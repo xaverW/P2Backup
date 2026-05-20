@@ -1,0 +1,212 @@
+
+
+/* InfoPane */
+.titlePane {
+    -fx-padding: 5;
+    -fx-border-color: grey;
+    -fx-border-width: 1;
+    -fx-background-color: lightgrey;
+}
+.infoPane {
+    -fx-padding: 5;
+    -fx-border-color: grey transparent transparent transparent;
+    -fx-border-width: 3;
+    -fx-background-color: lightgrey;
+}
+.infoPane Label {
+    -fx-padding: 5;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+}
+
+/* Button BackupList: anlegen */
+.btnAdjust {
+    -fx-padding: 1 2 1 2;
+    -fx-border-width: 1;
+    -fx-background-color: transparent;
+    -fx-font-size: 1em;
+ }
+.btnAdjust:pressed{
+    -fx-padding: 1 2 1 2;
+    -fx-border-width: 1;
+    -fx-border-color: grey;
+    -fx-background-color: transparent;
+    -fx-font-size: 1em;
+}
+.btnAdjust:focused{
+    -fx-padding: 1 2 1 2;
+    -fx-border-width: 1;
+    -fx-border-color: grey;
+    -fx-background-color: transparent;
+    -fx-font-size: 1em;
+}
+.btnAdjust:hover{
+    -fx-padding: 1 2 1 2;
+    -fx-border-width: 1;
+    -fx-border-color: #003151;
+    -fx-background-color: transparent;
+    -fx-font-size: 1em;
+}
+.btnAdjust:focused:hover{
+    -fx-padding: 1 2 1 2;
+    -fx-border-width: 1;
+    -fx-border-color: #003151;
+    -fx-background-color: transparent;
+    -fx-font-size: 1em;
+}
+.btnAdjust:pressed:focused:hover{
+    -fx-padding: 0 1 0 1;
+    -fx-border-width: 2;
+    -fx-border-color: #003151;
+    -fx-background-color: transparent;
+    -fx-font-size: 1em;
+}
+.lblAdjust {
+    -fx-text-fill: #900002;
+}
+
+/* InfoBackupDialog */
+.infoBackupDialogTop {
+    -fx-padding: 5;
+    -fx-border-color: grey;
+    -fx-border-width: 1;
+    -fx-background-color: lightgrey;
+}
+.infoBackupDialogGridPane {
+    -fx-padding: 5;
+    -fx-border-color: grey;
+    -fx-border-width: 1;
+    -fx-background-color: lightgrey;
+}
+
+/* BackupToolController */
+.lblToolInfo {
+    -fx-padding: 5;
+    -fx-border-color: grey;
+    -fx-border-width: 1;
+    -fx-background-color: transparent;
+}
+
+
+/* titledPane From */
+.titledPaneFrom{
+    -fx-padding: 10;
+    -fx-border-color: transparent, transparent;
+    -fx-border-padding: 10;
+    -fx-border-width: 2, 1;
+    -fx-background-color: transparent;
+}
+.tableFrom{
+    -fx-padding: 10 0 0 0;
+    -fx-border-color: transparent;
+    -fx-border-padding: 10;
+    -fx-border-width: 1;
+    -fx-background-color: transparent;
+}
+
+/* ProgrammUmschalter */
+.btnChange{
+    -fx-padding: 1 5 1 5;
+    -fx-border-radius: 50px;
+    -fx-border-color: grey;
+    -fx-border-width: 2px;
+    -fx-background-radius: 50px;
+    -fx-background-color: transparent;
+}
+.btnChange:pressed{
+    -fx-padding: 0 4 0 4;
+    -fx-border-width: 3px;
+    -fx-border-color: #003151;
+    -fx-background-color: transparent;
+}
+.btnChange:focused{
+    -fx-padding: 1 5 1 5;
+    -fx-border-width: 2px;
+    -fx-border-color: grey;
+    -fx-background-color: transparent;
+}
+.btnChange:hover{
+    -fx-padding: 1 5 1 5;
+    -fx-border-width: 2px;
+    -fx-border-color: #003151;
+    -fx-background-color: transparent;
+}
+.btnChange:focused:hover{
+    -fx-padding: 1 5 1 5;
+    -fx-border-width: 2px;
+    -fx-border-color: #003151;
+    -fx-background-color: transparent;
+}
+.btnChange:pressed:focused:hover{
+    -fx-padding: 0 4 0 4;
+    -fx-border-width: 3px;
+    -fx-border-color: #003151;
+    -fx-background-color: transparent;
+}
+
+
+
+/* Func-Button */
+.p2BackupMenu{
+    -fx-padding: 2;
+    -fx-border-radius: 5;
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+    -fx-background-radius: 5;
+    -fx-background-color: transparent;
+}
+
+.p2BackupMenu > .arrow-button{
+    /*Pfeil ausblenden*/
+    -fx-padding: 0;
+}
+.p2BackupMenu > .arrow-button > .arrow{
+    /*Pfeil ausblenden*/
+    -fx-padding: 0;
+}
+
+.p2BackupMenu:focused{
+    -fx-padding: 2;
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+    -fx-background-color: transparent;
+}
+.p2BackupMenu:hover{
+    -fx-padding: 1;
+    -fx-border-width: 2px;
+    -fx-border-color: #00344c;
+    -fx-background-color: lightgrey;
+}
+.p2BackupMenu:focused:hover{
+    -fx-padding: 1;
+    -fx-border-width: 2px;
+    -fx-border-color: #00344c;
+    -fx-background-color: lightgrey;
+}
+
+.p2BackupMenu:pressed{
+    -fx-padding: 0;
+    -fx-border-width: 3px;
+    -fx-border-color: #00344c;
+    -fx-background-color: lightgrey;
+}
+.p2BackupMenu:pressed:focused:hover{
+    -fx-padding: 0;
+    -fx-border-width: 3px;
+    -fx-border-color: #00344c;
+    -fx-background-color: lightgrey;
+}
+
+.p2FileLabel{
+    -fx-font-weight: bold;
+}
+
+
+.tree-cell > .tree-disclosure-node > .arrow  {
+    -fx-padding: 7;
+}
+.tree-cell:expanded > .tree-disclosure-node > .arrow {
+    -fx-padding: 7;
+}
+
+

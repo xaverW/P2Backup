@@ -1,0 +1,115 @@
+/*
+ * P2Tools Copyright (C) 2023 W. Xaver W.Xaver[at]googlemail.com
+ * https://www.p2tools.de/
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
+.btnSize{
+    -fx-padding: 5 12 5 12;
+    -fx-border-width: 2px;
+    -fx-font-size: 1.5em;
+}
+
+.pFuncBtnTitleBar{
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10;
+    -fx-border-color: -pTitleBarBorderColor;
+    -fx-background-color: -pTitleBarColor;
+    -fx-background-radius: 10;
+    -fx-font-size: 1.1em;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+    -fx-text-fill: -pTitleBarText;
+}
+.pFuncBtnTitleBar:focused{
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 1px;
+    -fx-border-color: -pTitleBarBorderColor;
+    -fx-background-color: -pTitleBarColor;
+    -fx-text-fill: -pTitleBarText;
+}
+.pFuncBtnTitleBar:pressed{
+    -fx-padding: 3 8 3 8;
+    -fx-border-width: 3px;
+    -fx-border-color: -pTitleBarBorderColor;
+    -fx-background-color: -pTitleBarColor;
+    -fx-text-fill: -pTitleBarText;
+}
+.pFuncBtnTitleBar:hover{
+    -fx-padding: 4 9 4 9;
+    -fx-border-width: 2px;
+    -fx-border-color: -pTitleBarBorderColor;
+    -fx-background-color: -pTitleBarColor;
+    -fx-text-fill: -pTitleBarText;
+}
+.pFuncBtnTitleBar:focused:hover{
+    -fx-padding: 4 9 4 9;
+    -fx-border-width: 2px;
+    -fx-border-color: -pTitleBarBorderColor;
+    -fx-background-color: -pTitleBarColor;
+    -fx-text-fill: -pTitleBarText;
+ }
+.pFuncBtnTitleBar:pressed:focused:hover{
+    -fx-padding: 3 8 3 8;
+    -fx-border-width: 3px;
+    -fx-border-color: -pTitleBarBorderColor;
+    -fx-background-color: -pTitleBarColor;
+    -fx-text-fill: -pTitleBarText;
+}
+
+.pFuncBtnTitleBarSel{
+    -fx-padding: 5 12 5 12;
+    -fx-border-width: 2px;
+    -fx-background-color: -pTitleBarSelColor;
+    -fx-font-size: 1.5em;
+    -fx-text-fill: -pTitleBarSelText;
+}
+.pFuncBtnTitleBarSel:focused{
+    -fx-padding: 5 12 5 12;
+    -fx-border-width: 2px;
+    -fx-background-color: -pTitleBarSelColor;
+    -fx-text-fill: -pTitleBarSelText;
+}
+.pFuncBtnTitleBarSel:pressed{
+    -fx-padding: 3 10 3 10;
+    -fx-border-width: 4px;
+    -fx-background-color: -pTitleBarSelColor;
+    -fx-text-fill: -pTitleBarSelText;
+}
+.pFuncBtnTitleBarSel:hover{
+    -fx-padding: 4 11 4 11;
+    -fx-border-width: 3px;
+    -fx-background-color: -pTitleBarSelColor;
+    -fx-text-fill: -pTitleBarSelText;
+}
+.pFuncBtnTitleBarSel:focused:hover{
+    -fx-padding: 4 11 4 11;
+    -fx-border-width: 3px;
+    -fx-background-color: -pTitleBarSelColor;
+    -fx-text-fill: -pTitleBarSelText;
+ }
+.pFuncBtnTitleBarSel:pressed:focused:hover{
+    -fx-padding: 3 10 3 10;
+    -fx-border-width: 4px;
+    -fx-background-color: -pTitleBarSelColor;
+    -fx-text-fill: -pTitleBarSelText;
+}
+
+
+/* pane der tabs */
+.splitPaneTab{
+    -fx-border-color: -pTitleBarSelColor;
+    -fx-border-width: 14 5 5 5;
+    -fx-background-color: -pTitleBarSelColor;
+}

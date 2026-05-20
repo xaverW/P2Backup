@@ -1,0 +1,156 @@
+/*
+ * MTViewer Copyright (C) 2017 W. Xaver W.Xaver[at]googlemail.com
+ * https://www.p2tools.de
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.p2tools.p2backup.controller;
+
+import de.p2tools.p2backup.controller.config.ProgConfig;
+import de.p2tools.p2backup.controller.config.ProgConst;
+import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.config.ProgInfos;
+import de.p2tools.p2lib.P2LibInit;
+import de.p2tools.p2lib.configfile.ConfigFile;
+import de.p2tools.p2lib.configfile.ConfigReadFile;
+import de.p2tools.p2lib.tools.P2ToolsRaspberry;
+import de.p2tools.p2lib.tools.duration.P2Duration;
+import de.p2tools.p2lib.tools.log.P2Log;
+import de.p2tools.p2lib.tools.log.P2Logger;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+
+public class ProgStartBeforeGui {
+
+    private ProgStartBeforeGui() {
+    }
+
+    public static void workBeforeGui() {
+        ProgData.raspberry = P2ToolsRaspberry.isRaspberry();
+        boolean load = loadAll();
+        initLib();
+
+        if (!load) {
+            // dann ist der erste Start
+            P2Duration.onlyPing("Erster Start");
+            ProgData.firstProgramStart = true;
+
+//            StartDialogController startDialogController = new StartDialogController();
+//            if (!startDialogController.isOk()) {
+//                // dann jetzt beenden -> Tschüs
+//                Platform.exit();
+//                System.exit(0);
+//            }
+
+            ProgConfigUpdate.setUpdateDone(); // dann ist's ja kein Programmupdate
+        }
+    }
+
+    private static void initLib() {
+        P2LibInit.initLib(ProgData.getInstance().primaryStage, ProgConst.PROGRAM_NAME, "",
+                ProgConfig.SYSTEM_THEME_CHANGED,
+                ProgConfig.SYSTEM_DARK_THEME,
+                ProgConfig.SYSTEM_BLACK_WHITE_ICON,
+                ProgConfig.SYSTEM_ICON_COLOR,
+                ProgConfig.SYSTEM_CSS_ADDER,
+
+                new String[]{
+                        "de/p2tools/p2backup/css/mtfx.css",
+                        "de/p2tools/p2backup/css/pFuncBtn.css",
+                        "de/p2tools/p2backup/css/pFuncMenu.css",
+                        "de/p2tools/p2backup/css/pFuncTitleBar.css",
+                        "de/p2tools/p2backup/css/pFuncTable.css",
+                        "de/p2tools/p2backup/css/pFuncToolBar.css",
+                        "de/p2tools/p2backup/css/pFuncTips.css",
+                        "de/p2tools/p2backup/css/pFuncStartDialog.css",
+                        "de/p2tools/p2backup/css/p2backup.css",
+                        "de/p2tools/p2backup/css/smallGui.css"},
+                new String[]{
+                        "de/p2tools/p2backup/css/mtfx-dark.css",
+                        "de/p2tools/p2backup/css/p2backup__dark.css",
+                        "de/p2tools/p2backup/css/smallGui__dark.css"},
+
+                ProgData.getInstance().cssProp,
+                ProgConfig.SYSTEM_FONT_SIZE,
+
+                null,
+                "", "",
+                ProgData.debug, ProgData.duration);
+    }
+
+    /**
+     * Config beim  Programmstart laden
+     */
+    private static boolean loadAll() {
+        ArrayList<String> logList = new ArrayList<>();
+        boolean ret = load(logList);
+
+        if (ProgConfig.SYSTEM_LOG_ON.getValue()) {
+            // dann für den evtl. geänderten LogPfad
+            P2Logger.setFileHandler(ProgInfos.getLogDirectory_String());
+        }
+        P2Log.sysLog(logList);
+
+        if (!ret) {
+            P2Log.sysLog("Weder Konfig noch Backup konnte geladen werden!");
+            // teils geladene Reste entfernen
+            clearTheConfigs();
+        }
+
+        return ret;
+    }
+
+    private static boolean load(ArrayList<String> logList) {
+        final Path xmlFilePath = ProgInfos.getSettingsFile();
+        P2Duration.onlyPing("ProgStartFactory.loadProgConfigData");
+        try {
+            if (!Files.exists(xmlFilePath)) {
+                //dann gibts das Konfig-File gar nicht
+                logList.add("Konfig existiert nicht!");
+                return false;
+            }
+
+            logList.add("Programmstart und ProgConfig laden von: " + xmlFilePath);
+            ConfigFile configFile = new ConfigFile(xmlFilePath.toString(), true) {
+                @Override
+                public void clearConfigFile() {
+                    clearTheConfigs();
+                }
+            };
+            ProgConfig.addConfigData(configFile);
+            if (ConfigReadFile.readConfig(configFile)) {
+                initAfterLoad();
+                logList.add("Konfig wurde geladen!");
+                return true;
+
+            } else {
+                // dann hat das Laden nicht geklappt
+                logList.add("Konfig konnte nicht geladen werden!");
+                return false;
+            }
+        } catch (final Exception ex) {
+            logList.add(ex.getLocalizedMessage());
+        }
+        return false;
+    }
+
+    private static void clearTheConfigs() {
+        ProgData progData = ProgData.getInstance();
+    }
+
+    private static void initAfterLoad() {
+        ProgConfigUpdate.update(); // falls es ein Programmupdate gab, Configs anpassen
+    }
+}

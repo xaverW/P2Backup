@@ -1,0 +1,124 @@
+/*
+ * MTViewer Copyright (C) 2017 W. Xaver W.Xaver[at]googlemail.com
+ * https://www.p2tools.de
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.p2tools.p2backup.gui.startdialog;
+
+import de.p2tools.p2lib.P2LibConst;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class StartPane extends VBox {
+    private final Stage stage;
+
+    public StartPane(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void close() {
+    }
+
+    public void makeStart1() {
+        HBox hBox = new HBox();
+        hBox.setSpacing(25);
+        hBox.setPadding(new Insets(20));
+
+        ImageView iv = new ImageView();
+        Image im = getHelpScreen1();
+        iv.setSmooth(true);
+        iv.setImage(im);
+
+        hBox.getChildren().addAll(iv);
+        Label text = new Label("1) Hier kann eine neue Filmliste\n" +
+                "geladen werden." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "2) Das ist das Programm-Menü" + P2LibConst.LINE_SEPARATOR +
+                "mit den Einstellungen und Infos über" + P2LibConst.LINE_SEPARATOR +
+                "das Programm." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "3) Das ist die Auswahl der\n" +
+                "Anzeige: Mediathek, Audiothek." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "4) Die Liste kann damit\n" +
+                "gefiltert werden." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "5) Eingestellte Filter kann man\n" +
+                "damit speichern oder wieder\n" +
+                "herstellen." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "6) Infos zum Ausgewählten\n" +
+                "Film werden hier angezeigt.");
+
+        hBox.getChildren().add(text);
+
+        getChildren().addAll(StartFactory.getTitle("Infos zur Programmoberfläche"), hBox);
+    }
+
+    public void makeStart2() {
+        HBox hBox = new HBox();
+        hBox.setSpacing(25);
+        hBox.setPadding(new Insets(20));
+
+        ImageView iv = new ImageView();
+        Image im = getHelpScreen2();
+        iv.setSmooth(true);
+        iv.setImage(im);
+
+        hBox.getChildren().addAll(iv);
+
+        Label text = new Label("1) Mit dem Pluszeichen können" + P2LibConst.LINE_SEPARATOR +
+                "Spalten in der Tabelle" + P2LibConst.LINE_SEPARATOR +
+                "ein- und ausgeblendet werden." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "2) Filme kann man damit\n" +
+                "ansehen oder speichern." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "3) Hier werden die" + P2LibConst.LINE_SEPARATOR +
+                "Downloads angezeigt." +
+
+                P2LibConst.LINE_SEPARATORx2 +
+                "4) Das ist die Liste aller" + P2LibConst.LINE_SEPARATOR +
+                "angelegter Downloads.");
+
+        hBox.getChildren().add(text);
+        getChildren().addAll(StartFactory.getTitle("Infos zur Programmoberfläche"), hBox);
+    }
+
+    private javafx.scene.image.Image getHelpScreen1() {
+        final String path = "/de/p2tools/p2backup/res/startdialog/mtviewer-startpage-1.png";
+        return new javafx.scene.image.Image(path, 500,
+                500,
+                true, true);
+    }
+
+    private javafx.scene.image.Image getHelpScreen2() {
+        final String path = "/de/p2tools/p2backup/res/startdialog/mtviewer-startpage-2.png";
+        return new javafx.scene.image.Image(path, 500,
+                500,
+                true, true);
+    }
+}

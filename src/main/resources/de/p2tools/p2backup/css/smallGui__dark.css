@@ -1,0 +1,30 @@
+
+/*SmallGui*/
+
+/*ist der ganze Dialog*/
+.smallGui{
+    -fx-background-color: #3e3e3e, #004a6c, #578cce, #434343;
+    -fx-background-insets: 0, 2, 10, 13;
+    -fx-background-radius: 0, 2, 20, 20;
+}
+
+
+/* HBox mit den Button */
+.smallGuiBtnBox{
+    -fx-padding: 5 0 0 0;
+    -fx-border-width: 2px;
+    -fx-border-color:  grey transparent transparent transparent;
+    -fx-background-color: transparent;
+}
+
+
+/* Button zu Beenden */
+.smallGuiBtn:hover{
+    -fx-background-color: #646464;
+}
+.smallGuiBtn:focused:hover{
+    -fx-background-color: #646464;
+}
+.smallGuiBtn:pressed:focused:hover{
+    -fx-background-color: #646464;
+}

@@ -1,0 +1,61 @@
+/*
+ * P2tools Copyright (C) 2022 W. Xaver W.Xaver[at]googlemail.com
+ * https://www.p2tools.de/
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+package de.p2tools.p2backup.gui.table;
+
+import de.p2tools.p2backup.controller.data.backupdata.BackupData;
+import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2backup.controller.data.filedata.FileFactory;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+
+public class CellToPath<S, T> extends TableCell<S, T> {
+
+    private final Stage stage;
+    private final ObjectProperty<BackupInfo> backupInfosProps;
+
+    public CellToPath(Stage stage, ObjectProperty<BackupInfo> backupInfosProps) {
+        this.stage = stage;
+        this.backupInfosProps = backupInfosProps;
+    }
+
+    public final Callback<TableColumn<BackupData, String>, TableCell<BackupData, String>> cellFactory
+            = (final TableColumn<BackupData, String> param) -> {
+
+        final TableCell<BackupData, String> cell = new TableCell<>() {
+
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
+                }
+
+                BackupData backupData = getTableView().getItems().get(getIndex());
+                setText(FileFactory.getToPathStr(backupInfosProps.get(), backupData));
+                setGraphic(null);
+            }
+        };
+        return cell;
+    };
+}

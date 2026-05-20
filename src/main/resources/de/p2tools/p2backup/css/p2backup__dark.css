@@ -1,0 +1,85 @@
+/*  style sheet for the dark-theme */
+
+/* TitleBox */
+.titleBox {
+    -fx-border-color: grey;
+    -fx-background-color: transparent;
+}
+
+/* InfoPane */
+.titlePane {
+    -fx-padding: 5;
+    -fx-border-color: lightgrey;
+    -fx-background-color: grey;
+}
+
+.infoPane {
+    -fx-padding: 5;
+    -fx-border-color: lightgrey transparent transparent transparent;
+    -fx-background-color: grey;
+}
+
+
+/* Button BackupList: anlegen */
+.lblAdjust {
+    -fx-text-fill: #ff0000;
+}
+
+/* BackupToolController */
+.lblToolInfo {
+    -fx-padding: 5;
+    -fx-border-color: lightgrey;
+    -fx-border-width: 1;
+    -fx-background-color: transparent;
+}
+
+
+/* TopButton*/
+.btnTabMark{
+    -fx-background-color: #1d506b;
+}
+.btnTabMark:focused{
+    -fx-background-color: #1d506b;
+}
+.btnTabMark:hover{
+    -fx-background-color: #838383;
+}
+.btnTabMark:focused:hover{
+    -fx-background-color: #838383;
+ }
+.btnTabMark:pressed:focused:hover{
+    -fx-background-color: #838383;
+}
+
+.btnTabNonMark{
+    -fx-background-color: transparent;
+}
+.btnTabNonMark:focused{
+    -fx-background-color: transparent;
+}
+.btnTabNonMark:hover{
+    -fx-background-color: #838383;
+}
+.btnTabNonMark:focused:hover{
+    -fx-background-color: #838383;
+ }
+.btnTabNonMark:pressed:focused:hover{
+    -fx-background-color: #838383;
+}
+
+/* p2BackupMenu */
+.p2BackupMenu:hover{
+    -fx-background-color: #838383;
+}
+.p2BackupMenu:focused:hover{
+    -fx-background-color: #838383;
+}
+
+.p2BackupMenu:pressed{
+    -fx-background-color: #838383;
+}
+.p2BackupMenu:pressed:focused:hover{
+    -fx-background-color: #838383;
+}
+
+

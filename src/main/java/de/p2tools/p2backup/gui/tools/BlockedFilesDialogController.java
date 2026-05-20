@@ -1,0 +1,194 @@
+/*
+ * MTViewer Copyright (C) 2017 W. Xaver W.Xaver[at]googlemail.com
+ * https://www.p2tools.de
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.p2tools.p2backup.gui.tools;
+
+
+import de.p2tools.p2backup.controller.config.ProgConfig;
+import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2backup.controller.picon.PIconFactory;
+import de.p2tools.p2backup.controller.runner.tools.ToolListBlockFile;
+import de.p2tools.p2backup.gui.table.Table;
+import de.p2tools.p2backup.gui.table.TableBlockedFile;
+import de.p2tools.p2lib.P2LibConst;
+import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
+import de.p2tools.p2lib.guitools.P2GuiTools;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
+
+public class BlockedFilesDialogController extends P2DialogExtra {
+
+    private final BackupInfo backupInfos;
+    private final Set<File> foundFileList = new HashSet<>();
+    private final Set<File> blockedFileList = new HashSet<>();
+    private final ObservableList<File> fileList = FXCollections.observableArrayList();
+    private final FilteredList<File> filteredFileList;
+    private final SortedList<File> sortedFileList;
+    private final Label lblSum = new Label();
+    private final ProgData progData;
+    private final TextField txtSearch = new TextField();
+    private final Button btnStart = new Button("Dateien laden");
+    private final TableBlockedFile tableView;
+    private final RadioButton rbAll = new RadioButton("Alle");
+    private final RadioButton rbFound = new RadioButton("Sichern");
+    private final RadioButton rbBlock = new RadioButton("Geblockt");
+
+    public BlockedFilesDialogController(BackupInfo backupInfos) {
+        super(ProgData.getInstance().primaryStage, ProgConfig.BLOCKED_FILE_DIALOG_SIZE, "In den Daten/Backup suchen",
+                true, true, true, DECO.NO_BORDER);
+
+        this.progData = ProgData.getInstance();
+        this.backupInfos = backupInfos;
+        tableView = new TableBlockedFile(Table.TABLE_ENUM.BLOCKED_FILE, getStage());
+
+        filteredFileList = new FilteredList<>(fileList, p -> true);
+        sortedFileList = new SortedList<>(filteredFileList);
+        init(false);
+    }
+
+    @Override
+    public void make() {
+        Button btnOk = new Button("OK");
+        btnOk.setOnAction(a -> close());
+        addOkButton(btnOk);
+
+        addSearch();
+        addTable();
+        addSum();
+    }
+
+    public void close() {
+        Table.saveTable(tableView, Table.TABLE_ENUM.BLOCKED_FILE);
+        super.close();
+    }
+
+    private void set() {
+        fileList.clear();
+        if (rbAll.isSelected()) {
+            fileList.addAll(foundFileList);
+            fileList.addAll(blockedFileList);
+        } else if (rbFound.isSelected()) {
+            fileList.addAll(foundFileList);
+        } else {
+            fileList.addAll(blockedFileList);
+        }
+        setPredicate();
+    }
+
+    public void setResult() {
+        Platform.runLater(this::set);
+    }
+
+    private void addSearch() {
+        btnStart.setOnAction(a -> {
+            new ToolListBlockFile(this,
+                    backupInfos, foundFileList, blockedFileList, new AtomicBoolean(true)).search();
+        });
+
+        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
+        hBox.getChildren().addAll(new Label("Suchen:"), txtSearch,
+                P2GuiTools.getHBoxGrower(), addProgress(), btnStart);
+        getVBoxCont().getChildren().add(hBox);
+        txtSearch.textProperty().addListener((u, o, n) -> setPredicate());
+    }
+
+    private void setPredicate() {
+        Predicate<File> pr = f -> f.getAbsolutePath().toLowerCase().contains(txtSearch.getText().toLowerCase());
+        filteredFileList.setPredicate(pr);
+    }
+
+    private void addSum() {
+        ToggleGroup tg = new ToggleGroup();
+        rbAll.setToggleGroup(tg);
+        rbFound.setToggleGroup(tg);
+        rbBlock.setToggleGroup(tg);
+        rbBlock.setSelected(true);
+
+        rbAll.setOnAction(a -> set());
+        rbFound.setOnAction(a -> set());
+        rbBlock.setOnAction(a -> set());
+
+        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
+        hBox.getChildren().addAll(rbAll, rbFound, rbBlock, P2GuiTools.getHBoxGrower(),
+                new Label("Anzahl: "), lblSum);
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        filteredFileList.addListener((ListChangeListener<File>) change ->
+                lblSum.setText(filteredFileList.size() + ""));
+        getVBoxCont().getChildren().add(hBox);
+    }
+
+    private void addTable() {
+        Table.setTable(tableView);
+        getVBoxCont().getChildren().addAll(tableView);
+        VBox.setVgrow(tableView, Priority.ALWAYS);
+
+        tableView.setItems(sortedFileList);
+        sortedFileList.comparatorProperty().bind(tableView.comparatorProperty());
+        tableView.setOnMousePressed(m -> {
+            if (m.getButton().equals(MouseButton.SECONDARY)) {
+                ContextMenu contextMenu = getContextMenu();
+                tableView.setContextMenu(contextMenu);
+            }
+        });
+    }
+
+    private ContextMenu getContextMenu() {
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem resetTable = new MenuItem("Tabelle zurücksetzen");
+        resetTable.setOnAction(e -> tableView.resetTable());
+        contextMenu.getItems().add(new SeparatorMenuItem());
+        contextMenu.getItems().addAll(resetTable);
+        return contextMenu;
+    }
+
+
+    private HBox addProgress() {
+        final ProgressBar progressBar = new ProgressBar();
+        progressBar.progressProperty().bind(backupInfos.runnerDto.progressProperty());
+
+        Button btnStop = new Button();
+        btnStop.setMinHeight(18);
+        btnStop.setMaxHeight(18);
+        btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
+        btnStop.setOnAction(a -> backupInfos.runnerDto.setStop());
+
+        HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
+        hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
+        hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), progressBar, btnStop);
+        hBoxProgress.setAlignment(Pos.CENTER);
+
+        hBoxProgress.visibleProperty().bind(backupInfos.runnerDto.runningProperty());
+        return hBoxProgress;
+    }
+}
