@@ -36,9 +36,10 @@ public class CopyDiffFactory {
         });
 
         // ====================
-        // Backup-Pfad eintragen
+        // ToPath zum Backup eintragen
         backupInfo.runnerDto.getDataFileList().forEach(f -> {
-            f.setCorrBackupPath(FileFactory.getToPathStr(backupInfo));
+            f.setToPathStr(FileFactory.getToPathStr(backupInfo));
+//            f.setCorrBackupPath(FileFactory.getToPathStr(backupInfo));
         });
 
         // ===============

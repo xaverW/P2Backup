@@ -51,11 +51,11 @@ public class FileFactory {
         if (ProgData.getInstance().WINDOWS) {
             // Win macht einfach nur MIST!
             // C:\Documents\Newsletters\Summer2018.pdf
-            return path.replace(":", ProgConst.WIN_REPLACE_PATH);
+            return File.separator + path.replace(":", ProgConst.WIN_REPLACE_PATH);
 
         } else {
             // /Documents/Newsletters/Summer2018.pdf
-            return path.replaceFirst("/", ProgConst.WIN_REPLACE_PATH);
+            return File.separator + path.replaceFirst("/", ProgConst.WIN_REPLACE_PATH);
         }
     }
 
@@ -63,11 +63,16 @@ public class FileFactory {
         if (ProgData.getInstance().WINDOWS) {
             // Win macht einfach nur MIST!
             // C:\Documents\Newsletters\Summer2018.pdf
+            if (path.startsWith(File.separator)) {
+                // \C__\Documents\Newsletters\Summer2018.pdf
+                path = path.substring(1);
+            }
             return path.replace(ProgConst.WIN_REPLACE_PATH, ":");
 
         } else {
             // /Documents/Newsletters/Summer2018.pdf
-            return path.replaceFirst(ProgConst.WIN_REPLACE_PATH, "/");
+            // /__Documents/Newsletters/Summer2018.pdf
+            return path.replaceFirst(ProgConst.WIN_REPLACE_PATH, "");
         }
     }
 

@@ -47,7 +47,7 @@ public class DirCreateHash {
         this.fromPathList = Collections.singletonList(fromPath);
         this.dirDataList = dirDataList;
         this.fileDataList = fileDataList;
-        this.toPath = toPath;
+        this.toPath = toPath; // der wird dann vom Pfad abgezogen!
         this.quick = quick;
         this.followLink = followLink;
         this.atomicBoolean = atomicBoolean;

@@ -289,7 +289,7 @@ public class PaneSearchInBackup extends HBox {
 
                     if (backupInfoFromPathList.contains(item)) {
                         // ist ein FROM-Pfad
-                        setText("~" + item);
+                        setText(FileFactory.setCorrPath(item));
                         return;
                     }
 

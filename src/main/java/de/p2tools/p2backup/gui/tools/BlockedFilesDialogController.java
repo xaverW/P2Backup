@@ -49,7 +49,7 @@ import java.util.function.Predicate;
 
 public class BlockedFilesDialogController extends P2DialogExtra {
 
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final Set<File> foundFileList = new HashSet<>();
     private final Set<File> blockedFileList = new HashSet<>();
     private final ObservableList<File> fileList = FXCollections.observableArrayList();
@@ -59,17 +59,18 @@ public class BlockedFilesDialogController extends P2DialogExtra {
     private final ProgData progData;
     private final TextField txtSearch = new TextField();
     private final Button btnStart = new Button("Dateien laden");
+    private final Button btnClear = new Button();
     private final TableBlockedFile tableView;
     private final RadioButton rbAll = new RadioButton("Alle");
     private final RadioButton rbFound = new RadioButton("Sichern");
     private final RadioButton rbBlock = new RadioButton("Geblockt");
 
-    public BlockedFilesDialogController(BackupInfo backupInfos) {
+    public BlockedFilesDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BLOCKED_FILE_DIALOG_SIZE, "In den Daten/Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         tableView = new TableBlockedFile(Table.TABLE_ENUM.BLOCKED_FILE, getStage());
 
         filteredFileList = new FilteredList<>(fileList, p -> true);
@@ -112,12 +113,17 @@ public class BlockedFilesDialogController extends P2DialogExtra {
 
     private void addSearch() {
         btnStart.setOnAction(a -> {
+            foundFileList.clear();
+            blockedFileList.clear();
             new ToolListBlockFile(this,
-                    backupInfos, foundFileList, blockedFileList, new AtomicBoolean(true)).search();
+                    backupInfo, foundFileList, blockedFileList, new AtomicBoolean(true)).search();
         });
+        btnClear.setGraphic(PIconFactory.PICON.BTN_CLEAR.getFontIcon());
+        btnClear.setTooltip(new Tooltip("Suche löschen"));
+        btnClear.setOnAction(a -> txtSearch.clear());
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(new Label("Suchen:"), txtSearch,
+        hBox.getChildren().addAll(new Label("Suchen:"), txtSearch, btnClear,
                 P2GuiTools.getHBoxGrower(), addProgress(), btnStart);
         getVBoxCont().getChildren().add(hBox);
         txtSearch.textProperty().addListener((u, o, n) -> setPredicate());
@@ -175,20 +181,20 @@ public class BlockedFilesDialogController extends P2DialogExtra {
 
     private HBox addProgress() {
         final ProgressBar progressBar = new ProgressBar();
-        progressBar.progressProperty().bind(backupInfos.runnerDto.progressProperty());
+        progressBar.progressProperty().bind(backupInfo.runnerDto.progressProperty());
 
         Button btnStop = new Button();
         btnStop.setMinHeight(18);
         btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
-        btnStop.setOnAction(a -> backupInfos.runnerDto.setStop());
+        btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
         hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), progressBar, btnStop);
         hBoxProgress.setAlignment(Pos.CENTER);
 
-        hBoxProgress.visibleProperty().bind(backupInfos.runnerDto.runningProperty());
+        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
         return hBoxProgress;
     }
 }

@@ -68,12 +68,19 @@ public class ToolCheckBackup {
     }
 
     private void compareDir() {
+        // Daten laden
         FileDataList fileListDb = new FileDataList();
-        if (!SqlFileData.readFileListFromBackup(backupInfo, backupData, fileListDb)) {
+        if (SqlFileData.readFileListFromBackup(backupInfo, backupData, fileListDb)) {
+//            // damit das Vergleichen klappt:
+//            fileListDb.forEach(f -> f.setFilePathStr(f.getBackupFilePathStr()));
+        } else {
             backupInfo.runnerDto.setStop();
         }
 
+        // Backup laden
         FileDataList fileListBackup = getFileListBackup(backupData.getSubPath());
+        // damit das Vergleichen mit den Daten klappt:
+        fileListBackup.forEach(f -> f.setFilePathStr(FileFactory.unSetCorrPath(f.getFilePathStr())));
 
         if (backupInfo.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
