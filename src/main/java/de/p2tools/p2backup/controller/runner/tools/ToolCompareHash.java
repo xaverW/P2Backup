@@ -70,7 +70,8 @@ public class ToolCompareHash {
     private void compareDir() {
         FileDataList fileListData = getFileDataList("");
         FileDataList fileListBackup = getFileDataList(subPathBackup);
-
+        fileListBackup.forEach(f -> f.setFilePathStr(FileFactory.unSetCorrPath(f.getFilePathStr())));
+        
         if (backupInfos.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
             fileListData.clear();

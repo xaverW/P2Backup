@@ -17,11 +17,6 @@ public class CopyAllFactory {
             return false;
         }
 
-//        // dann werden alle ins Backup geschrieben->toFileList
-//        backupInfos.runnerDto.getDataFileList().forEach(f -> {
-//            f.setCorrBackupPath(FileFactory.getToPathStr(backupInfos));
-//        });
-
         if (!CopyFactory.makeDirsOfFile(backupInfos.runnerDto.getDataFileList(), toDataPath)) {
             return false;
         }

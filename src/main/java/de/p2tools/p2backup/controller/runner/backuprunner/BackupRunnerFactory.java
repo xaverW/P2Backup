@@ -26,6 +26,7 @@ import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BackupRunnerFactory {
@@ -246,6 +247,19 @@ public class BackupRunnerFactory {
             if (!SqlFileData.writeDataFileList(backupInfos)) {
                 return false;
             }
+
+            // und jetzt noch die fehlerhaften löschen
+            ArrayList<FileData> removeList = new ArrayList<>();
+            backupInfos.runnerDto.getDataFileList().forEach(f -> {
+                if (f.isError()) {
+                    removeList.add(f);
+                }
+            });
+            if (!removeList.isEmpty()) {
+                P2Log.errorLog(956232145, "Fehlerhafte Dateien: " + removeList.size());
+                backupInfos.runnerDto.getDataFileList().removeAll(removeList);
+            }
+
         } catch (Exception ex) {
             P2AlertAppThread.showErrorAlert("Hash erstellen ",
                     "Konnte den Hash der Dateien " +
@@ -258,6 +272,8 @@ public class BackupRunnerFactory {
 
     public static boolean copyFilesToBackup(BackupInfo backupInfos) {
         boolean ret;
+        // Fehlerhafte löschen
+
 
         if (backupInfos.getBackupDataList().isEmpty()) {
             // dann gibts keinen Vorgänger -> alles kopieren
@@ -289,13 +305,13 @@ public class BackupRunnerFactory {
         return ret;
     }
 
-    public static boolean updateBackupData(BackupInfo backupInfos) {
+    public static boolean updateBackupData(BackupInfo backupInfo) {
         // BackupData in die Liste schreiben
-        backupInfos.getBackupDataList().add(backupInfos.runnerDto.getBackupData());
+        backupInfo.getBackupDataList().add(backupInfo.runnerDto.getBackupData());
         // und jetzt BackupInfo und alle BackupData in DB schreiben
-        if (!SqlBackupInfo.addUpdateBackupInfo(backupInfos)) {
+        if (!SqlBackupInfo.addUpdateBackupInfo(backupInfo)) {
             return false;
         }
-        return SqlFileData.writeBackupFileList(backupInfos);
+        return SqlFileData.writeBackupFileList(backupInfo);
     }
 }

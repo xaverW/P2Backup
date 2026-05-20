@@ -67,10 +67,10 @@ public class ToolCompareHashSql {
         FileDataList fileListBackup = new FileDataList();
         FileDataList resultList = new FileDataList();
 
-        if (!SqlFileData.readDataFileList(backupInfos, fileListBackup)) {
+        if (!SqlFileData.readDataFileList(backupInfos, fileListData)) {
             backupInfos.runnerDto.setStop();
         }
-        if (!SqlFileData.readBackupFileList(backupInfos, backupData, fileListData)) {
+        if (!SqlFileData.readBackupFileList(backupInfos, backupData, fileListBackup)) {
             backupInfos.runnerDto.setStop();
         }
 

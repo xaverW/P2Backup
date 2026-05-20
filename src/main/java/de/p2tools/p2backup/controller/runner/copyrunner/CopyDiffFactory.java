@@ -29,31 +29,24 @@ public class CopyDiffFactory {
         SqlFileData.readBackupFileList(backupInfo, oldBackup, oldFileList);
 
         oldFileList.forEach(fileData -> {
-            if (!fileData.getFilePathStr().isEmpty() ||
-                    fileData.getToPathStr().isEmpty()) {
+            if (!fileData.getFilePathStr().isEmpty() &&
+                    !fileData.getToPathStr().isEmpty() &&
+                    !fileData.isError()) {
                 oldBackupFileMap.put(fileData.getFilePathStr(), fileData);
             }
-        });
-
-        // ====================
-        // ToPath zum Backup eintragen
-        backupInfo.runnerDto.getDataFileList().forEach(f -> {
-            f.setToPathStr(FileFactory.getToPathStr(backupInfo));
-//            f.setCorrBackupPath(FileFactory.getToPathStr(backupInfo));
         });
 
         // ===============
         // suchen was kopiert werden muss
         backupInfo.runnerDto.getDataFileList().forEach(f -> {
+            if (f.isError()) {
+                // dann konnte es nicht gelesen werden, also nix!
+                return;
+            }
 
             FileData oldFile = oldBackupFileMap.get(f.getFilePathStr());
-            if (oldFile == null ||
-                    oldFile.getFilePathStr().isEmpty() ||
-                    oldFile.getToPathStr().isEmpty() ||
-                    !f.getHash().equals(oldFile.getHash())) {
-
+            if (oldFile == null || !f.getHash().equals(oldFile.getHash())) {
                 // dann gibt es sie nicht oder
-                // hat kein Backup
                 // oder sie sind nicht gleich -> aus DATEIEN kopieren
                 copyList.add(f);
 
@@ -64,10 +57,6 @@ public class CopyDiffFactory {
                 if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
                     // aus der Map löschen
                     oldBackupFileMap.remove(oldFile.getFilePathStr());
-
-                    // nur beim MOVE ist der BackupPath dann leer
-                    oldFile.setFilePathStr(""); // gibts dann ja nicht mehr
-                    oldFile.setToPathStr(""); // gibts dann ja nicht mehr
                 }
                 moveList.add(moveData);
             }
@@ -75,15 +64,8 @@ public class CopyDiffFactory {
 
         // ===============
         // oldBackup aktualisieren, backupFiles des alten Backup
-        oldFileList.setAll(oldBackupFileMap.values());
-        int count = 0;
-        for (FileData fileData : oldFileList) {
-            if (!fileData.getFilePathStr().isEmpty()) {
-                // nur dann gibts das BackupFile noch
-                ++count;
-            }
-        }
-        oldBackup.setCount(count);
+        oldFileList.setAll(oldBackupFileMap.values()); // sind alle bei INTELLIGENT oder der Rest bei DIFF
+        oldBackup.setCount(oldFileList.size());
         if (!SqlFileData.updateBackupFileList(backupInfo, oldBackup.getId(), oldFileList)) {
             backupInfo.runnerDto.setStop();
         }
