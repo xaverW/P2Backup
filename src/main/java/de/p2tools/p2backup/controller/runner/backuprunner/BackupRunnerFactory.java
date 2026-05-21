@@ -10,6 +10,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
 import de.p2tools.p2backup.controller.runner.copyrunner.CopyAllFactory;
 import de.p2tools.p2backup.controller.runner.copyrunner.CopyDiffFactory;
+import de.p2tools.p2backup.controller.runner.copyrunner.CopyFactory;
 import de.p2tools.p2backup.controller.runner.deleterunner.DeleteRunner;
 import de.p2tools.p2backup.controller.runner.hashrunner.CreateDataHash;
 import de.p2tools.p2backup.controller.sqlite.SqlBackupInfo;
@@ -192,7 +193,7 @@ public class BackupRunnerFactory {
             if (Files.exists(toPath)) {
                 P2AlertAppThread.showErrorAlert("Backupverzeichnis anlegen",
                         "Das Backupverzeichnis:\n" +
-                                toPath.toString() + "\n" +
+                                toPath + "\n" +
                                 "existiert schon.");
                 return false;
 
@@ -270,21 +271,25 @@ public class BackupRunnerFactory {
         return true;
     }
 
-    public static boolean copyFilesToBackup(BackupInfo backupInfos) {
+    public static boolean copyFilesToBackup(BackupInfo backupInfo) {
         boolean ret;
-        // Fehlerhafte löschen
 
-
-        if (backupInfos.getBackupDataList().isEmpty()) {
-            // dann gibts keinen Vorgänger -> alles kopieren
-            return CopyAllFactory.copyAllFilesToBackup(backupInfos);
+        // ====================
+        // BackupPfad nochmal prüfen, ist doppelt, schadet aber nicht
+        if (!CopyFactory.checkToPath(FileFactory.getToPath(backupInfo))) {
+            return false;
         }
 
-        switch (backupInfos.getHow()) {
-            case ProgConst.BACKUP_ALL -> ret = CopyAllFactory.copyAllFilesToBackup(backupInfos);
-            case ProgConst.BACKUP_DIFF -> ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfos);
-            case ProgConst.BACKUP_INTELLIGENT -> ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfos);
-            default -> ret = CopyAllFactory.copyAllFilesToBackup(backupInfos);
+        if (backupInfo.getBackupDataList().isEmpty()) {
+            // dann gibts keinen Vorgänger -> alles kopieren
+            return CopyAllFactory.copyAllFilesToBackup(backupInfo);
+        }
+
+        switch (backupInfo.getHow()) {
+            case ProgConst.BACKUP_ALL -> ret = CopyAllFactory.copyAllFilesToBackup(backupInfo);
+            case ProgConst.BACKUP_DIFF -> ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
+            case ProgConst.BACKUP_INTELLIGENT -> ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
+            default -> ret = CopyAllFactory.copyAllFilesToBackup(backupInfo);
         }
         return ret;
     }

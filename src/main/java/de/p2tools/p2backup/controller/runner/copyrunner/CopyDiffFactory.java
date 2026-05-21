@@ -8,7 +8,6 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,11 +20,11 @@ public class CopyDiffFactory {
         FileDataList copyList = new FileDataList();
         FileDataList moveList = new FileDataList();
         final Map<String, FileData> oldBackupFileMap = new HashMap<>(); // sind alle Dateien im alten Backup
-        final Path toPath = FileFactory.getToPath(backupInfo);
 
         // ======================
         // altes Backup laden
         BackupData oldBackup = backupInfo.getBackupDataList().getLast();
+        final String oldToPathStr = FileFactory.getToPathStr(backupInfo, oldBackup);
         SqlFileData.readBackupFileList(backupInfo, oldBackup, oldFileList);
 
         oldFileList.forEach(fileData -> {
@@ -35,6 +34,7 @@ public class CopyDiffFactory {
                 oldBackupFileMap.put(fileData.getFilePathStr(), fileData);
             }
         });
+        oldFileList.clear();
 
         // ===============
         // suchen was kopiert werden muss
@@ -53,10 +53,14 @@ public class CopyDiffFactory {
             } else {
                 // dann sind sie gleich -> move aus altem Backup
                 FileData moveData = f.getCopy();
-                moveData.setFilePathStr(oldFile.getBackupFilePath().toString()); // DATEN-Pfad ist der alte BACKUP-Pfad
+//                moveData.setFilePathStr(oldFile.getBackupFilePathStr()); // DATEN-Pfad ist der alte BACKUP-Pfad
                 if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
                     // aus der Map löschen, gibts dann nicht mehr
                     oldBackupFileMap.remove(oldFile.getFilePathStr());
+                } else if (backupInfo.getHow() == ProgConst.BACKUP_INTELLIGENT) {
+                    // dann muss der toPath geändert werden!
+//                    moveData.setToPathStr(toPathStr);
+
                 }
                 moveList.add(moveData);
             }
@@ -71,16 +75,10 @@ public class CopyDiffFactory {
         }
 
         // ====================
-        // BackupPfad anlegen
-        if (!CopyFactory.checkToPath(FileFactory.getToPath(backupInfo))) {
-            return false;
-        }
-
-        // ====================
         // Dirs für die Dateien anlegen
-        if (!CopyFactory.makeDirsOfFile(backupInfo.runnerDto.getDataFileList(), toPath)) {
-            return false;
-        }
+//        if (!CopyFactory.makeDirsOfFile(backupInfo.runnerDto.getDataFileList(), toPath)) {
+//            return false;
+//        }
 
         // ======================
         // und jetzt kopieren/linken/moven
@@ -90,10 +88,10 @@ public class CopyDiffFactory {
 
         if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
             // move files form OldBAckup
-            return CopyFactory.moveFiles(backupInfo, moveList);
+            return CopyFactory.moveFiles(backupInfo, oldToPathStr, moveList);
         } else {
             // link files from OldBackup
-            return CopyFactory.linkFiles(backupInfo, moveList);
+            return CopyFactory.linkFiles(backupInfo, oldToPathStr, moveList);
         }
     }
 }

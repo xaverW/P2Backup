@@ -88,6 +88,20 @@ public class FileData extends FileDataProps {
         return Path.of(getToPathStr(), FileFactory.setCorrPath(getFilePathStr())).toString();
     }
 
+    public Path getBackupFilePath(String toPath) {
+        if (getFilePathStr().isEmpty()) {
+            return null;
+        }
+        return Path.of(toPath, FileFactory.setCorrPath(getFilePathStr()));
+    }
+
+    public String getBackupFilePathStr(String toPath) {
+        if (getFilePathStr().isEmpty()) {
+            return "";
+        }
+        return Path.of(toPath, FileFactory.setCorrPath(getFilePathStr())).toString();
+    }
+
     public Path getParentBackupFilePath() {
         if (getFilePathStr().isEmpty()) {
             return null;

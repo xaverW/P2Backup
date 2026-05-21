@@ -97,7 +97,8 @@ public class CopyFactory {
             try {
                 // und jetzt den toData Pfad wieder setzen
                 backupInfo.runnerDto.setRunnerFileName(fromPath.toString());
-                Files.copy(fromPath, toFilePath, StandardCopyOption.COPY_ATTRIBUTES);
+//                Files.copy(fromPath, toFilePath, StandardCopyOption.COPY_ATTRIBUTES);
+                FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
             } catch (Exception ex) {
                 if (!FileFactory.goOnError(backupInfo, fromPath.toString())) {
                     return false;
@@ -111,30 +112,7 @@ public class CopyFactory {
         return true;
     }
 
-    public static boolean linkFiles(BackupInfo backupInfo,
-                                    List<FileData> fileDataList) {
-        // in der FileDataList sind die Dateien aus dem Backup die verlinkt werden
-        for (FileData f : fileDataList) {
-            if (f.isError()) {
-                continue;
-            }
-
-            Path fromFile = f.getFilePath();
-            Path toFile = f.getBackupFilePath();
-
-            try {
-                // create a hard link
-                Files.createLink(toFile, fromFile);
-            } catch (Exception ex) {
-                if (!FileFactory.goOnError(backupInfo, fromFile.toString())) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public static boolean moveFiles(BackupInfo backupInfo,
+    public static boolean moveFiles(BackupInfo backupInfo, String oldToPath,
                                     FileDataList fileDataList) {
         // move
         for (FileData f : fileDataList) {
@@ -142,7 +120,7 @@ public class CopyFactory {
                 continue;
             }
 
-            File fromFile = f.getFilePath().toFile();
+            File fromFile = f.getBackupFilePath(oldToPath).toFile();
             File toFile = f.getBackupFilePath().toFile();
             try {
                 FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
@@ -153,6 +131,30 @@ public class CopyFactory {
             }
         }
 
+        return true;
+    }
+
+    public static boolean linkFiles(BackupInfo backupInfo, String oldToPath,
+                                    List<FileData> fileDataList) {
+        // in der FileDataList sind die Dateien aus dem Backup die verlinkt werden
+        for (FileData f : fileDataList) {
+            if (f.isError()) {
+                continue;
+            }
+
+            Path fromFile = f.getBackupFilePath(oldToPath);
+            Path toFile = f.getBackupFilePath();
+
+            try {
+                // create a hard link
+                FileUtils.createParentDirectories(toFile.toFile());
+                Files.createLink(toFile, fromFile);
+            } catch (Exception ex) {
+                if (!FileFactory.goOnError(backupInfo, fromFile.toString())) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 }

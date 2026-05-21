@@ -62,12 +62,12 @@ public class FileDataProps implements Comparable<FileData> {
         return filePathStr;
     }
 
-    public void setFilePathStr(String dataFilePathStr) {
-        this.filePathStr = dataFilePathStr;
-        if (filePathStr.isEmpty()) {
+    public void setFilePathStr(String filePathStr) {
+        this.filePathStr = filePathStr;
+        if (this.filePathStr.isEmpty()) {
             fileNameStr = "";
         } else {
-            fileNameStr = Path.of(filePathStr).getFileName().toString();
+            fileNameStr = Path.of(this.filePathStr).getFileName().toString();
         }
     }
 
