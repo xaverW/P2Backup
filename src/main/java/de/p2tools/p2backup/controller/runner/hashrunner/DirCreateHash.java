@@ -47,7 +47,7 @@ public class DirCreateHash {
         this.fromPathList = Collections.singletonList(fromPath);
         this.dirDataList = dirDataList;
         this.fileDataList = fileDataList;
-        this.toPath = toPath; // der wird dann vom Pfad abgezogen!
+        this.toPath = toPath;
         this.quick = quick;
         this.followLink = followLink;
         this.atomicBoolean = atomicBoolean;
@@ -92,10 +92,10 @@ public class DirCreateHash {
                 // in DirDataList eintragen
                 if (dirDataList != null) {
                     foundDirList.forEach(f -> {
-                        FileData fileData = FileHashFactory.getFileData(backupInfos,
-                                true, toPath, f, followLink);
+                        FileData fileData = FileHashFactory.getFileHashData(backupInfos,
+                                toPath, true, f, followLink);
                         if (fileData != null) {
-                            fileData.setToPathStr(toPath);
+//                            FileFactory.cleanFileData(fileData, toPath);
                             dirDataList.add(fileData);
                         }
                     });
@@ -119,7 +119,6 @@ public class DirCreateHash {
 
     private void createFileHash(boolean followLink) {
         // FileData-Object für alle gefundenen Dateien erstellen
-
         P2Log.sysLog("Start createFileHash");
         int ready = 0;
         for (File file : foundFileList) {
@@ -129,9 +128,8 @@ public class DirCreateHash {
 
             backupInfos.runnerDto.setRunnerFileName(file.getName());
             // Pfad steht im dataPath
-            FileData fileData = FileHashFactory.getFileData(backupInfos,
-                    quick, toPath, file, followLink);
-
+            FileData fileData = FileHashFactory.getFileHashData(backupInfos,
+                    toPath, quick, file, followLink);
             if (fileData != null) {
                 fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
                 fileDataList.add(fileData);

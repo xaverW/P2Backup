@@ -102,8 +102,8 @@ public class CompareBackupDialogController extends P2DialogExtra {
             fileDataList.clear();
 
             if (chkLong.isSelected()) {
-                new ToolCompareHash(this, backupData.getSubPath(),
-                        backupInfos, new AtomicBoolean(true)).compare();
+                new ToolCompareHash(this, backupInfos,
+                        backupData, new AtomicBoolean(true)).compare();
             } else {
                 new ToolCompareHashSql(this, backupInfos,
                         backupData, new AtomicBoolean(true)).compare();

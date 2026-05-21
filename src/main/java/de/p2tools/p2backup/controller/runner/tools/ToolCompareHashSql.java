@@ -32,32 +32,34 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ToolCompareHashSql {
 
     private ProgData progData;
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
+    private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
     private final CompareBackupDialogController compareBackupDialogController;
-    private final BackupData backupData;
+    private final String subPathBackup;
 
     public ToolCompareHashSql(CompareBackupDialogController compareBackupDialogController,
-                              BackupInfo backupInfos, BackupData backupData, AtomicBoolean atomicBoolean) {
+                              BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
         this.compareBackupDialogController = compareBackupDialogController;
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         this.backupData = backupData;
+        this.subPathBackup = backupData.getSubPath();
         this.atomicBoolean = atomicBoolean;
     }
 
     public void compare() {
-        backupInfos.runnerDto.startRunner(backupInfos.getName());
+        backupInfo.runnerDto.startRunner(backupInfo.getName());
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         new Thread(() -> {
-            P2Log.sysLog("Start DirCompareHashSql: " + backupInfos.getName());
+            P2Log.sysLog("Start DirCompareHashSql: " + backupInfo.getName());
             P2Log.sysLog("=======================================");
             P2Log.sysLog("   Backup-Vergleich Start");
             P2Log.sysLog("=======================================");
 
             compareDir();
 
-            backupInfos.runnerDto.stopRunner();
+            backupInfo.runnerDto.stopRunner();
             progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         }).start();
     }
@@ -67,14 +69,16 @@ public class ToolCompareHashSql {
         FileDataList fileListBackup = new FileDataList();
         FileDataList resultList = new FileDataList();
 
-        if (!SqlFileData.readDataFileList(backupInfos, fileListData)) {
-            backupInfos.runnerDto.setStop();
+        if (!SqlFileData.readDataFileList(backupInfo, fileListData)) {
+            backupInfo.runnerDto.setStop();
         }
-        if (!SqlFileData.readBackupFileList(backupInfos, backupData, fileListBackup)) {
-            backupInfos.runnerDto.setStop();
+        if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileListBackup)) {
+            backupInfo.runnerDto.setStop();
         }
+//        FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
+//        FileFactory.cleanFileData(fileListBackup, subPathBackup); // Pfade anpassen
 
-        if (backupInfos.runnerDto.isStop()) {
+        if (backupInfo.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
             fileListData.clear();
             fileListBackup.clear();

@@ -19,6 +19,7 @@ package de.p2tools.p2backup.controller.runner.tools;
 
 import de.p2tools.p2backup.controller.config.PEvents;
 import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
@@ -36,17 +37,18 @@ public class ToolCompareHash {
 
     private ProgData progData;
     private final BackupInfo backupInfos;
+    private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
     private final CompareBackupDialogController compareBackupDialogController;
-    private final String subPathBackup;
+    private final String toPath;
 
 
     public ToolCompareHash(CompareBackupDialogController compareBackupDialogController,
-                           String subPathBackup,
-                           BackupInfo backupInfos, AtomicBoolean atomicBoolean) {
+                           BackupInfo backupInfos, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
         this.compareBackupDialogController = compareBackupDialogController;
-        this.subPathBackup = subPathBackup;
+        this.backupData = backupData;
+        this.toPath = FileFactory.getToPathStr(backupInfos, backupData);
         this.backupInfos = backupInfos;
         this.atomicBoolean = atomicBoolean;
     }
@@ -68,10 +70,11 @@ public class ToolCompareHash {
     }
 
     private void compareDir() {
-        FileDataList fileListData = getFileDataList("");
-        FileDataList fileListBackup = getFileDataList(subPathBackup);
-        fileListBackup.forEach(f -> f.setFilePathStr(FileFactory.unSetCorrPath(f.getFilePathStr())));
-        
+        FileDataList fileListData = getFileDataList();
+        FileDataList fileListBackup = getFileBackupList(toPath);
+        FileFactory.cleanFileData(fileListBackup, toPath); // Pfade anpassen
+        FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
+
         if (backupInfos.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
             fileListData.clear();
@@ -89,34 +92,31 @@ public class ToolCompareHash {
         atomicBoolean.set(false);
     }
 
-    private FileDataList getFileDataList(String subPath) {
+    private FileDataList getFileDataList() {
         FileDataList fileDataList = new FileDataList();
-        if (subPath.isEmpty()) {
-            // dann ist es der Pfad der DATEN
-            AtomicBoolean a = new AtomicBoolean(true);
-            CreateDataHash.create(backupInfos, null, fileDataList,
-                    false, false, a);
-            while (a.get()) {
-                P2ToolsFactory.pause(500);
-            }
-
-        } else {
-            // dann ist ein Backup-Pfad
-            Path toPath = FileFactory.getToPath(backupInfos, subPath);
-            if (toPath != null) {
-                AtomicBoolean a = new AtomicBoolean(true);
-                new DirCreateHash(backupInfos,
-                        toPath.toFile(),
-                        null, fileDataList,
-                        toPath.toString(), // damit der PATH korrigiert wird
-                        false, false,
-                        a).create();
-                while (a.get()) {
-                    P2ToolsFactory.pause(500);
-                }
-            }
+        // dann ist es der Pfad der DATEN
+        AtomicBoolean a = new AtomicBoolean(true);
+        CreateDataHash.create(backupInfos, null, fileDataList,
+                false, false, a);
+        while (a.get()) {
+            P2ToolsFactory.pause(500);
         }
+        return fileDataList;
+    }
 
+    private FileDataList getFileBackupList(String toPath) {
+        FileDataList fileDataList = new FileDataList();
+        // dann ist ein Backup-Pfad
+        AtomicBoolean a = new AtomicBoolean(true);
+        new DirCreateHash(backupInfos,
+                Path.of(toPath).toFile(),
+                null, fileDataList,
+                "",
+                false, false,
+                a).create();
+        while (a.get()) {
+            P2ToolsFactory.pause(500);
+        }
         return fileDataList;
     }
 }

@@ -14,6 +14,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,6 +48,43 @@ public class FileFactory {
         return yesProp.get();
     }
 
+    public static void cleanFileData(List<FileData> fileList, String toPath) {
+        fileList.forEach(f -> f.setFilePathStr(cleanFileData(f, toPath)));
+    }
+
+    public static String cleanFileData(FileData fileData, String toPath) {
+        String path = fileData.getFilePathStr();
+        if (!toPath.isEmpty() && path.startsWith(toPath)) {
+            path = path.replaceFirst(toPath, "");
+        }
+        if (!path.startsWith(File.separator)) {
+            path = File.separator + path;
+        }
+        if (path.endsWith(File.separator)) {
+            path = path.substring(0, path.length() - 1);
+        }
+
+        return path;
+    }
+
+    public static String cleanFileData(String path, String toPath) {
+        if (!toPath.isEmpty() && path.startsWith(toPath)) {
+            path = path.replaceFirst(toPath, "");
+        }
+        if (!path.startsWith(File.separator)) {
+            path = File.separator + path;
+        }
+        if (path.endsWith(File.separator)) {
+            path = path.substring(0, path.length() - 1);
+        }
+
+        return path;
+    }
+
+    public static void setCorrPath(List<FileData> fileList) {
+        fileList.forEach(f -> f.setFilePathStr(setCorrPath(f.getToPathStr())));
+    }
+
     public static String setCorrPath(String path) {
         if (ProgData.getInstance().WINDOWS) {
             // Win macht einfach nur MIST!
@@ -57,6 +95,14 @@ public class FileFactory {
             // /Documents/Newsletters/Summer2018.pdf
             return File.separator + path.replaceFirst("/", ProgConst.WIN_REPLACE_PATH);
         }
+    }
+
+    public static void unSetCorrPath(List<FileData> fileList) {
+        fileList.forEach(FileFactory::unSetCorrPath);
+    }
+
+    public static void unSetCorrPath(FileData fileData) {
+        fileData.setFilePathStr(unSetCorrPath(fileData.getFilePathStr()));
     }
 
     public static String unSetCorrPath(String path) {

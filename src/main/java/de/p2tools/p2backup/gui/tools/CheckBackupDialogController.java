@@ -50,11 +50,11 @@ public class CheckBackupDialogController extends P2DialogExtra {
     private final Button btnStart = new Button("Dateien laden");
     private final TableCheckBackup tableView;
 
-    private final RadioButton rbAll = new RadioButton("Alle");
-    private final RadioButton rbNotOk = new RadioButton("Daten/Backup unterschiedlich");
-    private final RadioButton rbDiff = new RadioButton("Verändert");
-    private final RadioButton rbOnlyData = new RadioButton("Nur in den Daten");
-    private final RadioButton rbOnlyBackup = new RadioButton("Nur im Backup");
+    private final RadioButton rbAll = new RadioButton("Alles");
+    private final RadioButton rbNotOk = new RadioButton("Ist/Soll unterschiedlich");
+    private final RadioButton rbDiff = new RadioButton("Datei verändert");
+    private final RadioButton rbOnlyData = new RadioButton("Nur in der Datenbank, \"Soll\"");
+    private final RadioButton rbOnlyBackup = new RadioButton("Nur in den Dateien, \"Ist\"");
     private final RadioButton rbReadError = new RadioButton("Kann nicht gelesen werden");
 
     public CheckBackupDialogController(BackupInfo backupInfos) {

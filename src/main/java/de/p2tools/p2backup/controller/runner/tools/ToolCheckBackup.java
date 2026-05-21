@@ -70,17 +70,16 @@ public class ToolCheckBackup {
     private void compareDir() {
         // Daten laden
         FileDataList fileListDb = new FileDataList();
-        if (SqlFileData.readFileListFromBackup(backupInfo, backupData, fileListDb)) {
-//            // damit das Vergleichen klappt:
-//            fileListDb.forEach(f -> f.setFilePathStr(f.getBackupFilePathStr()));
-        } else {
+        if (!SqlFileData.readFileListFromBackup(backupInfo, backupData, fileListDb)) {
             backupInfo.runnerDto.setStop();
         }
 
         // Backup laden
-        FileDataList fileListBackup = getFileListBackup(backupData.getSubPath());
-        // damit das Vergleichen mit den Daten klappt:
-        fileListBackup.forEach(f -> f.setFilePathStr(FileFactory.unSetCorrPath(f.getFilePathStr())));
+        String toPath = FileFactory.getToPathStr(backupInfo, backupData);
+        FileDataList fileListBackup = getFileListBackup(toPath);
+        FileFactory.cleanFileData(fileListBackup, toPath); // Pfade anpassen
+        FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
+
 
         if (backupInfo.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
@@ -99,16 +98,15 @@ public class ToolCheckBackup {
         atomicBoolean.set(false);
     }
 
-    private FileDataList getFileListBackup(String subPath) {
+    private FileDataList getFileListBackup(String toPath) {
         FileDataList fileDbList = new FileDataList();
         // dann ist ein Backup-Pfad
-        Path toPath = FileFactory.getToPath(backupInfo, subPath);
         if (toPath != null) {
             AtomicBoolean a = new AtomicBoolean(true);
             new DirCreateHash(backupInfo,
-                    toPath.toFile(),
+                    Path.of(toPath).toFile(),
                     null, fileDbList,
-                    toPath.toString(), // damit der PATH korrigiert wird
+                    "", // zum Eintragen in FileDate, brauchmer aber nicht
                     false, false,
                     a).create();
             while (a.get()) {

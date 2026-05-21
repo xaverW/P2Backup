@@ -61,13 +61,13 @@ public class TableCheckBackup extends PTable<FileData> {
         final TableColumn<FileData, Boolean> diffColumn = new TableColumn<>("Verändert");
         diffColumn.setCellValueFactory(new PropertyValueFactory<>("diff"));
         diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> fromColumn = new TableColumn<>("In den Daten");
+        final TableColumn<FileData, Boolean> fromColumn = new TableColumn<>("Soll");
         fromColumn.setCellValueFactory(new PropertyValueFactory<>("existData"));
         fromColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Im Backup");
+        final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Ist");
         toColumn.setCellValueFactory(new PropertyValueFactory<>("existBackup"));
         toColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Fehler");
+        final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Lesefehler");
         errorColumn.setCellValueFactory(new PropertyValueFactory<>("error"));
         TableFactory.columnFactoryBoolean(errorColumn);
 

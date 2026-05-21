@@ -55,7 +55,7 @@ public class CopyDiffFactory {
                 FileData moveData = f.getCopy();
                 moveData.setFilePathStr(oldFile.getBackupFilePath().toString()); // DATEN-Pfad ist der alte BACKUP-Pfad
                 if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
-                    // aus der Map löschen
+                    // aus der Map löschen, gibts dann nicht mehr
                     oldBackupFileMap.remove(oldFile.getFilePathStr());
                 }
                 moveList.add(moveData);

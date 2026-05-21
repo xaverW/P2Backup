@@ -35,8 +35,8 @@ public class FileHashFactory {
     private FileHashFactory() {
     }
 
-    public static FileData getFileData(BackupInfo backupInfo, boolean quick,
-                                       String toPath, File file, boolean followLink) {
+    public static FileData getFileHashData(BackupInfo backupInfo, String toPath,
+                                           boolean quick, File file, boolean followLink) {
         // liefert ein FileData mit oder ohne wenn (quick) dem Hash
         // toPath wird vom Pfad entfernt, wenn vorhanden -> wird dann der Pfad des ORG-DATEN-File
 
@@ -54,9 +54,9 @@ public class FileHashFactory {
             }
             // P2Date fileDate = new P2Date(file.lastModified());
             // FileTime fileTime = Files.getLastModifiedTime(Path.of(file.toString()));
-            if (!toPath.isEmpty()) {
-                strFile = strFile.replace(toPath, "");
-            }
+//            if (!toPath.isEmpty()) {
+//                strFile = strFile.replace(toPath, "");
+//            }
             return new FileData(strFile, toPath, file.lastModified(), file.length(), hashString, link);
 
         } catch (Exception ex) {
