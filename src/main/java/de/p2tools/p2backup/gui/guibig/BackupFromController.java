@@ -69,7 +69,11 @@ public class BackupFromController extends VBox {
 
     private void init() {
         progData.backupInfoProperty.addListener((u, o, n) -> {
+            vBoxContent.disableProperty().unbind();
             vBoxContent.setDisable(progData.backupInfoProperty.get() == null);
+            if (progData.backupInfoProperty.get() != null) {
+                vBoxContent.disableProperty().bind(progData.backupInfoProperty.get().runnerDto.runningProperty());
+            }
         });
 
         vBoxContent.getChildren().addAll(BackupGuiFactory.getInfoPane("Was soll gesichert werden?"), vBoxTableAll);
