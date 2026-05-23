@@ -29,7 +29,7 @@ public class BackupPathList extends P2DataSample<String> {
 
     public static final String TAG = "BackupPathList";
 
-    private ObservableList<String> path = FXCollections.observableArrayList();
+    private ObservableList<String> pathList = FXCollections.observableArrayList();
 
     public BackupPathList() {
     }
@@ -37,7 +37,7 @@ public class BackupPathList extends P2DataSample<String> {
     @Override
     public Config[] getConfigsArr() {
         ArrayList<Config> configList = new ArrayList<>();
-        configList.add(new ConfigStringList("path", path));
+        configList.add(new ConfigStringList("path", pathList));
         return configList.toArray(new Config[]{});
     }
 
@@ -46,11 +46,11 @@ public class BackupPathList extends P2DataSample<String> {
         return TAG;
     }
 
-    public ObservableList<String> getPath() {
-        return path;
+    public ObservableList<String> getPathList() {
+        return pathList;
     }
 
-    public void setPath(ObservableList<String> path) {
-        this.path = path;
+    public void setPathList(ObservableList<String> pathList) {
+        this.pathList = pathList;
     }
 }

@@ -49,8 +49,6 @@ public class ProgData {
     public static boolean startSmall = false; // Minimiert starten
     public P2EventHandler pEventHandler;
     public ObjectProperty<P2CssFactory.CSS> cssProp = new SimpleObjectProperty<>(P2CssFactory.CSS.CSS_1);
-    public static String fromPath = ""; // gemerkte letzte FROM
-    public static String toPath = ""; // gemerkte letzte To
 
     public static String configDir = ""; // Verzeichnis zum Speichern der Programmeinstellungen
     public MTShortcut mtShortcut; // verwendete Shortcuts
@@ -68,7 +66,7 @@ public class ProgData {
     // data
     public DbDataList dbDataList;
     public BackupInfoList backupInfoList;
-    public BackupPathList usedToPathList; // ist die Liste der bereits verwendeten ToPaths, zur Auwahl
+    public BackupPathList usedToPathList; // ist die Liste der bereits verwendeten ToPaths, zur Auswahl
     public IntegerProperty programState = new SimpleIntegerProperty(ProgConst.PROGRAM_STATE_BACKUP);
     public final ObjectProperty<BackupInfo> backupInfoProperty = new SimpleObjectProperty<>(null);
     public final boolean WINDOWS;

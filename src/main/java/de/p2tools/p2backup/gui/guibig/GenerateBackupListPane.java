@@ -280,8 +280,6 @@ public class GenerateBackupListPane extends VBox {
     private HBox addProgress(BackupInfo backupInfo) {
 
         Button btnStop = new Button();
-        btnStop.setMinHeight(18);
-        btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 

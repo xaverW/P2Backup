@@ -51,7 +51,7 @@ public class BackupToController extends VBox {
         getChildren().addAll(new TitleBox());
         getChildren().add(vBoxContent);
 
-        cboPath = new P2CboButtonListString(progData.usedToPathList.getPath(), filter);
+        cboPath = new P2CboButtonListString(progData.usedToPathList.getPathList(), filter);
         init();
         initList();
     }
@@ -78,9 +78,17 @@ public class BackupToController extends VBox {
         btnTo.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
         btnTo.setTooltip(new Tooltip("Den Ordner für das Backup auswählen"));
         btnTo.setOnAction(event -> {
-            String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgData.toPath);
-            ProgData.fromPath = path;
-            filter.set(path);
+            String start;
+            if (filter.get().isEmpty()) {
+                start = ProgConfig.SYSTEM_TO_PATH.get();
+            } else {
+                start = filter.get();
+            }
+            String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, start);
+            if (!path.isEmpty()) {
+                ProgConfig.SYSTEM_TO_PATH.set(path);
+                filter.set(path);
+            }
         });
 
         Button btnHlpTo = PIconFactory.getHelpButton("Ordner zum Speichern des Backups",

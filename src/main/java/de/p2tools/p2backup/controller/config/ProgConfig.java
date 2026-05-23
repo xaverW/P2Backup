@@ -141,6 +141,8 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty TIP_OF_DAY_WAS_SHOWN = addStrProp("tip-of-day-was-shown");//bereits angezeigte Tips
     public static StringProperty TIP_OF_DAY_DATE = addStrProp("tip-of-day-date"); //Datum des letzten Tips
     public static StringProperty SYSTEM_DOWNLOAD_DIR_NEW_VERSION = addStrProp("system-download-dir-new-version", "");
+    public static StringProperty SYSTEM_FROM_PATH = addStrProp("system-from-path", ""); // gemerkter Pfad
+    public static StringProperty SYSTEM_TO_PATH = addStrProp("system-to-path", ""); // gemerkter Pfad
 
 
     // DialogHowHelp

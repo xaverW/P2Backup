@@ -1,5 +1,6 @@
 package de.p2tools.p2backup.controller;
 
+import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoList;
@@ -48,7 +49,7 @@ public class LoadFactory {
     }
 
     public static void loadBackupInfo(BackupInfo backupInfo) {
-        String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgData.toPath);
+        String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_TO_PATH.get());
         if (path.isEmpty()) {
             return;
         }

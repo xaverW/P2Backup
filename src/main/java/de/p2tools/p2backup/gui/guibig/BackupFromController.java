@@ -95,9 +95,9 @@ public class BackupFromController extends VBox {
         btnPath.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
         btnPath.setTooltip(new Tooltip("Den Ordner zum Sichern auswählen"));
         btnPath.setOnAction(event -> {
-            String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgData.fromPath);
-            ProgData.fromPath = path;
+            String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_FROM_PATH.get());
             if (!path.isEmpty()) {
+                ProgConfig.SYSTEM_FROM_PATH.set(path);
                 backupInfos.getPathListFrom().add(new PathData(path));
             }
         });
