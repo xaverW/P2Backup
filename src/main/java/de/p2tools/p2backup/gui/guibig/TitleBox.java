@@ -86,7 +86,6 @@ public class TitleBox extends VBox {
 
     private Node getProgress() {
         final P2ProgressBar p2ProgressBar = new P2ProgressBar();
-        p2ProgressBar.getText().setText("Chef");
         setProgressBarVisible(p2ProgressBar);
         progData.backupInfoProperty.addListener((u, o, n) -> {
             setProgressBarVisible(p2ProgressBar);
@@ -97,12 +96,14 @@ public class TitleBox extends VBox {
     private void setProgressBarVisible(P2ProgressBar p2ProgressBar) {
         p2ProgressBar.getProgressBar().progressProperty().unbind();
         p2ProgressBar.visibleProperty().unbind();
+        p2ProgressBar.getLblText().textProperty().unbind();
 
         BackupInfo backupInfo = progData.backupInfoProperty.get();
         p2ProgressBar.setVisible(backupInfo != null);
         if (backupInfo != null) {
             p2ProgressBar.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
             p2ProgressBar.getProgressBar().progressProperty().bind(backupInfo.runnerDto.progressProperty());
+            p2ProgressBar.getLblText().textProperty().bind(backupInfo.runnerDto.textProperty());
         }
     }
 }

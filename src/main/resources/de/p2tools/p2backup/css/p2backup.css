@@ -19,6 +19,15 @@
     -fx-font-weight: bold;
 }
 
+/* Label in ProgressBar */
+.lblProgress {
+    -fx-background-color: transparent;
+    -fx-padding: 5 15 5 15;
+    -fx-font-weight: bold;
+    /*-fx-font-size: 1.1em;*/
+    -fx-text-fill: #4d4d4d;
+ }
+
 /* Button BackupList: anlegen */
 .btnAdjust {
     -fx-padding: 1 2 1 2;

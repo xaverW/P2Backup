@@ -94,7 +94,7 @@ public class BackupRunner {
 
             // ===============================
             // fromHash erstellen und toPath eintragen
-            this.backupInfos.runnerDto.setRunnerText("Dateien einlesen:");
+            this.backupInfos.runnerDto.setRunnerText("Dateien einlesen");
             if (!BackupRunnerFactory.makeFromHash(this.backupInfos)) {
                 quitt(false);
                 return;
@@ -106,7 +106,7 @@ public class BackupRunner {
 
             // ===============================
             // Dateien kopieren
-            this.backupInfos.runnerDto.setRunnerText("Dateien kopieren:");
+            this.backupInfos.runnerDto.setRunnerText("Dateien kopieren");
             if (!BackupRunnerFactory.copyFilesToBackup(this.backupInfos)) {
                 quitt(false);
                 return;

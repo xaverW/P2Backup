@@ -11,7 +11,6 @@ import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.backuprunner.BackupRunner;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.alert.P2Alert;
-import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.p2event.P2Listener;
@@ -22,7 +21,6 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -279,31 +277,33 @@ public class GenerateBackupListPane extends VBox {
         }
     }
 
-    private HBox addProgress(BackupInfo backupInfos) {
-        final ProgressBar progressBar = new ProgressBar();
-        progressBar.progressProperty().bind(backupInfos.runnerDto.progressProperty());
+    private HBox addProgress(BackupInfo backupInfo) {
+        final P2ProgressBar p2ProgressBar = new P2ProgressBar();
+        p2ProgressBar.getProgressBar().progressProperty().bind(backupInfo.runnerDto.progressProperty());
+        p2ProgressBar.getLblText().textProperty().bind(backupInfo.runnerDto.fileNameProperty());
 
         Button btnStop = new Button();
         btnStop.setMinHeight(18);
         btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
-        btnStop.setOnAction(a -> backupInfos.runnerDto.setStop());
+        btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         Label lblText = new Label();
         lblText.setMaxWidth(Double.MAX_VALUE);
-        lblText.textProperty().bind(backupInfos.runnerDto.textProperty());
+        lblText.textProperty().bind(backupInfo.runnerDto.textProperty());
 
         Label lblFileName = new Label();
         lblFileName.setMaxWidth(Double.MAX_VALUE);
-        lblFileName.textProperty().bind(backupInfos.runnerDto.fileNameProperty());
+        lblFileName.textProperty().bind(backupInfo.runnerDto.fileNameProperty());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxProgress.getChildren().addAll(lblText, lblFileName, P2GuiTools.getHBoxGrower(), progressBar, btnStop);
-        HBox.setHgrow(lblFileName, Priority.ALWAYS);
+        hBoxProgress.getChildren().addAll(lblText/*, lblFileName*//*, P2GuiTools.getHBoxGrower()*/, p2ProgressBar, btnStop);
+        HBox.setHgrow(p2ProgressBar, Priority.ALWAYS);
         hBoxProgress.setAlignment(Pos.CENTER);
 
-        hBoxProgress.visibleProperty().bind(backupInfos.runnerDto.runningProperty());
-        hBoxProgress.managedProperty().bind(backupInfos.runnerDto.runningProperty());
+
+        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
+        hBoxProgress.managedProperty().bind(backupInfo.runnerDto.runningProperty());
         return hBoxProgress;
     }
 }

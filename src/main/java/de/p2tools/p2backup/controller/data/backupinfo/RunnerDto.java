@@ -19,15 +19,15 @@ public class RunnerDto {
     private final IntegerProperty done = new SimpleIntegerProperty(0);
     private final DoubleProperty progress = new SimpleDoubleProperty(0);
     private final BooleanProperty running = new SimpleBooleanProperty(false); // wird im GUI ausgewertet
-    private final StringProperty text = new SimpleStringProperty("");
-    private final BooleanProperty goAlwaysOverError = new SimpleBooleanProperty(false);
-    private final BooleanProperty ask = new SimpleBooleanProperty(false);
+    private final BooleanProperty goAlwaysOverError = new SimpleBooleanProperty(false); // Lesefehler überspringen
+    private final BooleanProperty ask = new SimpleBooleanProperty(false); // bei Lesefehler fragen
 
     // Infos die angezeigt werden beim Lauf
     private final StringProperty fileName = new SimpleStringProperty(""); // ist der Name der im Progress-Info angezeigt wird
     private final IntegerProperty runnerMax = new SimpleIntegerProperty(0); // Anzahl Dateien
     private final IntegerProperty runnerDone = new SimpleIntegerProperty(0); // schon fertig
-    private final StringProperty runnerText = new SimpleStringProperty("");
+    private final StringProperty runnerText = new SimpleStringProperty(""); // Text, was Runner macht
+    private final StringProperty text = new SimpleStringProperty(""); // ist der RunnerText im GUI
     private final StringProperty runnerFileName = new SimpleStringProperty(""); // aktuelle Datei (zum Erstellen des Hash)
 
     // backupPath   /tmp/usb/backup
