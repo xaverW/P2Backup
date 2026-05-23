@@ -62,9 +62,9 @@ public class ToolListBlockFile {
             // wenn abgebrochen, löschen
             foundFileList.clear();
             blockedFileList.clear();
-        } else {
-            blockedFilesDialogController.setResult();
         }
+        
+        blockedFilesDialogController.setResult();
         atomicBoolean.set(false);
     }
 }

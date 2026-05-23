@@ -278,9 +278,6 @@ public class GenerateBackupListPane extends VBox {
     }
 
     private HBox addProgress(BackupInfo backupInfo) {
-        final P2ProgressBar p2ProgressBar = new P2ProgressBar();
-        p2ProgressBar.getProgressBar().progressProperty().bind(backupInfo.runnerDto.progressProperty());
-        p2ProgressBar.getLblText().textProperty().bind(backupInfo.runnerDto.fileNameProperty());
 
         Button btnStop = new Button();
         btnStop.setMinHeight(18);
@@ -296,11 +293,11 @@ public class GenerateBackupListPane extends VBox {
         lblFileName.setMaxWidth(Double.MAX_VALUE);
         lblFileName.textProperty().bind(backupInfo.runnerDto.fileNameProperty());
 
+        final PProgressBar pProgressBar = new PProgressBar(true, true);
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxProgress.getChildren().addAll(lblText/*, lblFileName*//*, P2GuiTools.getHBoxGrower()*/, p2ProgressBar, btnStop);
-        HBox.setHgrow(p2ProgressBar, Priority.ALWAYS);
+        hBoxProgress.getChildren().addAll(lblText/*, lblFileName*//*, P2GuiTools.getHBoxGrower()*/, pProgressBar, btnStop);
+        HBox.setHgrow(pProgressBar, Priority.ALWAYS);
         hBoxProgress.setAlignment(Pos.CENTER);
-
 
         hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
         hBoxProgress.managedProperty().bind(backupInfo.runnerDto.runningProperty());

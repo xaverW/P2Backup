@@ -38,31 +38,53 @@ public class CopyFileErrorDialogController extends P2DialogExtra {
 
     private final Button btnYes = new Button("Ja");
     private final Button btnNo = new Button("Nein");
-    private final CheckBox chkAlways = new CheckBox("Auch jede weitere Datei");
+    private final CheckBox chkAlways;
     private final BackupInfo backupInfos;
     private final String file;
     private final BooleanProperty yesProp;
+    private final boolean isFile;
 
-
-    public CopyFileErrorDialogController(BackupInfo backupInfos, String file, BooleanProperty yesProp) {
+    public CopyFileErrorDialogController(BackupInfo backupInfos, String file, BooleanProperty yesProp,
+                                         boolean isFile) {
         super(ProgData.getInstance().primaryStage, null, "Datei kopieren",
                 true, false, false, DECO.NO_BORDER);
 
         this.backupInfos = backupInfos;
         this.file = file;
         this.yesProp = yesProp;
+        this.isFile = isFile;
+        if (isFile) {
+            chkAlways = new CheckBox("Auch jede weitere Datei?");
+        } else {
+            chkAlways = new CheckBox("Auch jeder weitere Pfad?");
+        }
         init(true);
     }
 
     @Override
     public void make() {
-        Button btnHelp = PIconFactory.getHelpButton(getStage(), "Datei kopieren",
-                "Die Datei\n\n" +
-                        file + "\n\n kann nicht kopiert werden. Es kann das ganze Backup " +
-                        "abgebrochen werden oder die Datei wird übersprungen. Hier ist möglich auszuwählen " +
-                        "ob nur die eine Datei übersprungen wird oder auch alle " +
-                        "noch folgenden Dateien.");
-        Text text = P2Text.getTextBold("Datei kann nicht kopiert werden:");
+        Button btnHelp;
+        if (isFile) {
+            btnHelp = PIconFactory.getHelpButton(getStage(), "Datei kopieren",
+                    "Die Datei\n\n" +
+                            file + "\n\n kann nicht kopiert werden. Es kann das ganze Backup " +
+                            "abgebrochen werden oder die Datei wird übersprungen. Hier ist möglich auszuwählen " +
+                            "ob nur die eine Datei übersprungen wird oder auch alle " +
+                            "noch folgenden Dateien.");
+        } else {
+            btnHelp = PIconFactory.getHelpButton(getStage(), "Pfad lesen",
+                    "Der Pfad\n\n" +
+                            file + "\n\n kann nicht gelesen werden. Es kann das " +
+                            "abgebrochen werden oder der Pfad wird übersprungen. Hier ist möglich auszuwählen " +
+                            "ob nur die ein Pfad übersprungen wird oder auch alle " +
+                            "noch folgenden Pfade.");
+        }
+        Text text;
+        if (isFile) {
+            text = P2Text.getTextBold("Datei kann nicht kopiert werden:");
+        } else {
+            text = P2Text.getTextBold("Pfad kann nicht gelesen werden:");
+        }
         VBox vBoxFile = new VBox(5);
         vBoxFile.setAlignment(Pos.CENTER_LEFT);
         vBoxFile.getChildren().addAll(text, new Label(file));
@@ -76,7 +98,12 @@ public class CopyFileErrorDialogController extends P2DialogExtra {
         hBoxBtn.setAlignment(Pos.CENTER_RIGHT);
         hBoxBtn.getChildren().addAll(chkAlways, P2GuiTools.getHBoxGrower(),
                 btnHelp, btnNo, btnYes);
-        Label lblName = P2Text.getLblTextBold("Soll die Datei übersprungen werden?");
+        Label lblName;
+        if (isFile) {
+            lblName = P2Text.getLblTextBold("Soll die Datei übersprungen werden?");
+        } else {
+            lblName = P2Text.getLblTextBold("Soll der Pfad übersprungen werden?");
+        }
 
         getVBoxCont().getChildren().addAll(hBox, P2GuiTools.getVDistance(50), lblName, hBoxBtn);
 

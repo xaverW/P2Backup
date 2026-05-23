@@ -17,6 +17,7 @@
 package de.p2tools.p2backup.gui.guibig;
 
 import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.gui.tools.*;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -32,6 +33,9 @@ public class BackupToolController extends VBox {
 
     private final ProgData progData;
     private final VBox vBoxContent = new VBox();
+    Button btnBlocked = new Button("Geblockte Dateien Suchen");
+    Label lblBlocked = new Label("Dient zur Anzeige, welche Dateien ins Backup kopiert werden und " +
+            "welche nicht im Backup landen.");
 
     public BackupToolController() {
         progData = ProgData.getInstance();
@@ -46,10 +50,18 @@ public class BackupToolController extends VBox {
 
     private void init() {
         progData.backupInfoProperty.addListener((u, o, n) -> {
+            BackupInfo backupInfo = progData.backupInfoProperty.get();
             vBoxContent.disableProperty().unbind();
-            vBoxContent.setDisable(progData.backupInfoProperty.get() == null);
-            if (progData.backupInfoProperty.get() != null) {
-                vBoxContent.disableProperty().bind(progData.backupInfoProperty.get().runnerDto.runningProperty());
+            vBoxContent.setDisable(backupInfo == null);
+            if (backupInfo != null) {
+                vBoxContent.disableProperty().bind(backupInfo.runnerDto.runningProperty());
+                btnBlocked.setVisible(!backupInfo.getPathListExcludeDir().isEmpty() ||
+                        !backupInfo.getPathListExcludeFile().isEmpty());
+                btnBlocked.managedProperty().bind(btnBlocked.visibleProperty());
+                
+                lblBlocked.setVisible(!backupInfo.getPathListExcludeDir().isEmpty() ||
+                        !backupInfo.getPathListExcludeFile().isEmpty());
+                lblBlocked.managedProperty().bind(lblBlocked.visibleProperty());
             }
         });
 
@@ -112,17 +124,15 @@ public class BackupToolController extends VBox {
 
 
         // Geblockt
-        Button btnBlocked = new Button("Geblockte Dateien Suchen");
         btnBlocked.setMaxWidth(Double.MAX_VALUE);
         btnBlocked.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
                 new BlockedFilesDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
-        Label lblBlocked = new Label("Dient zur Anzeige, welche Dateien ins Backup kopiert werden und " +
-                "welche nicht im Backup landen.");
         lblBlocked.setWrapText(true);
         lblBlocked.getStyleClass().add("lblToolInfo");
+
 
         final GridPane gridPane = new GridPane();
         gridPane.setHgap(15);

@@ -24,6 +24,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolSearchInBackup;
+import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -35,7 +36,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -93,6 +93,8 @@ public class SearchInBackupDialogController extends P2DialogExtra {
                 lblPath.setText("Pfad: " + backupDataProp.get().getToPathStr(backupInfosProp.get()));
                 String subPath = backupDataProp.get().getSubPath();
                 if (!subPath.isEmpty()) {
+                    backupInfosProp.get().runnerDto.initRunner();
+                    backupInfosProp.get().runnerDto.setRunnerText("Backup laden");
                     new ToolSearchInBackup(this,
                             backupInfosProp.get(), backupDataProp.get(), new AtomicBoolean(true)).search();
                 }
@@ -110,9 +112,6 @@ public class SearchInBackupDialogController extends P2DialogExtra {
     }
 
     private HBox addProgress() {
-        final ProgressBar progressBar = new ProgressBar();
-        progressBar.progressProperty().bind(backupInfosProp.get().runnerDto.progressProperty());
-
         Button btnStop = new Button();
         btnStop.setMinHeight(18);
         btnStop.setMaxHeight(18);
@@ -121,7 +120,7 @@ public class SearchInBackupDialogController extends P2DialogExtra {
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
-        hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), progressBar, btnStop);
+        hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), new PProgressBar(true, true), btnStop);
         hBoxProgress.setAlignment(Pos.CENTER);
 
         hBoxProgress.visibleProperty().bind(backupInfosProp.get().runnerDto.runningProperty());

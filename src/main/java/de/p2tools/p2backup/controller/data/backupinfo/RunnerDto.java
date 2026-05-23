@@ -20,7 +20,7 @@ public class RunnerDto {
     private final DoubleProperty progress = new SimpleDoubleProperty(0);
     private final BooleanProperty running = new SimpleBooleanProperty(false); // wird im GUI ausgewertet
     private final BooleanProperty goAlwaysOverError = new SimpleBooleanProperty(false); // Lesefehler überspringen
-    private final BooleanProperty ask = new SimpleBooleanProperty(false); // bei Lesefehler fragen
+    private final BooleanProperty ask = new SimpleBooleanProperty(true); // bei Lesefehler fragen
 
     // Infos die angezeigt werden beim Lauf
     private final StringProperty fileName = new SimpleStringProperty(""); // ist der Name der im Progress-Info angezeigt wird
@@ -75,6 +75,15 @@ public class RunnerDto {
         });
     }
 
+    public void initRunner() {
+        getDataFileList().clear();
+        getDirFileList().clear();
+
+        setDataSubPath("");
+        setToPath(null);
+        askProperty().set(true);
+        goAlwaysOverErrorProperty().set(false);
+    }
 
     //===============
     public BackupData getBackupData() {

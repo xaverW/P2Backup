@@ -9,7 +9,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -58,7 +57,7 @@ public class TitleBox extends VBox {
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setSpacing(P2LibConst.SPACING_HBOX);
         hBox.getChildren().addAll(new Label("Backup:"), cboBackup, lblTop,
-                P2GuiTools.getHBoxGrower(), getProgress());
+                P2GuiTools.getHBoxGrower(), new PProgressBar());
         getChildren().addAll(hBox, P2GuiTools.getHDistance(5));
     }
 
@@ -81,29 +80,6 @@ public class TitleBox extends VBox {
             nameProp.bind(backupInfos.nameProperty());
             lblTop.textProperty().bind(backupInfos.nameProperty());
             cboBackup.getSelectionModel().select(backupInfos);
-        }
-    }
-
-    private Node getProgress() {
-        final P2ProgressBar p2ProgressBar = new P2ProgressBar();
-        setProgressBarVisible(p2ProgressBar);
-        progData.backupInfoProperty.addListener((u, o, n) -> {
-            setProgressBarVisible(p2ProgressBar);
-        });
-        return p2ProgressBar;
-    }
-
-    private void setProgressBarVisible(P2ProgressBar p2ProgressBar) {
-        p2ProgressBar.getProgressBar().progressProperty().unbind();
-        p2ProgressBar.visibleProperty().unbind();
-        p2ProgressBar.getLblText().textProperty().unbind();
-
-        BackupInfo backupInfo = progData.backupInfoProperty.get();
-        p2ProgressBar.setVisible(backupInfo != null);
-        if (backupInfo != null) {
-            p2ProgressBar.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
-            p2ProgressBar.getProgressBar().progressProperty().bind(backupInfo.runnerDto.progressProperty());
-            p2ProgressBar.getLblText().textProperty().bind(backupInfo.runnerDto.textProperty());
         }
     }
 }

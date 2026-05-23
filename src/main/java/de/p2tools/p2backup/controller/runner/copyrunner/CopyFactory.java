@@ -96,11 +96,11 @@ public class CopyFactory {
 
             try {
                 // und jetzt den toData Pfad wieder setzen
-                backupInfo.runnerDto.setRunnerFileName(fromPath.toString());
+                backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
 //                Files.copy(fromPath, toFilePath, StandardCopyOption.COPY_ATTRIBUTES);
                 FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
             } catch (Exception ex) {
-                if (!FileFactory.goOnError(backupInfo, fromPath.toString())) {
+                if (!FileFactory.goOnError(backupInfo, fromPath.toString(), true)) {
                     return false;
                 }
             }
@@ -125,7 +125,7 @@ public class CopyFactory {
             try {
                 FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
             } catch (IOException e) {
-                if (!FileFactory.goOnError(backupInfo, fromFile.toString())) {
+                if (!FileFactory.goOnError(backupInfo, fromFile.toString(), true)) {
                     return false;
                 }
             }
@@ -150,7 +150,7 @@ public class CopyFactory {
                 FileUtils.createParentDirectories(toFile.toFile());
                 Files.createLink(toFile, fromFile);
             } catch (Exception ex) {
-                if (!FileFactory.goOnError(backupInfo, fromFile.toString())) {
+                if (!FileFactory.goOnError(backupInfo, fromFile.toString(), true)) {
                     return false;
                 }
             }

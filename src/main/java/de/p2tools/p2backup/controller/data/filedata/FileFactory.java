@@ -29,7 +29,7 @@ public class FileFactory {
     private FileFactory() {
     }
 
-    public static boolean goOnError(BackupInfo backupInfos, String file) {
+    public static boolean goOnError(BackupInfo backupInfos, String file, boolean isFile) {
         if (backupInfos.runnerDto.getGoAlwaysOverError()) {
             return true;
         }
@@ -38,7 +38,7 @@ public class FileFactory {
         AtomicBoolean atomicBoolean = new AtomicBoolean(true);
         Platform.runLater(() -> {
             // wird im GUI angezeigt
-            new CopyFileErrorDialogController(backupInfos, file, yesProp);
+            new CopyFileErrorDialogController(backupInfos, file, yesProp, isFile);
             atomicBoolean.set(false);
         });
         while (atomicBoolean.get()) {

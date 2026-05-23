@@ -39,7 +39,7 @@ import javafx.scene.layout.VBox;
 
 public class BackupInfoDialogController extends P2DialogExtra {
 
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final ProgData progData;
     private final VBox vBoxGrid = new VBox();
 
@@ -48,7 +48,7 @@ public class BackupInfoDialogController extends P2DialogExtra {
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
-        this.backupInfos = backupInfo;
+        this.backupInfo = backupInfo;
         init(true);
     }
 
@@ -65,8 +65,9 @@ public class BackupInfoDialogController extends P2DialogExtra {
     }
 
     private void search() {
+        backupInfo.runnerDto.setRunnerText("Infos laden");
         new ToolCountFiles(progData, this,
-                backupInfos, false, true).count();
+                backupInfo, false, true).count();
     }
 
     private void setInfo() {
@@ -90,13 +91,13 @@ public class BackupInfoDialogController extends P2DialogExtra {
         // zuerst die DATEN
         gridPane.add(new Label(""), 0, ++row);
         gridPane.add(P2Text.getLblTextBold("Daten"), 0, ++row);
-        if (backupInfos.getPathListFrom().size() > 1) {
+        if (backupInfo.getPathListFrom().size() > 1) {
             gridPane.add(new Label("Summe aller Dateien:"), 0, ++row);
         }
-        gridPane.add(new Label(backupInfos.getCount() + ""), 1, row);
-        gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupInfos.getSize(), true)), 2, row);
+        gridPane.add(new Label(backupInfo.getCount() + ""), 1, row);
+        gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 2, row);
 
-        for (PathData p : backupInfos.getPathListFrom()) {
+        for (PathData p : backupInfo.getPathListFrom()) {
             gridPane.add(new Label(p.getPath()), 0, ++row);
             gridPane.add(new Label(p.getCount() + ""), 1, row);
             gridPane.add(new Label(P2SizeTools.humanReadableByteCount(p.getSize(), true)), 2, row);
@@ -106,7 +107,7 @@ public class BackupInfoDialogController extends P2DialogExtra {
         // Dann die angelegten Backups
         gridPane.add(new Label(""), 0, ++row);
         gridPane.add(P2Text.getLblTextBold("Backups:"), 0, ++row);
-        for (BackupData backupData : backupInfos.getBackupDataList()) {
+        for (BackupData backupData : backupInfo.getBackupDataList()) {
             gridPane.add(new Label(backupData.getSubPath()), 0, ++row);
             gridPane.add(new Label(backupData.getCount() + ""), 1, row);
             gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupData.getSize(), true)), 2, row);
@@ -120,7 +121,7 @@ public class BackupInfoDialogController extends P2DialogExtra {
         btnSearch.setOnAction(a -> search());
 
         HBox hBoxBtn = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfos.getName()), P2GuiTools.getHBoxGrower(), btnSearch);
+        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfo.getName()), P2GuiTools.getHBoxGrower(), btnSearch);
         hBoxBtn.setAlignment(Pos.CENTER_RIGHT);
         hBoxBtn.getStyleClass().add("infoBackupDialogTop");
         getVBoxCont().getChildren().addAll(hBoxBtn);

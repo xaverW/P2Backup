@@ -35,13 +35,7 @@ public class BackupRunnerFactory {
     }
 
     public static boolean collectInfos(BackupInfo backupInfos) {
-        backupInfos.runnerDto.getDataFileList().clear();
-        backupInfos.runnerDto.getDirFileList().clear();
-
-        backupInfos.runnerDto.setDataSubPath("");
-        backupInfos.runnerDto.setToPath(null);
-        backupInfos.runnerDto.askProperty().set(true);
-        backupInfos.runnerDto.goAlwaysOverErrorProperty().set(false);
+        backupInfos.runnerDto.initRunner();
 
         if (!checkName(backupInfos)) {
             return false;

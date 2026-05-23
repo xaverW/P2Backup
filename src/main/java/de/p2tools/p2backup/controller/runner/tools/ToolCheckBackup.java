@@ -69,18 +69,21 @@ public class ToolCheckBackup {
 
     private void compareDir() {
         // Daten laden
+        backupInfo.runnerDto.setRunnerText("Gespeicherte Backup-Dateien laden");
         FileDataList fileListDb = new FileDataList();
         if (!SqlFileData.readFileListFromBackup(backupInfo, backupData, fileListDb)) {
             backupInfo.runnerDto.setStop();
         }
 
         // Backup laden
+        backupInfo.runnerDto.setRunnerText("Backup neu einlesen");
         String toPath = FileFactory.getToPathStr(backupInfo, backupData);
         FileDataList fileListBackup = getFileListBackup(toPath);
         FileFactory.cleanFileData(fileListBackup, toPath); // Pfade anpassen
         FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
 
 
+        FileDataList resultList = new FileDataList();
         if (backupInfo.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
             fileListDb.clear();
@@ -89,12 +92,11 @@ public class ToolCheckBackup {
         } else {
             // ==============
             // und jetzt den Hash vergleichen
-            FileDataList resultList = new FileDataList();
+            backupInfo.runnerDto.setRunnerText("Vergleichen");
             CompareFactory.compare(checkBackupDialogController.getStage(),
                     fileListDb, fileListBackup, resultList, false);
-            checkBackupDialogController.setResult(resultList);
         }
-
+        checkBackupDialogController.setResult(resultList);
         atomicBoolean.set(false);
     }
 

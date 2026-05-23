@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ToolCompareHash {
 
     private ProgData progData;
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
     private final CompareBackupDialogController compareBackupDialogController;
@@ -44,38 +44,41 @@ public class ToolCompareHash {
 
 
     public ToolCompareHash(CompareBackupDialogController compareBackupDialogController,
-                           BackupInfo backupInfos, BackupData backupData, AtomicBoolean atomicBoolean) {
+                           BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
         this.compareBackupDialogController = compareBackupDialogController;
         this.backupData = backupData;
-        this.toPath = FileFactory.getToPathStr(backupInfos, backupData);
-        this.backupInfos = backupInfos;
+        this.toPath = FileFactory.getToPathStr(backupInfo, backupData);
+        this.backupInfo = backupInfo;
         this.atomicBoolean = atomicBoolean;
     }
 
     public void compare() {
-        backupInfos.runnerDto.startRunner(backupInfos.getName());
+        backupInfo.runnerDto.startRunner(backupInfo.getName());
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         new Thread(() -> {
-            P2Log.sysLog("Start DirCompareHash: " + backupInfos.getName());
+            P2Log.sysLog("Start DirCompareHash: " + backupInfo.getName());
             P2Log.sysLog("=======================================");
             P2Log.sysLog("   Backup-Vergleich Start");
             P2Log.sysLog("=======================================");
 
             compareDir();
 
-            backupInfos.runnerDto.stopRunner();
+            backupInfo.runnerDto.stopRunner();
             progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         }).start();
     }
 
     private void compareDir() {
+        backupInfo.runnerDto.setRunnerText("Daten laden");
         FileDataList fileListData = getFileDataList();
+        backupInfo.runnerDto.setRunnerText("Backup laden");
         FileDataList fileListBackup = getFileBackupList(toPath);
         FileFactory.cleanFileData(fileListBackup, toPath); // Pfade anpassen
         FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
 
-        if (backupInfos.runnerDto.isStop()) {
+        FileDataList resultList = new FileDataList();
+        if (backupInfo.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
             fileListData.clear();
             fileListBackup.clear();
@@ -83,12 +86,11 @@ public class ToolCompareHash {
         } else {
             // ==============
             // und jetzt mit dem Hash vergleichen
-            FileDataList resultList = new FileDataList();
             CompareFactory.compare(compareBackupDialogController.getStage(),
                     fileListData, fileListBackup, resultList, true);
-            compareBackupDialogController.setResult(resultList);
         }
 
+        compareBackupDialogController.setResult(resultList);
         atomicBoolean.set(false);
     }
 
@@ -96,7 +98,7 @@ public class ToolCompareHash {
         FileDataList fileDataList = new FileDataList();
         // dann ist es der Pfad der DATEN
         AtomicBoolean a = new AtomicBoolean(true);
-        CreateDataHash.create(backupInfos, null, fileDataList,
+        CreateDataHash.create(backupInfo, null, fileDataList,
                 false, false, a);
         while (a.get()) {
             P2ToolsFactory.pause(500);
@@ -108,7 +110,7 @@ public class ToolCompareHash {
         FileDataList fileDataList = new FileDataList();
         // dann ist ein Backup-Pfad
         AtomicBoolean a = new AtomicBoolean(true);
-        new DirCreateHash(backupInfos,
+        new DirCreateHash(backupInfo,
                 Path.of(toPath).toFile(),
                 null, fileDataList,
                 "",

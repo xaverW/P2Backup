@@ -22,6 +22,7 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolListBlockFile;
+import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableBlockedFile;
 import de.p2tools.p2lib.P2LibConst;
@@ -29,7 +30,6 @@ import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -115,6 +115,8 @@ public class BlockedFilesDialogController extends P2DialogExtra {
         btnStart.setOnAction(a -> {
             foundFileList.clear();
             blockedFileList.clear();
+            backupInfo.runnerDto.initRunner();
+            backupInfo.runnerDto.setRunnerText("Geblockte Dateien suchen");
             new ToolListBlockFile(this,
                     backupInfo, foundFileList, blockedFileList, new AtomicBoolean(true)).search();
         });
@@ -132,6 +134,7 @@ public class BlockedFilesDialogController extends P2DialogExtra {
     private void setPredicate() {
         Predicate<File> pr = f -> f.getAbsolutePath().toLowerCase().contains(txtSearch.getText().toLowerCase());
         filteredFileList.setPredicate(pr);
+        lblSum.setText("Anzahl: " + filteredFileList.size());
     }
 
     private void addSum() {
@@ -146,11 +149,9 @@ public class BlockedFilesDialogController extends P2DialogExtra {
         rbBlock.setOnAction(a -> set());
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(rbAll, rbFound, rbBlock, P2GuiTools.getHBoxGrower(),
-                new Label("Anzahl: "), lblSum);
+        hBox.getChildren().addAll(rbAll, rbFound, rbBlock,
+                P2GuiTools.getHBoxGrower(), lblSum);
         hBox.setAlignment(Pos.CENTER_LEFT);
-        filteredFileList.addListener((ListChangeListener<File>) change ->
-                lblSum.setText(filteredFileList.size() + ""));
         getVBoxCont().getChildren().add(hBox);
     }
 
@@ -180,18 +181,13 @@ public class BlockedFilesDialogController extends P2DialogExtra {
 
 
     private HBox addProgress() {
-        final ProgressBar progressBar = new ProgressBar();
-        progressBar.progressProperty().bind(backupInfo.runnerDto.progressProperty());
-
         Button btnStop = new Button();
-        btnStop.setMinHeight(18);
-        btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
-        hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), progressBar, btnStop);
+        hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), new PProgressBar(true, true), btnStop);
         hBoxProgress.setAlignment(Pos.CENTER);
 
         hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());

@@ -27,11 +27,14 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCompareHash;
 import de.p2tools.p2backup.controller.runner.tools.ToolCompareHashSql;
+import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableCompareDir;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
+import de.p2tools.p2lib.guitools.P2GuiTools;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -45,7 +48,7 @@ import java.util.function.Predicate;
 
 public class CompareBackupDialogController extends P2DialogExtra {
 
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final FileDataList fileDataList = new FileDataList();
     private final ProgData progData;
     private final ComboBox<BackupData> cboBackup = new ComboBox<>();
@@ -59,13 +62,14 @@ public class CompareBackupDialogController extends P2DialogExtra {
     private final RadioButton rbOnlyBackup = new RadioButton("Nur im Backup");
     private final RadioButton rbReadError = new RadioButton("Kann nicht gelesen werden");
     private final CheckBox chkLong = new CheckBox("Neu einlesen");
+    private final Label lblSum = new Label();
 
-    public CompareBackupDialogController(BackupInfo backupInfos) {
+    public CompareBackupDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.COMPARE_DIALOG_SIZE, "Daten mit Backup vergleichen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         tableView = new TableCompareDir(Table.TABLE_ENUM.DIR_COMPARE);
         init(false);
     }
@@ -87,11 +91,15 @@ public class CompareBackupDialogController extends P2DialogExtra {
     }
 
     public void setResult(FileDataList fileDataList) {
-        this.fileDataList.setAll(fileDataList);
+        Platform.runLater(() -> {
+                    this.fileDataList.setAll(fileDataList);
+                    this.setPredicate();
+                }
+        );
     }
 
     private void init() {
-        cboBackup.setItems(backupInfos.getBackupDataList());
+        cboBackup.setItems(backupInfo.getBackupDataList());
         cboBackup.getSelectionModel().selectLast();
 
         btnStart.setOnAction(a -> {
@@ -100,12 +108,14 @@ public class CompareBackupDialogController extends P2DialogExtra {
                 return;
             }
             fileDataList.clear();
+            backupInfo.runnerDto.initRunner();
 
             if (chkLong.isSelected()) {
-                new ToolCompareHash(this, backupInfos,
+                backupInfo.runnerDto.setRunnerText("Daten mit Backup vergleichen");
+                new ToolCompareHash(this, backupInfo,
                         backupData, new AtomicBoolean(true)).compare();
             } else {
-                new ToolCompareHashSql(this, backupInfos,
+                new ToolCompareHashSql(this, backupInfo,
                         backupData, new AtomicBoolean(true)).compare();
             }
         });
@@ -138,10 +148,10 @@ public class CompareBackupDialogController extends P2DialogExtra {
         rbOnlyBackup.setToggleGroup(tg);
         rbReadError.setToggleGroup(tg);
         rbAll.setSelected(true);
-        setPredicate();
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(rbAll, rbNotOk, rbDiff, rbOnlyData, rbOnlyBackup, rbReadError);
+        hBox.getChildren().addAll(rbAll, rbNotOk, rbDiff, rbOnlyData, rbOnlyBackup, rbReadError,
+                P2GuiTools.getHBoxGrower(), lblSum);
         getVBoxCont().getChildren().add(hBox);
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
@@ -180,6 +190,7 @@ public class CompareBackupDialogController extends P2DialogExtra {
         }
 
         fileDataList.getFilteredList().setPredicate(predicate);
+        lblSum.setText("Anzahl: " + fileDataList.getFilteredList().size());
     }
 
     private void addTable() {
@@ -207,15 +218,13 @@ public class CompareBackupDialogController extends P2DialogExtra {
     }
 
     private HBox getProgress() {
-        final ProgressBar progressBar = new ProgressBar();
-        progressBar.setMaxWidth(Double.MAX_VALUE);
-        progressBar.progressProperty().bind(backupInfos.runnerDto.progressProperty());
+        final PProgressBar progressBar = new PProgressBar(true, true);
 
         Button btnStop = new Button();
-        btnStop.setMinHeight(18);
-        btnStop.setMaxHeight(18);
+//        btnStop.setMinHeight(18);
+//        btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
-        btnStop.setOnAction(a -> backupInfos.runnerDto.setStop());
+        btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
@@ -223,7 +232,7 @@ public class CompareBackupDialogController extends P2DialogExtra {
         hBoxProgress.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(progressBar, Priority.ALWAYS);
 
-        hBoxProgress.visibleProperty().bind(backupInfos.runnerDto.runningProperty());
+        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
         return hBoxProgress;
     }
 }

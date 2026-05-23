@@ -81,7 +81,7 @@ public class FileHashFactory {
 
         } catch (Exception ex) {
             if (backupInfo.runnerDto.isAsk()) {
-                if (!FileFactory.goOnError(backupInfo, file.getAbsolutePath())) {
+                if (!FileFactory.goOnError(backupInfo, file.getAbsolutePath(), true)) {
                     backupInfo.runnerDto.setStop();
                 }
             }

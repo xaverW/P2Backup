@@ -17,9 +17,10 @@
 
 package de.p2tools.p2backup.controller.runner;
 
-import de.p2tools.p2lib.alert.P2AlertAppThread;
+import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2lib.tools.log.P2Log;
-import javafx.application.Platform;
 
 import java.io.File;
 
@@ -57,11 +58,14 @@ public class FileRunner {
                 list = dir.listFiles();
                 if (list == null) {
                     final String path = dir.getCanonicalPath();
-                    if (!altert) {
-                        altert = true;
-                        Platform.runLater(() ->
-                                P2AlertAppThread.showErrorAlert("Dateien lesen",
-                                        "Kann Dateien des Ordners \"" + path + "\" nicht lesen", "Fehler!"));
+                    BackupInfo backupInfo = ProgData.getInstance().backupInfoProperty.get();
+                    if (backupInfo != null) {
+                        if (backupInfo.runnerDto.isAsk()) {
+                            if (!FileFactory.goOnError(backupInfo, path, false)) {
+                                backupInfo.runnerDto.setStop();
+                                stop = true;
+                            }
+                        }
                     }
 
                 } else {

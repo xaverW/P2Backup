@@ -67,17 +67,17 @@ public class ToolCompareHashSql {
     private void compareDir() {
         FileDataList fileListData = new FileDataList();
         FileDataList fileListBackup = new FileDataList();
-        FileDataList resultList = new FileDataList();
 
+        backupInfo.runnerDto.setRunnerText("Daten laden");
         if (!SqlFileData.readDataFileList(backupInfo, fileListData)) {
             backupInfo.runnerDto.setStop();
         }
+        backupInfo.runnerDto.setRunnerText("Backup laden");
         if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileListBackup)) {
             backupInfo.runnerDto.setStop();
         }
-//        FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
-//        FileFactory.cleanFileData(fileListBackup, subPathBackup); // Pfade anpassen
 
+        FileDataList resultList = new FileDataList();
         if (backupInfo.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
             fileListData.clear();
@@ -88,9 +88,9 @@ public class ToolCompareHashSql {
             // und jetzt mit dem Hash vergleichen
             CompareFactory.compare(compareBackupDialogController.getStage(),
                     fileListData, fileListBackup, resultList, true);
-            compareBackupDialogController.setResult(resultList);
         }
 
+        compareBackupDialogController.setResult(resultList);
         atomicBoolean.set(false);
     }
 }

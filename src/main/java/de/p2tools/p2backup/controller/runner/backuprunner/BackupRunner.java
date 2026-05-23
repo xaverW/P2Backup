@@ -22,29 +22,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BackupRunner {
 
     private final ProgData progData;
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
 
-    public BackupRunner(BackupInfo backupInfos) {
+    public BackupRunner(BackupInfo backupInfo) {
         this.progData = ProgData.getInstance();
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
     }
 
     public void makeBackup() {
-        backupInfos.runnerDto.startRunner(backupInfos.getName());
-        backupInfos.runnerDto.setFirstRun(true);
+        backupInfo.runnerDto.startRunner(backupInfo.getName());
+        backupInfo.runnerDto.setFirstRun(true);
 
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
 
         new Thread(() -> {
-            P2Log.sysLog("Start BackupRunner: " + this.backupInfos.getName());
+            P2Log.sysLog("Start BackupRunner: " + this.backupInfo.getName());
             P2Log.sysLog("=======================================");
             P2Log.sysLog("   Backup Start");
             P2Log.sysLog("=======================================");
 
-            this.backupInfos.runnerDto.setRunnerText("Start Backup");
+            this.backupInfo.runnerDto.setRunnerText("Starte Backup " + this.backupInfo.getName());
 
             // erst mal alles putzen, prüfen und Infos sammeln
-            if (!BackupRunnerFactory.collectInfos(this.backupInfos)) {
+            if (!BackupRunnerFactory.collectInfos(this.backupInfo)) {
                 close();
                 return;
             }
@@ -57,20 +57,20 @@ public class BackupRunner {
             // ===============================
             // backup Verzeichnis anlegen
             BackupData backupData = new BackupData();
-            backupData.setBackupInfoId(backupInfos.getId());
-            this.backupInfos.runnerDto.setBackupData(backupData);
+            backupData.setBackupInfoId(backupInfo.getId());
+            this.backupInfo.runnerDto.setBackupData(backupData);
 
             AtomicBoolean a = new AtomicBoolean(true);
             Platform.runLater(() -> {
-                backupData.setStartDate(this.backupInfos.getLastStartDate());
-                backupData.setSubPath(this.backupInfos.runnerDto.getDataSubPath());
+                backupData.setStartDate(this.backupInfo.getLastStartDate());
+                backupData.setSubPath(this.backupInfo.runnerDto.getDataSubPath());
                 a.set(false);
             });
             while (a.get()) {
                 P2ToolsFactory.pause(100);
             }
 
-            if (!BackupRunnerFactory.makeBackupDirectory(this.backupInfos)) {
+            if (!BackupRunnerFactory.makeBackupDirectory(this.backupInfo)) {
                 quitt(false);
                 return;
             }
@@ -78,7 +78,7 @@ public class BackupRunner {
 
             // ===============================
             // toPath Verzeichnis anlegen
-            if (!BackupRunnerFactory.makeToPathDirectory(this.backupInfos)) {
+            if (!BackupRunnerFactory.makeToPathDirectory(this.backupInfo)) {
                 quitt(false);
                 return;
             }
@@ -86,7 +86,7 @@ public class BackupRunner {
             // ================================
             // falls es das erste Mal ist, muss
             // zuerst die DB angelegt werden
-            if (!SqlTable.makeBackupDb(this.backupInfos)) {
+            if (!SqlTable.makeBackupDb(this.backupInfo)) {
                 quitt(false);
                 return;
             }
@@ -94,38 +94,38 @@ public class BackupRunner {
 
             // ===============================
             // fromHash erstellen und toPath eintragen
-            this.backupInfos.runnerDto.setRunnerText("Dateien einlesen");
-            if (!BackupRunnerFactory.makeFromHash(this.backupInfos)) {
+            this.backupInfo.runnerDto.setRunnerText("Dateien einlesen");
+            if (!BackupRunnerFactory.makeFromHash(this.backupInfo)) {
                 quitt(false);
                 return;
             }
-            if (this.backupInfos.runnerDto.isStop()) {
+            if (this.backupInfo.runnerDto.isStop()) {
                 quitt(false);
                 return;
             }
 
             // ===============================
             // Dateien kopieren
-            this.backupInfos.runnerDto.setRunnerText("Dateien kopieren");
-            if (!BackupRunnerFactory.copyFilesToBackup(this.backupInfos)) {
+            this.backupInfo.runnerDto.setRunnerText("Dateien kopieren");
+            if (!BackupRunnerFactory.copyFilesToBackup(this.backupInfo)) {
                 quitt(false);
                 return;
             }
-            if (this.backupInfos.runnerDto.isStop()) {
+            if (this.backupInfo.runnerDto.isStop()) {
                 quitt(false);
                 return;
             }
 
             // ============================
             // Überzählige Backups löschen
-            if (!BackupRunnerFactory.deleteBackupData(this.backupInfos)) {
+            if (!BackupRunnerFactory.deleteBackupData(this.backupInfo)) {
                 quitt(false);
                 return;
             }
 
             // ============================
             // Update BackupData
-            if (!BackupRunnerFactory.updateBackupData(this.backupInfos)) {
+            if (!BackupRunnerFactory.updateBackupData(this.backupInfo)) {
                 quitt(false);
                 return;
             }
@@ -135,10 +135,10 @@ public class BackupRunner {
     }
 
     private void quitt(boolean ret) {
-        backupInfos.runnerDto.getBackupData().setOk(ret);
+        backupInfo.runnerDto.getBackupData().setOk(ret);
 
-        if (backupInfos.runnerDto.isStop() || !ret) {
-            backupInfos.runnerDto.setOk(false);
+        if (backupInfo.runnerDto.isStop() || !ret) {
+            backupInfo.runnerDto.setOk(false);
             // dann wurde abgebrochen oder hatte einen Fehler
             final Stage stage;
             if (progData.primaryStageSmall != null && progData.primaryStageSmall.isShowing()) {
@@ -147,10 +147,10 @@ public class BackupRunner {
                 stage = progData.primaryStage;
             }
 
-            Platform.runLater(() -> new BackupErrorDialogController(stage, backupInfos));
+            Platform.runLater(() -> new BackupErrorDialogController(stage, backupInfo));
 
             // delete backup-files
-            Path toPath = backupInfos.runnerDto.getToPath();
+            Path toPath = backupInfo.runnerDto.getToPath();
             try {
                 if (toPath != null && toPath.toFile().isDirectory() && toPath.toFile().exists()) {
                     FileUtils.deleteDirectory(toPath.toFile());
@@ -163,16 +163,16 @@ public class BackupRunner {
             }
 
             // cleanUp DB todo! rest??
-            SqlFileData.deleteFileList(backupInfos, backupInfos.runnerDto.getBackupData());
+            SqlFileData.deleteFileList(backupInfo, backupInfo.runnerDto.getBackupData());
 
         } else {
-            backupInfos.runnerDto.setOk(true);
+            backupInfo.runnerDto.setOk(true);
         }
         close();
     }
 
     private void close() {
-        backupInfos.runnerDto.stopRunner();
+        backupInfo.runnerDto.stopRunner();
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
 
     }
