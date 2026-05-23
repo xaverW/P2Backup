@@ -82,6 +82,10 @@ public class BackupSmallGui extends P2DialogOnly {
         });
     }
 
+    public void newStart() {
+        setStartAll();
+    }
+
     private void initDialog() {
         getVBoxCompleteDialog().setPadding(new Insets(3));
         getVBoxCompleteDialog().setSpacing(0);
@@ -126,8 +130,10 @@ public class BackupSmallGui extends P2DialogOnly {
     }
 
     private void setStartAll() {
-        Optional<BackupInfo> opt = progData.backupInfoList.stream().filter(BackupInfo::isNotReady).findAny();
+        Optional<BackupInfo> opt = progData.backupInfoList.stream().filter(backupInfo -> !backupInfo.isNotReady()).findAny();
         if (opt.isPresent()) {
+            btnStartAll.setDisable(false);
+        } else {
             btnStartAll.setDisable(true);
         }
     }
