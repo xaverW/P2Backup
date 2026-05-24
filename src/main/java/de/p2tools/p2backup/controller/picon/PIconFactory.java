@@ -26,7 +26,8 @@ public class PIconFactory {
         BTN_RESET_2("gmi-rotate-right", 30),
 
         BTN_LOAD_BACKUP("mdoal-backup", 20),
-        BTN_LOAD_BACKUP_BIG("mdoal-backup", 30),
+        BTN_LOAD_BACKUP_BIG_30("mdoal-backup", 30),
+        BTN_LOAD_BACKUP_BIG_50("mdoal-backup", 50),
         BTN_LOAD_REFRESH_BIG("mdi2f-folder-refresh-outline", 30),
 
         BTN_ADD_BACKUP("gmi-control-point", 20),

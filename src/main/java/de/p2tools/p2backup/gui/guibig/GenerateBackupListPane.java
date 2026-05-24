@@ -90,7 +90,7 @@ public class GenerateBackupListPane extends VBox {
         // Load stored
         Button btnLoad = new Button("Ein gespeichertes\nBackup laden");
         btnLoad.setWrapText(true);
-        btnLoad.setGraphic(PIconFactory.PICON.BTN_LOAD_BACKUP_BIG.getFontIcon());
+        btnLoad.setGraphic(PIconFactory.PICON.BTN_LOAD_BACKUP_BIG_30.getFontIcon());
         btnLoad.visibleProperty().bind(backupInfos.notReadyProperty());
         btnLoad.managedProperty().bind(backupInfos.notReadyProperty());
         btnLoad.setTooltip(new Tooltip("Ein gespeichertes Backup auswählen und laden"));
@@ -293,7 +293,8 @@ public class GenerateBackupListPane extends VBox {
 
         final PProgressBar pProgressBar = new PProgressBar(true, true);
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxProgress.getChildren().addAll(lblText/*, lblFileName*//*, P2GuiTools.getHBoxGrower()*/, pProgressBar, btnStop);
+        hBoxProgress.setPadding(new Insets(10, 0, 0, 0));
+        hBoxProgress.getChildren().addAll(/*lblText, lblFileName, P2GuiTools.getHBoxGrower(),*/ pProgressBar, btnStop);
         HBox.setHgrow(pProgressBar, Priority.ALWAYS);
         hBoxProgress.setAlignment(Pos.CENTER);
 

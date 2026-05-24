@@ -71,8 +71,10 @@ public class BackupListController extends VBox {
         btnLoad.managedProperty().bind(progData.backupInfoProperty.isNull().not());
         btnLoad.setOnAction(a -> LoadFactory.loadBackupInfo(null));
 
-        P2BigButton btnBigLoad = new P2BigButton(PIconFactory.PICON.BTN_LOAD_BACKUP_BIG.getFontIcon(),
+        P2BigButton btnBigLoad = new P2BigButton(PIconFactory.PICON.BTN_LOAD_BACKUP_BIG_50.getFontIcon(),
                 "Gespeichertes Backup laden", "");
+        btnBigLoad.setAlignment(Pos.CENTER);
+        btnBigLoad.setMaxHeight(Double.MAX_VALUE);
         btnBigLoad.visibleProperty().bind(progData.backupInfoProperty.isNull());
         btnBigLoad.managedProperty().bind(progData.backupInfoProperty.isNull());
         btnBigLoad.setOnAction(a -> LoadFactory.loadBackupInfo(null));
@@ -87,6 +89,8 @@ public class BackupListController extends VBox {
 
         P2BigButton btnBigAdd = new P2BigButton(PIconFactory.PICON.BTN_ADD_BACKUP_BIG.getFontIcon(),
                 "Neues Backup anlegen", "");
+        btnBigAdd.setAlignment(Pos.CENTER);
+        btnBigAdd.setMaxHeight(Double.MAX_VALUE);
         btnBigAdd.visibleProperty().bind(progData.backupInfoProperty.isNull());
         btnBigAdd.managedProperty().bind(progData.backupInfoProperty.isNull());
         btnBigAdd.setOnAction(e -> add());
@@ -95,6 +99,7 @@ public class BackupListController extends VBox {
         hBoxAdd.getChildren().addAll(btnLoad, btnAdd);
         HBox hBoxBig = new HBox(P2LibConst.SPACING_HBOX);
         hBoxBig.getChildren().addAll(btnBigLoad, btnBigAdd);
+
 
         VBox vBoxAdd = new VBox();
         vBoxAdd.getChildren().addAll(hBoxAdd, hBoxBig);

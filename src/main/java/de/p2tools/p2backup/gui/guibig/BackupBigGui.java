@@ -248,7 +248,6 @@ public class BackupBigGui extends VBox {
         btnForward.visibleProperty().bind(progData.programState.isEqualTo(ProgConst.PROGRAM_STATE_MAX).not()
                 .and(progData.backupInfoProperty.isNull().not()));
 
-//        hBoxButton.visibleProperty().bind(progData.backupInfoProperty.isNull().not());
         btnInfos.disableProperty().bind(progData.backupInfoProperty.isNull());
         btnFrom.disableProperty().bind(progData.backupInfoProperty.isNull());
         btnTo.disableProperty().bind(progData.backupInfoProperty.isNull());
