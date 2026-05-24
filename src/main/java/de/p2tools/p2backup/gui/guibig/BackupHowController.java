@@ -16,6 +16,7 @@
 
 package de.p2tools.p2backup.gui.guibig;
 
+import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
@@ -73,6 +74,8 @@ public class BackupHowController extends VBox {
         rbAll.disableProperty().bind(progData.backupInfoProperty.isNull());
         rbDiff.disableProperty().bind(progData.backupInfoProperty.isNull());
         rbIntelligent.disableProperty().bind(progData.backupInfoProperty.isNull());
+        rbIntelligent.visibleProperty().bind(ProgConfig.SYSTEM_ENHANCED);
+        rbIntelligent.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
 
         tg.selectedToggleProperty().addListener((u, o, n) -> {
             if (rbAll.isSelected()) {
@@ -108,7 +111,6 @@ public class BackupHowController extends VBox {
         hBox.setAlignment(Pos.BOTTOM_RIGHT);
         HBox.setHgrow(gridPaneHow, Priority.ALWAYS);
 
-//        VBox vBoxHow = new VBox(10);
         vBoxContent.getChildren().addAll(BackupGuiFactory.getInfoPane("Wie wird gesichert?"),
                 hBox);
 
@@ -123,8 +125,6 @@ public class BackupHowController extends VBox {
         vBoxContent.getChildren().addAll(P2GuiTools.getHDistance(10),
                 BackupGuiFactory.getInfoPane("Wie viele Backups sollen gespeichert werden?"),
                 gridPaneCount);
-
-//        vBoxContent.getChildren().addAll( P2GuiTools.getVDistance(10), vBoxCount);
     }
 
     private void setInfosProp() {

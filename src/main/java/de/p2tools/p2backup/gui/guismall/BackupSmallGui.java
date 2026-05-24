@@ -82,7 +82,7 @@ public class BackupSmallGui extends P2DialogOnly {
         });
     }
 
-    public void newStart() {
+    public void restartShowing() {
         setStartAll();
     }
 

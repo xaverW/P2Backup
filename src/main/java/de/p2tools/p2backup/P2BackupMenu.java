@@ -28,9 +28,12 @@ import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2backup.gui.configdialog.ConfigDialogController;
 import de.p2tools.p2backup.gui.dialog.AboutDialogController;
 import de.p2tools.p2backup.gui.dialog.ResetDialogController;
+import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.tools.log.P2Logger;
 import de.p2tools.p2lib.tools.shortcut.P2ShortcutWorker;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
@@ -59,7 +62,38 @@ public class P2BackupMenu extends MenuButton {
         miConfig.setOnAction(e -> new ConfigDialogController(ProgData.getInstance()));
 
         final CheckMenuItem chkEnhanced = new CheckMenuItem("Erweiterte Einstellungen");
-        chkEnhanced.selectedProperty().bindBidirectional(ProgConfig.SYSTEM_ENHANCED);
+        chkEnhanced.setOnAction(a -> {
+            if (chkEnhanced.isSelected()) {
+                // einschalten
+                ProgConfig.SYSTEM_ENHANCED.set(true);
+
+            } else {
+                // ausschalten geht nur, wenn noch nicht benutzte
+                BooleanProperty found = new SimpleBooleanProperty(false);
+                progData.backupInfoList.forEach(bi -> {
+                    if (bi.getHow() == ProgConst.BACKUP_INTELLIGENT) {
+                        found.set(true);
+                    }
+                    if (!bi.getPathListExcludeDir().isEmpty()) {
+                        found.set(true);
+                    }
+                    if (!bi.getPathListExcludeFile().isEmpty()) {
+                        found.set(true);
+                    }
+                });
+                if (found.get()) {
+                    P2Alert.showErrorAlert("Erweiterte Einstellungen",
+                            "Die Erweiterten Einstellungen können nur abgeschaltet werden, " +
+                                    "wenn sie noch nicht benutzt werden.\n\n" +
+                                    "\"Intelligentes Kopieren\" oder\n" +
+                                    "\"Ausschließen von Ordnern/Dateien von den " +
+                                    "Ordnern die gesichert werden sollen.");
+                    chkEnhanced.setSelected(true);
+                } else {
+                    ProgConfig.SYSTEM_ENHANCED.set(false);
+                }
+            }
+        });
 
         final CheckMenuItem miDarkMode = new CheckMenuItem("Dunkle Oberfläche");
         miDarkMode.selectedProperty().bindBidirectional(ProgConfig.SYSTEM_DARK_THEME);

@@ -46,22 +46,22 @@ public class HowHelpDialog extends P2DialogExtra {
                     "dem letzten Backup geändert haben, in den Backup-Ordner kopiert." +
                     "\n\n" +
                     "Das ist schneller und braucht am wenigsten Platz. Nachteil ist, dass " +
-                    "das Wiederherstellen der eigenen Dateien schwieriger ist. Es müssen " +
+                    "das Wiederherstellen eines bestimmten Backups schwieriger ist. Es müssen " +
                     "alle Backup-Ordner abgesucht werden.";
     private final String TEXT_INTELLIGENT_HEADER = "Intelligentes kopieren";
     private final String TEXT_INTELLIGENT =
             "Hier werden auch nur die geänderten Dateien in den Backup-Ordner " +
-                    "kopiert. Die Dateien die sich nicht geändert haben werden aus dem Backup-Ordner " +
+                    "kopiert. Die Dateien die sich nicht geändert haben, werden aus dem Backup-Ordner " +
                     "von gestern, nur verlinkt. D.h. die unveränderten Dateien sind nur einmal in " +
                     "den Backup-Ordnern. Sie werden aber in jedem Backup angezeigt." +
                     "\n\n" +
-                    "Der Vorteil ist, es brauch dadurch sehr wenig Platz. Beim Wiederherstellen der eigenen " +
+                    "Der Vorteil ist, es braucht dadurch sehr wenig Platz. Beim Wiederherstellen der eigenen " +
                     "Daten muss man auch nicht alle Backup-Ordner absuchen." +
                     "\n\n" +
                     "Es funktioniert aber nur auf Dateisystemen die diese Funktion unterstützen. Das sind " +
                     "z.B. bei Linux ext3/ext4 und bei Windows NTFS. USB-Sticks und externe Festplatten " +
-                    "sind meist nur mit fat32 formatiert, die " +
-                    "müssten dann mit NTFS formatiert werden.";
+                    "sind oft nur mit fat32 formatiert, die " +
+                    "müssten dann mit NTFS neu formatiert werden.";
 
     public HowHelpDialog() {
         super(ProgData.getInstance().primaryStage, ProgConfig.DIALOG_HOW_HELP_SIZE, "Wie jetzt?",
@@ -78,8 +78,9 @@ public class HowHelpDialog extends P2DialogExtra {
         addOkButton(btnOk);
         addCopy("Alles kopieren", TEXT_ALL_HEADER, TEXT_ALL, ProgConst.HOW_HELP_IMAGE_ALL);
         addCopy("Geändertes kopieren", TEXT_ONLY_HEADER, TEXT_ONLY, ProgConst.HOW_HELP_IMAGE_ONLY);
-        addCopy("Intelligentes kopieren", TEXT_INTELLIGENT_HEADER, TEXT_INTELLIGENT, ProgConst.HOW_HELP_IMAGE_INTELLIGENT);
-
+        if (ProgConfig.SYSTEM_ENHANCED.get()) {
+            addCopy("Intelligentes kopieren", TEXT_INTELLIGENT_HEADER, TEXT_INTELLIGENT, ProgConst.HOW_HELP_IMAGE_INTELLIGENT);
+        }
         VBox.setVgrow(tabPane, Priority.ALWAYS);
         getVBoxCont().getChildren().add(tabPane);
     }
@@ -90,9 +91,10 @@ public class HowHelpDialog extends P2DialogExtra {
         sc.setFitToWidth(true);
 
         Label lblHeader = new Label();
+//        lblHeader.setAlignment(Pos.CENTER_LEFT);
         lblHeader.setMaxWidth(Double.MAX_VALUE);
         lblHeader.getStyleClass().add("lblHeader");
-        lblHeader.setWrapText(true);
+//        lblHeader.setWrapText(true);
         lblHeader.setText(header);
         HBox.setHgrow(lblHeader, Priority.ALWAYS);
 

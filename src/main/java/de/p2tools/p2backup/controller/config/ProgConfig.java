@@ -132,7 +132,7 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty SYSTEM_PROG_SAVE = addStrProp("system-prog-save", SYSTEM_PROG_SAVE_INIT);
     public static BooleanProperty SYSTEM_BLACK_WHITE_ICON_START = addBoolProp("system-black-white-icon-start", Boolean.FALSE);
     public static BooleanProperty SYSTEM_SMALL_BACKUP = addBoolProp("system-small-backup", false);
-    public static BooleanProperty SYSTEM_ENHANCED = addBoolProp("system-enhanced", false);
+    public static BooleanProperty SYSTEM_ENHANCED = addBoolProp("system-enhanced", false); // erweiterte Einstellungen
 
     public static StringProperty SYSTEM_LOG_DIR = addStrProp("system-log-dir", "");
     public static BooleanProperty SYSTEM_LOG_ON = addBoolProp("system-log-on", Boolean.TRUE);

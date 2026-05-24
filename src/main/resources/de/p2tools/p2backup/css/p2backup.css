@@ -19,6 +19,14 @@
     -fx-font-weight: bold;
 }
 
+/* ist der Header im Dialog "und wie jetzt" */
+.lblHeader {
+    -fx-padding: 5 15 5 0;
+    -fx-font-weight: bold;
+    -fx-underline: true;
+    -fx-font-size: 1.2em;
+}
+
 /* Label in ProgressBar */
 .lblProgress {
     -fx-background-color: transparent;
