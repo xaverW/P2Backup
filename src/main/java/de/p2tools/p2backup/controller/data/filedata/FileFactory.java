@@ -5,7 +5,7 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.gui.dialog.CopyFileErrorDialogController;
-import de.p2tools.p2lib.tools.P2ToolsFactory;
+import de.p2tools.p2lib.tools.P2Wait;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -42,7 +42,7 @@ public class FileFactory {
             atomicBoolean.set(false);
         });
         while (atomicBoolean.get()) {
-            P2ToolsFactory.pause(500);
+            P2Wait.pause(500);
         }
 
         return yesProp.get();

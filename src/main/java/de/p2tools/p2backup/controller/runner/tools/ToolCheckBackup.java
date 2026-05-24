@@ -27,7 +27,7 @@ import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.gui.tools.CheckBackupDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
-import de.p2tools.p2lib.tools.P2ToolsFactory;
+import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.nio.file.Path;
@@ -112,7 +112,7 @@ public class ToolCheckBackup {
                     false, false,
                     a).create();
             while (a.get()) {
-                P2ToolsFactory.pause(500);
+                P2Wait.pause(500);
             }
         }
 

@@ -6,7 +6,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
 import de.p2tools.p2lib.p2event.P2Event;
-import de.p2tools.p2lib.tools.P2ToolsFactory;
+import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class CreateDataHash {
                     quick, followLink, a).create();
 
             while (a.get()) {
-                P2ToolsFactory.pause(500);
+                P2Wait.pause(500);
             }
 
             atomicBoolean.set(false);

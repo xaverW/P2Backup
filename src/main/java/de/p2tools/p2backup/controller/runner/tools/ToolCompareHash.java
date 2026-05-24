@@ -27,7 +27,7 @@ import de.p2tools.p2backup.controller.runner.hashrunner.CreateDataHash;
 import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
 import de.p2tools.p2backup.gui.tools.CompareBackupDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
-import de.p2tools.p2lib.tools.P2ToolsFactory;
+import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.nio.file.Path;
@@ -101,7 +101,7 @@ public class ToolCompareHash {
         CreateDataHash.create(backupInfo, null, fileDataList,
                 false, false, a);
         while (a.get()) {
-            P2ToolsFactory.pause(500);
+            P2Wait.pause(500);
         }
         return fileDataList;
     }
@@ -117,7 +117,7 @@ public class ToolCompareHash {
                 false, false,
                 a).create();
         while (a.get()) {
-            P2ToolsFactory.pause(500);
+            P2Wait.pause(500);
         }
         return fileDataList;
     }

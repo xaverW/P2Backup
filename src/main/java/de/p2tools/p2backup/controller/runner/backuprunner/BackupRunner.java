@@ -9,7 +9,7 @@ import de.p2tools.p2backup.controller.sqlite.SqlTable;
 import de.p2tools.p2backup.gui.dialog.BackupErrorDialogController;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.p2event.P2Event;
-import de.p2tools.p2lib.tools.P2ToolsFactory;
+import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -67,7 +67,7 @@ public class BackupRunner {
                 a.set(false);
             });
             while (a.get()) {
-                P2ToolsFactory.pause(100);
+                P2Wait.pause(100);
             }
 
             if (!BackupRunnerFactory.makeBackupDirectory(this.backupInfo)) {

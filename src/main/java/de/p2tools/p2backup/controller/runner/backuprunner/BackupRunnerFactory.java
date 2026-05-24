@@ -17,7 +17,7 @@ import de.p2tools.p2backup.controller.sqlite.SqlBackupInfo;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.dialogs.P2DirFileChooserAppThread;
-import de.p2tools.p2lib.tools.P2ToolsFactory;
+import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.application.Platform;
 
@@ -58,7 +58,7 @@ public class BackupRunnerFactory {
             a.set(false);
         });
         while (a.get()) {
-            P2ToolsFactory.pause(100);
+            P2Wait.pause(100);
         }
 
         backupInfos.runnerDto.setDataSubPath(subPath);
@@ -121,7 +121,7 @@ public class BackupRunnerFactory {
                 atomicBoolean.set(false);
             });
             while (atomicBoolean.get()) {
-                P2ToolsFactory.pause(500);
+                P2Wait.pause(500);
             }
         }
 
@@ -225,7 +225,7 @@ public class BackupRunnerFactory {
                     false, false, atomicBoolean);
 
             while (atomicBoolean.get()) {
-                P2ToolsFactory.pause(500);
+                P2Wait.pause(500);
             }
 
             // toPath eintragen

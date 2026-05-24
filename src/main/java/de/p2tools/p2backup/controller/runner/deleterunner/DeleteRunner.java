@@ -7,7 +7,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.sqlite.SqlBackupData;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.p2event.P2Event;
-import de.p2tools.p2lib.tools.P2ToolsFactory;
+import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.nio.file.Path;
@@ -41,7 +41,7 @@ public class DeleteRunner {
         }
         delete();
         while (a.get()) {
-            P2ToolsFactory.pause(100);
+            P2Wait.pause(100);
         }
         return ret;
     }
@@ -106,7 +106,7 @@ public class DeleteRunner {
                 return;
             }
 
-            // und noch im BackupInfos löschen
+            // und noch im BackupInfos löschen^^^
             backupInfos.getBackupDataList().remove(backupData);
             quitt(true);
         }).start();

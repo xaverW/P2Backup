@@ -18,12 +18,13 @@ package de.p2tools.p2backup.controller;
 
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoFactory;
 import de.p2tools.p2backup.controller.data.dbdata.DbData;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.sqlite.SqlBackupInfo;
 import de.p2tools.p2backup.controller.sqlite.SqlTable;
+import de.p2tools.p2backup.gui.dialog.QuitDialogController;
 import de.p2tools.p2lib.guitools.P2GuiSize;
-import de.p2tools.p2lib.tools.P2ShutDown;
 import de.p2tools.p2lib.tools.log.P2LogMessage;
 import javafx.application.Platform;
 
@@ -38,6 +39,16 @@ public class ProgQuit {
      * Quit the MTViewer application
      */
     public static void quit() {
+
+        if (BackupInfoFactory.isRunning()) {
+            new QuitDialogController();
+
+        } else {
+            quitNow();
+        }
+    }
+
+    public static void quitNow() {
         if (ProgData.getInstance().backupBigGui != null &&
                 ProgData.getInstance().primaryStage.isShowing()) {
             P2GuiSize.getSize(ProgConfig.SYSTEM_SIZE_BIG_GUI, ProgData.getInstance().primaryStage);
@@ -49,15 +60,6 @@ public class ProgQuit {
         }
 
         saveConfig();
-        exitProg();
-    }
-
-    /**
-     * Quit the MTViewer application and shutDown the computer
-     */
-    public static void quitShutDown() {
-        saveConfig();
-        P2ShutDown.shutDown();
         exitProg();
     }
 
