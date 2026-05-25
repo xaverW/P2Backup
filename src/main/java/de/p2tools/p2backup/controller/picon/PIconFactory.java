@@ -6,6 +6,7 @@ import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.ikonli.IkonlyFactory;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -94,6 +95,15 @@ public class PIconFactory {
     }
 
     private PIconFactory() {
+    }
+
+
+    public static FontIcon getAttentionIcon(String literal) {
+        FontIcon fontIcon = new FontIcon();
+        fontIcon.setIconSize(100);
+        fontIcon.setIconColor(Paint.valueOf(Color.RED.toString()));
+        fontIcon.setIconLiteral(literal);
+        return fontIcon;
     }
 
     public static void setColor() {

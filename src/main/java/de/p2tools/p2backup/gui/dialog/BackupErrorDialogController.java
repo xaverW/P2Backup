@@ -62,7 +62,7 @@ public class BackupErrorDialogController extends P2DialogExtra {
         vBox.setAlignment(Pos.CENTER_LEFT);
         vBox.getChildren().addAll(text, P2GuiTools.getVDistance(50), hBoxName);
 
-        Node errorNode = PIconFactory.PICON.BTN_ERROR_DIALOG.getFontIcon();
+        Node errorNode = PIconFactory.getAttentionIcon("mdoal-error");
         HBox hBox = new HBox(20);
         hBox.setAlignment(Pos.CENTER);
         hBox.getChildren().addAll(errorNode, vBox);

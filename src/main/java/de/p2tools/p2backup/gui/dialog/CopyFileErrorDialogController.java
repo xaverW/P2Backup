@@ -88,7 +88,7 @@ public class CopyFileErrorDialogController extends P2DialogExtra {
         VBox vBoxFile = new VBox(5);
         vBoxFile.setAlignment(Pos.CENTER_LEFT);
         vBoxFile.getChildren().addAll(text, new Label(file));
-        Node errorNode = PIconFactory.PICON.BTN_ATTENTION_DIALOG.getFontIcon();
+        Node errorNode = PIconFactory.getAttentionIcon("gmi-error-outline");
 
         HBox hBox = new HBox(10);
         hBox.setAlignment(Pos.CENTER);
