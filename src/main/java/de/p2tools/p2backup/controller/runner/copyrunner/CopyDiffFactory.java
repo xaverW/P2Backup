@@ -1,15 +1,23 @@
 package de.p2tools.p2backup.controller.runner.copyrunner;
 
 import de.p2tools.p2backup.controller.config.ProgConst;
+import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
+import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
+import de.p2tools.p2lib.alert.P2AlertAppThread;
+import de.p2tools.p2lib.tools.P2Wait;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CopyDiffFactory {
     public CopyDiffFactory() {
@@ -25,6 +33,39 @@ public class CopyDiffFactory {
         // altes Backup laden
         BackupData oldBackup = backupInfo.getBackupDataList().getLast();
         final String oldToPathStr = FileFactory.getToPathStr(backupInfo, oldBackup);
+
+
+        // =====================================
+        // erst mal das alte Backup überprüfen
+        backupInfo.runnerDto.setRunnerText("Altes Backup prüfen");
+        BooleanProperty foundError = new SimpleBooleanProperty(false);
+
+        AtomicBoolean a = new AtomicBoolean(true);
+        new ToolCheckBackupQuick(backupInfo, oldBackup, a).compare(foundError);
+        while (a.get()) {
+            P2Wait.pause(500);
+        }
+
+        if (foundError.get()) {
+            Stage stage;
+            if (ProgData.getInstance().primaryStageSmall != null &&
+                    ProgData.getInstance().primaryStageSmall.isShowing()) {
+                stage = ProgData.getInstance().primaryStageSmall;
+            } else {
+                stage = ProgData.getInstance().primaryStage;
+            }
+            P2AlertAppThread.showErrorAlert(stage, "Backup erstellen",
+                    """
+                            Das vorherige Backup ist beschädigt. Es kann dann kein neues Backup mit
+                            "nur geänderten Dateien"
+                            angelegt werden.
+                            
+                            Es werden stattdessen wieder alle Dateien gesichert.""");
+            return CopyAllFactory.copyAllFilesToBackup(backupInfo);
+        }
+        // =====================================
+
+
         SqlFileData.readBackupFileList(backupInfo, oldBackup, oldFileList);
 
         oldFileList.forEach(fileData -> {
