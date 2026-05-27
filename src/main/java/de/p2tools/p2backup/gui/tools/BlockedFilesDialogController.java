@@ -84,6 +84,10 @@ public class BlockedFilesDialogController extends P2DialogExtra {
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
 
+        HBox hBox = addProgress();
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+        getHboxLeft().getChildren().add(hBox);
+
         addSearch();
         addTable();
         addSum();
@@ -126,7 +130,7 @@ public class BlockedFilesDialogController extends P2DialogExtra {
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getChildren().addAll(new Label("Suchen:"), txtSearch, btnClear,
-                P2GuiTools.getHBoxGrower(), addProgress(), btnStart);
+                P2GuiTools.getHBoxGrower(), /*addProgress(),*/ btnStart);
         getVBoxCont().getChildren().add(hBox);
         txtSearch.textProperty().addListener((u, o, n) -> setPredicate());
     }
@@ -181,14 +185,16 @@ public class BlockedFilesDialogController extends P2DialogExtra {
 
 
     private HBox addProgress() {
+        PProgressBar pProgressBar = new PProgressBar(true, true);
         Button btnStop = new Button();
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
-        hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), new PProgressBar(true, true), btnStop);
-        hBoxProgress.setAlignment(Pos.CENTER);
+        hBoxProgress.getChildren().addAll(pProgressBar, btnStop);
+        hBoxProgress.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(pProgressBar, Priority.ALWAYS);
 
         hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
         return hBoxProgress;

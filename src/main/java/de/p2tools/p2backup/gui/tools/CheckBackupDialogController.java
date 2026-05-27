@@ -76,6 +76,9 @@ public class CheckBackupDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+        HBox hBox = addProgress();
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+        getHboxLeft().getChildren().add(hBox);
 
         init();
         addTable();
@@ -113,13 +116,13 @@ public class CheckBackupDialogController extends P2DialogExtra {
 
         btnStart.disableProperty().bind((cboBackup.getSelectionModel().selectedItemProperty().isNull()));
 
-        HBox hBoxProgress = addProgress();
+//        HBox hBoxProgress = addProgress();
+//        HBox.setHgrow(hBoxProgress, Priority.ALWAYS);
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().addAll(new Label("Backup:"), cboBackup,
-                hBoxProgress, btnStart);
-        HBox.setHgrow(hBoxProgress, Priority.ALWAYS);
-        getVBoxCont().getChildren().addAll(hBox);
+        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, P2GuiTools.getHBoxGrower(),
+                /*hBoxProgress,*/ btnStart);
+        getVBoxCont().getChildren().addAll(hBox/*, hBoxProgress*/);
     }
 
     private void addRadio() {
@@ -203,8 +206,6 @@ public class CheckBackupDialogController extends P2DialogExtra {
     private HBox addProgress() {
         PProgressBar pProgressBar = new PProgressBar(true, true);
         Button btnStop = new Button();
-//        btnStop.setMinHeight(18);
-//        btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 

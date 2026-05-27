@@ -189,9 +189,6 @@ public class PaneSearchInBackup extends HBox {
 
         lblPath.getStyleClass().add("p2FileLabel");
         lblFilePath.getStyleClass().add("p2FileLabel");
-        HBox hBoxPath = new HBox();
-        hBoxPath.setPadding(new Insets(5, 5, 5, 5));
-        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Ordner:  "), lblPath);
 
         btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
@@ -208,13 +205,17 @@ public class PaneSearchInBackup extends HBox {
         });
         btnOpenDirectory.visibleProperty().bind(lblFilePath.textProperty().isEmpty().not());
 
+        HBox hBoxPath = new HBox();
+        hBoxPath.setPadding(new Insets(5, 5, 5, 5));
+        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Ordner:  "), lblPath);
+
         HBox hBoxFilePath = new HBox();
         hBoxFilePath.setPadding(new Insets(5, 5, 5, 5));
         hBoxFilePath.getChildren().addAll(P2Text.getLblTextBold("Datei:   "), lblFilePath,
                 P2GuiTools.getHBoxGrower(), btnOpenDirectory);
 
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(hBoxPath, tableViewFile, hBoxFilePath);
+        vBox.getChildren().addAll(tableViewFile, hBoxPath, hBoxFilePath);
         VBox.setVgrow(tableViewFile, Priority.ALWAYS);
 
         splitPane.getItems().addAll(treeView, vBox);
@@ -246,8 +247,7 @@ public class PaneSearchInBackup extends HBox {
             if (treeItem != null && !treeItem.getValue().isEmpty()) {
                 if (backupDataProp.get() != null) {
                     String treeFileData = treeItem.getValue();
-                    lblPath.setText(FileFactory.setCorrPath(treeFileData));
-
+                    lblPath.setText(backupDataProp.get().getToPathStr(backupInfosProp.get()));
                     if (!treeView.getRoot().equals(treeItem)) {
                         Predicate<FileData> pr = f -> {
                             String path = f.getParentFilePathStr();

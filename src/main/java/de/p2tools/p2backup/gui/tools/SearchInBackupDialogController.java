@@ -50,12 +50,12 @@ public class SearchInBackupDialogController extends P2DialogExtra {
 
     private final ObjectProperty<BackupInfo> backupInfosProp = new SimpleObjectProperty<>(null);
     private ObjectProperty<BackupData> backupDataProp = new SimpleObjectProperty<>(null);
-    private Label lblPath = new Label("");
+    //    private Label lblPath = new Label("");
     private final ProgData progData;
     private final PaneSearchInBackup paneSearchInBackup;
 
     public SearchInBackupDialogController(BackupInfo backupInfos) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.SEARCH_DIALOG_SIZE, "Dateien im Backup",
+        super(ProgData.getInstance().primaryStage, ProgConfig.SEARCH_DIALOG_SIZE, "Dateien im Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
@@ -70,6 +70,9 @@ public class SearchInBackupDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+        HBox hBox = addProgress();
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+        getHboxLeft().getChildren().add(hBox);
 
         addSearch();
         addComboBox();
@@ -90,7 +93,7 @@ public class SearchInBackupDialogController extends P2DialogExtra {
         btnLoad.setOnAction(a -> {
             if (cboBackup.getSelectionModel().getSelectedItem() != null) {
                 backupDataProp.set(cboBackup.getSelectionModel().getSelectedItem());
-                lblPath.setText("Pfad: " + backupDataProp.get().getToPathStr(backupInfosProp.get()));
+//                lblPath.setText("Pfad: " + backupDataProp.get().getToPathStr(backupInfosProp.get()));
                 String subPath = backupDataProp.get().getSubPath();
                 if (!subPath.isEmpty()) {
                     backupInfosProp.get().runnerDto.initRunner();
@@ -104,10 +107,12 @@ public class SearchInBackupDialogController extends P2DialogExtra {
             }
         });
 
-        lblPath.getStyleClass().add("p2FileLabel");
+//        lblPath.getStyleClass().add("p2FileLabel");
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(cboBackup, lblPath, P2GuiTools.getHBoxGrower(), addProgress(), btnLoad);
+//        HBox hBoxProgress = addProgress();
+//        HBox.setHgrow(hBoxProgress, Priority.ALWAYS);
+        hBox.getChildren().addAll(cboBackup, P2GuiTools.getHBoxGrower()/*, hBoxProgress*/, btnLoad);
         getVBoxCont().getChildren().addAll(hBox);
     }
 
@@ -120,7 +125,9 @@ public class SearchInBackupDialogController extends P2DialogExtra {
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
-        hBoxProgress.getChildren().addAll(P2GuiTools.getHBoxGrower(), new PProgressBar(true, true), btnStop);
+        PProgressBar pProgressBar = new PProgressBar(true, true);
+        HBox.setHgrow(pProgressBar, Priority.ALWAYS);
+        hBoxProgress.getChildren().addAll(/*P2GuiTools.getHBoxGrower(),*/ pProgressBar, btnStop);
         hBoxProgress.setAlignment(Pos.CENTER);
 
         hBoxProgress.visibleProperty().bind(backupInfosProp.get().runnerDto.runningProperty());
