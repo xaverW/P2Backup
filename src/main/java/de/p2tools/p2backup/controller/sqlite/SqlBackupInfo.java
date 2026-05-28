@@ -36,81 +36,81 @@ public class SqlBackupInfo {
             var rs = pstmt.executeQuery();
 
 
-            BackupInfo backupInfos = new BackupInfo();
+            BackupInfo backupInfo = new BackupInfo();
             while (rs.next()) {
-                backupInfos.setId(rs.getLong("id"));
-                backupInfos.setName(rs.getString("name"));
-                backupInfos.setDescription(rs.getString("description"));
-                backupInfos.setBackupPath(rs.getString("backupPath"));
-                backupInfos.setLastBackupId(rs.getLong("lastBackupId"));
-                backupInfos.setLastStartDate(SqlFactory.getLocalDateTime(rs.getString("lastStartDate")));
+                backupInfo.setId(rs.getLong("id"));
+                backupInfo.setName(rs.getString("name"));
+                backupInfo.setDescription(rs.getString("description"));
+                backupInfo.setBackupPath(rs.getString("backupPath"));
+                backupInfo.setLastBackupId(rs.getLong("lastBackupId"));
+                backupInfo.setLastStartDate(SqlFactory.getLocalDateTime(rs.getString("lastStartDate")));
 
-                backupInfos.setHow(rs.getInt("how"));
-                backupInfos.setFileFilterNot(rs.getBoolean("fileFilterNot"));
+                backupInfo.setHow(rs.getInt("how"));
+                backupInfo.setFileFilterNot(rs.getBoolean("fileFilterNot"));
 
-                backupInfos.setSumDay(rs.getInt("sumDay"));
-                backupInfos.setSumWeek(rs.getInt("sumWeek"));
-                backupInfos.setSumMonth(rs.getInt("sumMonth"));
-                backupInfos.setGenDate(P2LDateFactory.fromString(rs.getString("genDate")));
+                backupInfo.setSumDay(rs.getInt("sumDay"));
+                backupInfo.setSumWeek(rs.getInt("sumWeek"));
+                backupInfo.setSumMonth(rs.getInt("sumMonth"));
+                backupInfo.setGenDate(P2LDateFactory.fromString(rs.getString("genDate")));
             }
 
-            if (!backupInfos.getBackupPath().equals(backupPath)) {
+            if (!backupInfo.getBackupPath().equals(backupPath)) {
                 // dann hat er sich geändert
-                backupInfos.setBackupPath(backupPath);
+                backupInfo.setBackupPath(backupPath);
             }
 
             // die Backups laden
-            if (!SqlBackupData.readBackupDataList(backupInfos)) {
+            if (!SqlBackupData.readBackupDataList(backupInfo)) {
                 conn.rollback();
             }
 
 
             // Path laden
-            if (!readPathDataList(backupInfos)) {
+            if (!readPathDataList(backupInfo)) {
                 conn.rollback();
             }
 
-            return backupInfos;
+            return backupInfo;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
         return null;
     }
 
-    private static boolean readPathDataList(BackupInfo backupInfos) {
-        String url = SqlFactory.getUrl(backupInfos);
+    private static boolean readPathDataList(BackupInfo backupInfo) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
 
         String sql = "SELECT id, backupInfoId, path FROM pathData " +
                 "WHERE backupInfoId == ?";
-        if (!readPath(backupInfos, url, sql, backupInfos.getPathListFrom())) {
+        if (!readPath(backupInfo, url, sql, backupInfo.getPathListFrom())) {
             return false;
         }
 
         sql = "SELECT id, backupInfoId, path FROM pathDataExcludeDir " +
                 "WHERE backupInfoId == ?";
-        if (!readPath(backupInfos, url, sql, backupInfos.getPathListExcludeDir())) {
+        if (!readPath(backupInfo, url, sql, backupInfo.getPathListExcludeDir())) {
             return false;
         }
 
         sql = "SELECT id, backupInfoId, path FROM pathDataExcludeFile " +
                 "WHERE backupInfoId == ?";
-        if (!readPath(backupInfos, url, sql, backupInfos.getPathListExcludeFile())) {
+        if (!readPath(backupInfo, url, sql, backupInfo.getPathListExcludeFile())) {
             return false;
         }
 
         return true;
     }
 
-    private static boolean readPath(BackupInfo backupInfos,
+    private static boolean readPath(BackupInfo backupInfo,
                                     String url, String sql, PathDataList pathDataList) {
 
         try (var conn = DriverManager.getConnection(url);
              var pstmt = conn.prepareStatement(sql)) {
 
-            long backupInfoId = backupInfos.getId();
+            long backupInfoId = backupInfo.getId();
             pstmt.setLong(1, backupInfoId);
             var rs = pstmt.executeQuery();
 
@@ -128,11 +128,11 @@ public class SqlBackupInfo {
         return true;
     }
 
-    public static boolean delBackupInfo(BackupInfo backupInfos) {
-        // BackupInfos
+    public static boolean delBackupInfo(BackupInfo backupInfo) {
+        // backupInfo
         P2Duration.counterStart("delBackupInfo");
 
-        String url = SqlFactory.getUrl(backupInfos);
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -140,7 +140,7 @@ public class SqlBackupInfo {
             // Disable auto-commit mode
             conn.setAutoCommit(false);
 
-            long id = backupInfos.getId();
+            long id = backupInfo.getId();
 
             // BackupInfo
             String sql = "DELETE FROM backupInfo WHERE id=?";
@@ -154,7 +154,7 @@ public class SqlBackupInfo {
             }
 
             // BackupData
-            for (BackupData backupData : backupInfos.getBackupDataList()) {
+            for (BackupData backupData : backupInfo.getBackupDataList()) {
                 // BackupData
                 if (!SqlBackupData.delBackupData(backupData, conn)) {
                     conn.rollback();
@@ -206,11 +206,11 @@ public class SqlBackupInfo {
         return true;
     }
 
-    public static boolean addUpdateBackupInfo(BackupInfo backupInfos) {
-        // BackupInfos, BackupData updaten
+    public static boolean addUpdateBackupInfo(BackupInfo backupInfo) {
+        // backupInfo, BackupData updaten
         P2Duration.counterStart("updateBackupInfo");
 
-        String url = SqlFactory.getUrl(backupInfos);
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -218,7 +218,7 @@ public class SqlBackupInfo {
             // Disable auto-commit mode
             conn.setAutoCommit(false);
 
-            long id = backupInfos.getId();
+            long id = backupInfo.getId();
 
 
 //            // zuerst DB erstellen
@@ -261,11 +261,11 @@ public class SqlBackupInfo {
             }
 
             // die BACKUP_INFO und BACKUP_DATA schreiben
-            if (!writeBackupInfo(backupInfos, conn)) {
+            if (!writeBackupInfo(backupInfo, conn)) {
                 conn.rollback();
             }
 
-            for (BackupData backupData : backupInfos.getBackupDataList()) {
+            for (BackupData backupData : backupInfo.getBackupDataList()) {
                 // BackupData
                 if (!SqlBackupData.writeBackupData(backupData, conn)) {
                     conn.rollback();
@@ -284,8 +284,8 @@ public class SqlBackupInfo {
         return true;
     }
 
-    private static boolean writeBackupInfo(BackupInfo backupInfos, Connection conn) throws SQLException {
-        // BackupInfos und aktuelles Backup anlegen/updaten
+    private static boolean writeBackupInfo(BackupInfo backupInfo, Connection conn) throws SQLException {
+        // backupInfo und aktuelles Backup anlegen/updaten
         P2Duration.counterStart("addBackupInfo");
 
         // BackupInfo
@@ -295,20 +295,20 @@ public class SqlBackupInfo {
                 "sumDay, sumWeek, sumMonth, " +
                 "genDate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try (var pstmt = conn.prepareStatement(sqlBackupInfo)) {
-            pstmt.setLong(1, backupInfos.getId());
-            pstmt.setString(2, backupInfos.getName());
-            pstmt.setString(3, backupInfos.getDescription());
-            pstmt.setString(4, backupInfos.getBackupPath());
-            pstmt.setLong(5, backupInfos.getLastBackupId());
-            pstmt.setString(6, SqlFactory.fromLocalDate(backupInfos.getLastStartDate()));
+            pstmt.setLong(1, backupInfo.getId());
+            pstmt.setString(2, backupInfo.getName());
+            pstmt.setString(3, backupInfo.getDescription());
+            pstmt.setString(4, backupInfo.getBackupPath());
+            pstmt.setLong(5, backupInfo.getLastBackupId());
+            pstmt.setString(6, SqlFactory.fromLocalDate(backupInfo.getLastStartDate()));
 
-            pstmt.setInt(7, backupInfos.getHow());
-            pstmt.setBoolean(8, backupInfos.isFileFilterNot());
+            pstmt.setInt(7, backupInfo.getHow());
+            pstmt.setBoolean(8, backupInfo.isFileFilterNot());
 
-            pstmt.setInt(9, backupInfos.getSumDay());
-            pstmt.setInt(10, backupInfos.getSumWeek());
-            pstmt.setInt(11, backupInfos.getSumMonth());
-            pstmt.setString(12, backupInfos.getGenDate().toString());
+            pstmt.setInt(9, backupInfo.getSumDay());
+            pstmt.setInt(10, backupInfo.getSumWeek());
+            pstmt.setInt(11, backupInfo.getSumMonth());
+            pstmt.setString(12, backupInfo.getGenDate().toString());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -319,9 +319,9 @@ public class SqlBackupInfo {
         // PathDataList
         final String sqlPath = "INSERT OR REPLACE INTO pathData(id, backupInfoId, path) VALUES(?,?,?)";
         try (var pstmt = conn.prepareStatement(sqlPath)) {
-            for (PathData path : backupInfos.getPathListFrom()) {
+            for (PathData path : backupInfo.getPathListFrom()) {
                 pstmt.setLong(1, path.getId());
-                pstmt.setLong(2, backupInfos.getId());
+                pstmt.setLong(2, backupInfo.getId());
                 pstmt.setString(3, path.getPath());
                 pstmt.executeUpdate();
             }
@@ -334,9 +334,9 @@ public class SqlBackupInfo {
         // PathDataList excludeDir
         final String sqlPathExcludeDir = "INSERT OR REPLACE INTO pathDataExcludeDir(id, backupInfoId, path) VALUES(?,?,?)";
         try (var pstmt = conn.prepareStatement(sqlPathExcludeDir)) {
-            for (PathData path : backupInfos.getPathListExcludeDir()) {
+            for (PathData path : backupInfo.getPathListExcludeDir()) {
                 pstmt.setLong(1, path.getId());
-                pstmt.setLong(2, backupInfos.getId());
+                pstmt.setLong(2, backupInfo.getId());
                 pstmt.setString(3, path.getPath());
                 pstmt.executeUpdate();
             }
@@ -349,9 +349,9 @@ public class SqlBackupInfo {
         // PathDataList excludeFile
         final String sqlPathExcludeFile = "INSERT OR REPLACE INTO pathDataExcludeFile(id, backupInfoId, path) VALUES(?,?,?)";
         try (var pstmt = conn.prepareStatement(sqlPathExcludeFile)) {
-            for (PathData path : backupInfos.getPathListExcludeFile()) {
+            for (PathData path : backupInfo.getPathListExcludeFile()) {
                 pstmt.setLong(1, path.getId());
-                pstmt.setLong(2, backupInfos.getId());
+                pstmt.setLong(2, backupInfo.getId());
                 pstmt.setString(3, path.getPath());
                 pstmt.executeUpdate();
             }

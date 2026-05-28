@@ -35,14 +35,14 @@ import javafx.stage.Stage;
 public class BackupErrorDialogController extends P2DialogExtra {
 
     private final Button btnOk = new Button("Ok");
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
 
 
-    public BackupErrorDialogController(Stage stage, BackupInfo backupInfos) {
+    public BackupErrorDialogController(Stage stage, BackupInfo backupInfo) {
         super(stage, null, "Backup",
                 true, false, false, DECO.NO_BORDER);
 
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         init(true);
     }
 
@@ -55,7 +55,7 @@ public class BackupErrorDialogController extends P2DialogExtra {
 
         HBox hBoxName = new HBox(5);
         hBoxName.setAlignment(Pos.CENTER_LEFT);
-        hBoxName.getChildren().addAll(lblName, new Label(backupInfos.getName()));
+        hBoxName.getChildren().addAll(lblName, new Label(backupInfo.getName()));
 
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(0, 20, 0, 0));

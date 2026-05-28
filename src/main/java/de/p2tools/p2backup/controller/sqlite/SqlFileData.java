@@ -15,8 +15,8 @@ public class SqlFileData {
 
     }
 
-    public static boolean readDataFileList(BackupInfo backupInfos, FileDataList fileDataList) {
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean readDataFileList(BackupInfo backupInfo, FileDataList fileDataList) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -48,13 +48,13 @@ public class SqlFileData {
         return true;
     }
 
-    public static boolean readBackupFileList(BackupInfo backupInfos, BackupData backupData,
+    public static boolean readBackupFileList(BackupInfo backupInfo, BackupData backupData,
                                              FileDataList fileDataList) {
-        String url = SqlFactory.getUrl(backupInfos);
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
-        final String to = backupData.getToPathStr(backupInfos);
+        final String to = backupData.getToPathStr(backupInfo);
         final String sqlBackupInfo = "SELECT id, backupId, dataFile, " +
                 "date, size, link, hash, error FROM " +
                 "backupFiles WHERE backupId == ?";
@@ -86,13 +86,13 @@ public class SqlFileData {
         return true;
     }
 
-    public static boolean readFileListFromBackup(BackupInfo backupInfos, BackupData backupData,
+    public static boolean readFileListFromBackup(BackupInfo backupInfo, BackupData backupData,
                                                  FileDataList fileDataList) {
-        String url = SqlFactory.getUrl(backupInfos);
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
-        final String to = backupData.getToPathStr(backupInfos);
+        final String to = backupData.getToPathStr(backupInfo);
         final String sqlBackupInfo = "SELECT id, backupId, dataFile, " +
                 "date, size, link, hash, error FROM backupFiles " +
                 "WHERE backupId == ? ";
@@ -125,8 +125,8 @@ public class SqlFileData {
     }
 
 
-    public static boolean writeDataFileList(BackupInfo backupInfos) {
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean writeDataFileList(BackupInfo backupInfo) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -135,7 +135,7 @@ public class SqlFileData {
             conn.setAutoCommit(false);
 
             // zuerst mal alle von BackupInfo löschen (wenn vorhanden)
-            for (BackupData backupData : backupInfos.getBackupDataList()) {
+            for (BackupData backupData : backupInfo.getBackupDataList()) {
                 final String sql = "DELETE FROM dataFiles WHERE backupId=?";
                 try (var pstmt = conn.prepareStatement(sql)) {
                     pstmt.setLong(1, backupData.getId());
@@ -148,7 +148,7 @@ public class SqlFileData {
             }
 
             // dann schreiben
-            if (!write(backupInfos.runnerDto.getBackupData().getId(), backupInfos.runnerDto.getDataFileList(), conn, false)) {
+            if (!write(backupInfo.runnerDto.getBackupData().getId(), backupInfo.runnerDto.getDataFileList(), conn, false)) {
                 conn.rollback();
                 return false;
             }
@@ -162,16 +162,16 @@ public class SqlFileData {
         return true;
     }
 
-    public static boolean writeBackupFileList(BackupInfo backupInfos) {
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean writeBackupFileList(BackupInfo backupInfo) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
         try (var conn = DriverManager.getConnection(url)) {
             // Disable auto-commit mode
             conn.setAutoCommit(false);
-            if (!writeBackupFileList(backupInfos.runnerDto.getBackupData().getId(),
-                    backupInfos.runnerDto.getDataFileList(), conn)) {
+            if (!writeBackupFileList(backupInfo.runnerDto.getBackupData().getId(),
+                    backupInfo.runnerDto.getDataFileList(), conn)) {
                 conn.rollback();
             }
 
@@ -233,8 +233,8 @@ public class SqlFileData {
         return true;
     }
 
-    public static boolean updateBackupFileList(BackupInfo backupInfos, long backupId, FileDataList fileDataList) {
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean updateBackupFileList(BackupInfo backupInfo, long backupId, FileDataList fileDataList) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -242,7 +242,7 @@ public class SqlFileData {
             // Disable auto-commit mode
             conn.setAutoCommit(false);
 
-            if (!SqlFileData.deleteBackupFileList(backupInfos, backupId)) {
+            if (!SqlFileData.deleteBackupFileList(backupInfo, backupId)) {
                 conn.rollback();
                 return false;
             }
@@ -288,8 +288,8 @@ public class SqlFileData {
         return true;
     }
 
-    public static boolean deleteBackupFileList(BackupInfo backupInfos, long backupId) {
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean deleteBackupFileList(BackupInfo backupInfo, long backupId) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -317,8 +317,8 @@ public class SqlFileData {
         return true;
     }
 
-    public static boolean deleteFileList(BackupInfo backupInfos, BackupData backupData) {
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean deleteFileList(BackupInfo backupInfo, BackupData backupData) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }

@@ -35,7 +35,7 @@ public class FileHashFactory {
     private FileHashFactory() {
     }
 
-    public static FileData getFileHashData(BackupInfo backupInfo, String toPath,
+    public static FileData getFileDataHash(BackupInfo backupInfo, String toPath,
                                            boolean quick, File file, boolean followLink) {
         // liefert ein FileData mit oder ohne wenn (quick) dem Hash
         // toPath wird vom Pfad entfernt, wenn vorhanden -> wird dann der Pfad des ORG-DATEN-File
@@ -52,17 +52,46 @@ public class FileHashFactory {
             if (link && followLink) {
                 strFile = file.getCanonicalPath(); // ist der Pfad des verlinkten Files
             }
-            // P2Date fileDate = new P2Date(file.lastModified());
-            // FileTime fileTime = Files.getLastModifiedTime(Path.of(file.toString()));
-//            if (!toPath.isEmpty()) {
-//                strFile = strFile.replace(toPath, "");
-//            }
             return new FileData(strFile, toPath, file.lastModified(), file.length(), hashString, link);
 
         } catch (Exception ex) {
             P2Log.errorLog(784512589, ex.getLocalizedMessage());
             return null;
         }
+    }
+
+    public static void setFileDataHash(BackupInfo backupInfo, FileData fileData) {
+        final byte[] buffer = new byte[1024]; // todo
+        InputStream srcStream = null;
+        String hashString = "";
+
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance(HashConst.HASH_MD5);
+            srcStream = new DigestInputStream(new FileInputStream(fileData.getFilePath().toFile()), messageDigest);
+
+            while (!backupInfo.runnerDto.isStop() && srcStream.read(buffer) > -1) {
+            }
+            hashString = getHashString(messageDigest.digest());
+            fileData.setHash(hashString);
+            return;
+
+        } catch (Exception ex) {
+            if (backupInfo.runnerDto.isAsk()) {
+                if (!FileFactory.goOnError(backupInfo, fileData.getFilePathStr(), true)) {
+                    backupInfo.runnerDto.setStop();
+                }
+            }
+            P2Log.errorLog(963210472, ex, "Fehler! " + fileData.getFileNameStr());
+        } finally {
+            try {
+                if (srcStream != null) {
+                    srcStream.close();
+                }
+            } catch (IOException ignored) {
+            }
+        }
+
+        fileData.setHash(FileFactory.HASH_ERROR);
     }
 
     private static String getFileHash(BackupInfo backupInfo, File file) {

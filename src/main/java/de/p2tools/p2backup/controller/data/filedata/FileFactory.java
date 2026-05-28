@@ -29,8 +29,8 @@ public class FileFactory {
     private FileFactory() {
     }
 
-    public static boolean goOnError(BackupInfo backupInfos, String file, boolean isFile) {
-        if (backupInfos.runnerDto.getGoAlwaysOverError()) {
+    public static boolean goOnError(BackupInfo backupInfo, String file, boolean isFile) {
+        if (backupInfo.runnerDto.getGoAlwaysOverError()) {
             return true;
         }
 
@@ -38,7 +38,7 @@ public class FileFactory {
         AtomicBoolean atomicBoolean = new AtomicBoolean(true);
         Platform.runLater(() -> {
             // wird im GUI angezeigt
-            new CopyFileErrorDialogController(backupInfos, file, yesProp, isFile);
+            new CopyFileErrorDialogController(backupInfo, file, yesProp, isFile);
             atomicBoolean.set(false);
         });
         while (atomicBoolean.get()) {
@@ -138,12 +138,12 @@ public class FileFactory {
     // =======================
     // backup
     // =======================
-    public static Path getBackupPath(BackupInfo backupInfos) {
-        return Path.of(backupInfos.getBackupPath());
+    public static Path getBackupPath(BackupInfo backupInfo) {
+        return Path.of(backupInfo.getBackupPath());
     }
 
-    public static boolean backupPathExistAndNotEmpty(BackupInfo backupInfos) {
-        Path backupPath = getBackupPath(backupInfos);
+    public static boolean backupPathExistAndNotEmpty(BackupInfo backupInfo) {
+        Path backupPath = getBackupPath(backupInfo);
         if (backupPath.toFile().exists() &&
                 backupPath.toFile().isDirectory() &&
                 backupPath.toFile().listFiles() != null &&
@@ -162,41 +162,41 @@ public class FileFactory {
         return Path.of(backupPath, ProgConst.CONFIG_DB_FILE).toString();
     }
 
-    public static String getBackupDbPath(BackupInfo backupInfos) {
-        return Path.of(backupInfos.getBackupPath(), ProgConst.CONFIG_DB_FILE).toString();
+    public static String getBackupDbPath(BackupInfo backupInfo) {
+        return Path.of(backupInfo.getBackupPath(), ProgConst.CONFIG_DB_FILE).toString();
     }
 
     // =======================
     // toPath
     // =======================
-    public static Path getToPath(BackupInfo backupInfos, String subPath) {
-        return subPath.isEmpty() ? null : Path.of(backupInfos.getBackupPath(), subPath);
+    public static Path getToPath(BackupInfo backupInfo, String subPath) {
+        return subPath.isEmpty() ? null : Path.of(backupInfo.getBackupPath(), subPath);
     }
 
-    public static String getToPathStr(BackupInfo backupInfos, String subPath) {
+    public static String getToPathStr(BackupInfo backupInfo, String subPath) {
         if (subPath.isEmpty()) {
             return "";
         }
-        if (backupInfos.getBackupPath().isEmpty()) {
+        if (backupInfo.getBackupPath().isEmpty()) {
             return "";
         }
-        return Path.of(backupInfos.getBackupPath(), subPath).toString();
+        return Path.of(backupInfo.getBackupPath(), subPath).toString();
     }
 
-    public static Path getToPath(BackupInfo backupInfos, BackupData backupData) {
-        return Path.of(backupInfos.getBackupPath(), backupData.getSubPath());
+    public static Path getToPath(BackupInfo backupInfo, BackupData backupData) {
+        return Path.of(backupInfo.getBackupPath(), backupData.getSubPath());
     }
 
-    public static String getToPathStr(BackupInfo backupInfos, BackupData backupData) {
-        return Path.of(backupInfos.getBackupPath(), backupData.getSubPath()).toString();
+    public static String getToPathStr(BackupInfo backupInfo, BackupData backupData) {
+        return Path.of(backupInfo.getBackupPath(), backupData.getSubPath()).toString();
     }
 
-    public static String getToPathStr(BackupInfo backupInfos) {
-        return backupInfos.runnerDto.getToPath().toString();
+    public static String getToPathStr(BackupInfo backupInfo) {
+        return backupInfo.runnerDto.getToPath().toString();
     }
 
-    public static Path getToPath(BackupInfo backupInfos) {
-        return Path.of(backupInfos.runnerDto.getToPath().toString());
+    public static Path getToPath(BackupInfo backupInfo) {
+        return Path.of(backupInfo.runnerDto.getToPath().toString());
     }
 
     // =======================
@@ -215,8 +215,8 @@ public class FileFactory {
         return strDate;
     }
 
-//    public static String getLastSubPath(BackupInfo backupInfos) {
-//        ObservableList<String> fileNameList = getAllSubPath(backupInfos);
+//    public static String getLastSubPath(BackupInfo backupInfo) {
+//        ObservableList<String> fileNameList = getAllSubPath(backupInfo);
 //        if (!fileNameList.isEmpty()) {
 //            return fileNameList.get(0);
 //        } else {
@@ -224,23 +224,23 @@ public class FileFactory {
 //        }
 //    }
 //
-//    public static ObservableList<String> getAllSubPath(BackupInfo backupInfos) {
+//    public static ObservableList<String> getAllSubPath(BackupInfo backupInfo) {
 //        ObservableList<String> fileNameList = FXCollections.observableArrayList();
 //        Path path = null;
 //        try {
-//            for (BackupData backupData : backupInfos.getBackupDataList()) {
-//                path = FileFactory.getToPath(backupInfos, backupData);
+//            for (BackupData backupData : backupInfo.getBackupDataList()) {
+//                path = FileFactory.getToPath(backupInfo, backupData);
 //                if (path.toFile().exists()) {
 //                    fileNameList.add(path.getFileName().toString());
 //                } else {
 //                    P2AlertAppThread.showErrorAlert("Kann die Backup-Ordner nicht lesen!",
-//                            "Kann Dateien des Ordners \"" + backupInfos.getBackupPath() + "\" nicht lesen");
+//                            "Kann Dateien des Ordners \"" + backupInfo.getBackupPath() + "\" nicht lesen");
 //                }
 //            }
 //        } catch (Exception ex) {
 //            P2AlertAppThread.showErrorAlert(ProgData.getInstance().primaryStage,
 //                    "Kann die Backup-Ordner nicht lesen!",
-//                    "Kann Dateien des Ordners \"" + backupInfos.getBackupPath() +
+//                    "Kann Dateien des Ordners \"" + backupInfo.getBackupPath() +
 //                            (path != null ? (" - " + path) : "") +
 //                            "\" nicht lesen");
 //        }

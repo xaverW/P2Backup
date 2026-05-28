@@ -29,12 +29,12 @@ import java.io.File;
 
 public class CellFilePath<S, T> extends TableCell<S, T> {
 
-    private final ObjectProperty<BackupInfo> backupInfosProps;
+    private final ObjectProperty<BackupInfo> backupInfoProps;
     private final ObjectProperty<BackupData> backupDataProps;
 
-    public CellFilePath(ObjectProperty<BackupInfo> backupInfosProps,
+    public CellFilePath(ObjectProperty<BackupInfo> backupInfoProps,
                         ObjectProperty<BackupData> backupDataProp) {
-        this.backupInfosProps = backupInfosProps;
+        this.backupInfoProps = backupInfoProps;
         this.backupDataProps = backupDataProp;
     }
 

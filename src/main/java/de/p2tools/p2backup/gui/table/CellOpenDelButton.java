@@ -40,11 +40,11 @@ import java.nio.file.Path;
 public class CellOpenDelButton<S, T> extends TableCell<S, T> {
 
     private final Stage stage;
-    private final ObjectProperty<BackupInfo> backupInfosProps;
+    private final ObjectProperty<BackupInfo> backupInfoProps;
 
-    public CellOpenDelButton(Stage stage, ObjectProperty<BackupInfo> backupInfosProps) {
+    public CellOpenDelButton(Stage stage, ObjectProperty<BackupInfo> backupInfoProps) {
         this.stage = stage;
-        this.backupInfosProps = backupInfosProps;
+        this.backupInfoProps = backupInfoProps;
     }
 
     public final Callback<TableColumn<BackupData, String>, TableCell<BackupData, String>> cellFactory
@@ -68,7 +68,7 @@ public class CellOpenDelButton<S, T> extends TableCell<S, T> {
                 hbox.setPadding(new Insets(0, 2, 0, 2));
 
                 BackupData backupData = getTableView().getItems().get(getIndex());
-                Path path = FileFactory.getToPath(backupInfosProps.get(), backupData);
+                Path path = FileFactory.getToPath(backupInfoProps.get(), backupData);
 
                 final Button btnOpenDirectory;
                 btnOpenDirectory = new Button();
@@ -94,7 +94,7 @@ public class CellOpenDelButton<S, T> extends TableCell<S, T> {
                 btnDel.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnDel.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
                 btnDel.setOnAction(a -> {
-                    new DeleteRunner(backupInfosProps.get(), backupData).deleteBackup();
+                    new DeleteRunner(backupInfoProps.get(), backupData).deleteBackup();
                     getTableView().refresh();
                     getTableView().requestFocus();
                 });

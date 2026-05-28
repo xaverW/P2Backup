@@ -29,11 +29,11 @@ import javafx.util.Callback;
 public class CellToPath<S, T> extends TableCell<S, T> {
 
     private final Stage stage;
-    private final ObjectProperty<BackupInfo> backupInfosProps;
+    private final ObjectProperty<BackupInfo> backupInfoProps;
 
-    public CellToPath(Stage stage, ObjectProperty<BackupInfo> backupInfosProps) {
+    public CellToPath(Stage stage, ObjectProperty<BackupInfo> backupInfoProps) {
         this.stage = stage;
-        this.backupInfosProps = backupInfosProps;
+        this.backupInfoProps = backupInfoProps;
     }
 
     public final Callback<TableColumn<BackupData, String>, TableCell<BackupData, String>> cellFactory
@@ -52,7 +52,7 @@ public class CellToPath<S, T> extends TableCell<S, T> {
                 }
 
                 BackupData backupData = getTableView().getItems().get(getIndex());
-                setText(FileFactory.getToPathStr(backupInfosProps.get(), backupData));
+                setText(FileFactory.getToPathStr(backupInfoProps.get(), backupData));
                 setGraphic(null);
             }
         };

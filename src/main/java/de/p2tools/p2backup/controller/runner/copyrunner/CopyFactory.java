@@ -6,6 +6,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
+import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.p2event.P2Event;
 import org.apache.commons.io.FileUtils;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.HashSet;
 import java.util.List;
 
 public class CopyFactory {
@@ -41,42 +41,18 @@ public class CopyFactory {
         return true;
     }
 
-    public static boolean makeDirsOfFile(List<FileData> fileDataList, Path toDataPath) {
-        // erst mal die Dirs anlegen
-        final HashSet<File> dirSet = new HashSet<>();
-        for (FileData fileData : fileDataList) {
-            // toFilePath:  /tmp/usb/backup/2025-10-21__16-29-29/__home/emil/Desktop/daten/file2/1972/bild.jpg
-            // toPath:      /tmp/usb/backup/2025-10-23__10-12-00
-            // filePath:    /home/emil/Desktop/daten/file1/1970/1960_05.jpg
-            File parentDir = fileData.getParentBackupFilePath().toFile();
-            dirSet.add(parentDir);
-        }
-
-        for (File f : dirSet) {
-            if (!f.exists() && !f.mkdirs() && !f.isDirectory()) {
-                P2AlertAppThread.showErrorAlert("Dateien kopieren", "Konnte den Zielordner\n" +
-                        f + "\n" +
-                        "nicht anlegen");
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public static boolean copyFiles(BackupInfo backupInfo,
                                     List<FileData> fileDataList) {
 
+        backupInfo.runnerDto.setRunnerText("Dateien kopieren");
         ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
-        backupInfo.runnerDto.setRunnerMax(fileDataList.size());
-        backupInfo.runnerDto.setRunnerDone(0);
-        int ready = 0;
-
         for (FileData fileData : fileDataList) {
             // toFilePath:  /tmp/usb/backup/2025-10-21__16-29-29/Daten/home/emil/Desktop/daten/file2/1972/bild.jpg
             // toPath:      /tmp/usb/backup/2025-10-23__10-12-00
             // filePath:    /home/emil/Desktop/daten/file1/1970/1960_05.jpg
 
+            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (fileData.isError()) {
                 continue;
             }
@@ -95,19 +71,16 @@ public class CopyFactory {
             Path toFilePath = fileData.getBackupFilePath(); // neue Speicherpfad
 
             try {
-                // und jetzt den toData Pfad wieder setzen
                 backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
-//                Files.copy(fromPath, toFilePath, StandardCopyOption.COPY_ATTRIBUTES);
+                backupInfo.runnerDto.addRunnerDone();
                 FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
             } catch (Exception ex) {
                 if (!FileFactory.goOnError(backupInfo, fromPath.toString(), true)) {
                     return false;
                 }
             }
-
-            ++ready;
-            backupInfo.runnerDto.setRunnerDone(ready);
         }
+
         ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         return true;
     }
@@ -115,14 +88,19 @@ public class CopyFactory {
     public static boolean moveFiles(BackupInfo backupInfo, String oldToPath,
                                     FileDataList fileDataList) {
         // move
-        for (FileData f : fileDataList) {
-            if (f.isError()) {
+        for (FileData fileData : fileDataList) {
+
+            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            if (fileData.isError()) {
                 continue;
             }
 
-            File fromFile = f.getBackupFilePath(oldToPath).toFile();
-            File toFile = f.getBackupFilePath().toFile();
+            File fromFile = fileData.getBackupFilePath(oldToPath).toFile();
+            File toFile = fileData.getBackupFilePath().toFile();
             try {
+                backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
+                backupInfo.runnerDto.addRunnerDone();
                 FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
             } catch (IOException e) {
                 if (!FileFactory.goOnError(backupInfo, fromFile.toString(), true)) {
@@ -137,16 +115,21 @@ public class CopyFactory {
     public static boolean linkFiles(BackupInfo backupInfo, String oldToPath,
                                     List<FileData> fileDataList) {
         // in der FileDataList sind die Dateien aus dem Backup die verlinkt werden
-        for (FileData f : fileDataList) {
-            if (f.isError()) {
+        for (FileData fileData : fileDataList) {
+
+            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            if (fileData.isError()) {
                 continue;
             }
 
-            Path fromFile = f.getBackupFilePath(oldToPath);
-            Path toFile = f.getBackupFilePath();
+            Path fromFile = fileData.getBackupFilePath(oldToPath);
+            Path toFile = fileData.getBackupFilePath();
 
             try {
                 // create a hard link
+                backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
+                backupInfo.runnerDto.addRunnerDone();
                 FileUtils.createParentDirectories(toFile.toFile());
                 Files.createLink(toFile, fromFile);
             } catch (Exception ex) {
@@ -155,6 +138,7 @@ public class CopyFactory {
                 }
             }
         }
+
         return true;
     }
 }

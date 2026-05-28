@@ -2,7 +2,7 @@ package de.p2tools.p2backup.gui.guibig;
 
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.data.backupinfo.BackupInfosProps;
+import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoProps;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,7 +37,7 @@ public class TitleBox extends VBox {
 
         nameProp.addListener((u, o, n) -> setName());
         cboBackup.setItems(ProgData.getInstance().backupInfoList
-                .sorted(Comparator.comparing(BackupInfosProps::getName)));
+                .sorted(Comparator.comparing(BackupInfoProps::getName)));
         cboBackup.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
             BackupInfo b = cboBackup.getSelectionModel().getSelectedItem();
             if (b != null) {
@@ -58,7 +58,7 @@ public class TitleBox extends VBox {
         hBox.setSpacing(P2LibConst.SPACING_HBOX);
         hBox.getChildren().addAll(new Label("Backup:"), cboBackup, lblTop,
                 P2GuiTools.getHBoxGrower(), new PProgressBar());
-        getChildren().addAll(hBox, P2GuiTools.getHDistance(5));
+        getChildren().addAll(hBox);
     }
 
     private void setName() {
@@ -69,17 +69,17 @@ public class TitleBox extends VBox {
     }
 
     private void set() {
-        BackupInfo backupInfos;
+        BackupInfo backupInfo;
         if (progData.backupInfoProperty.get() == null) {
             nameProp.unbind();
             lblTop.textProperty().unbind();
             lblTop.setText("");
             cboBackup.getSelectionModel().clearSelection();
         } else {
-            backupInfos = progData.backupInfoProperty.get();
-            nameProp.bind(backupInfos.nameProperty());
-            lblTop.textProperty().bind(backupInfos.nameProperty());
-            cboBackup.getSelectionModel().select(backupInfos);
+            backupInfo = progData.backupInfoProperty.get();
+            nameProp.bind(backupInfo.nameProperty());
+            lblTop.textProperty().bind(backupInfo.nameProperty());
+            cboBackup.getSelectionModel().select(backupInfo);
         }
     }
 }

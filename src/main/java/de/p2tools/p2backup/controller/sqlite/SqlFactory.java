@@ -25,14 +25,14 @@ public class SqlFactory {
         }
     }
 
-    public static String getUrl(BackupInfo backupInfos) {
+    public static String getUrl(BackupInfo backupInfo) {
         String path;
-        if (backupInfos.getBackupPath().isEmpty()) {
+        if (backupInfo.getBackupPath().isEmpty()) {
             P2AlertAppThread.showErrorAlert("Datenbank anlegen",
                     "Kann die Backup-Datenbank nicht speichern");
             return "";
         } else {
-            path = FileFactory.getBackupDbPath(backupInfos);
+            path = FileFactory.getBackupDbPath(backupInfo);
             return "jdbc:sqlite:" + path;
         }
     }

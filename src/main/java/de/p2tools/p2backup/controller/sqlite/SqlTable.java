@@ -12,9 +12,8 @@ public class SqlTable {
     private SqlTable() {
     }
 
-    public static boolean makeBackupDb(BackupInfo backupInfos) {
-        P2Duration.counterStart("makeBackupDb");
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean makeBackupDb(BackupInfo backupInfo) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -39,7 +38,6 @@ public class SqlTable {
             return false;
         }
 
-        P2Duration.counterStop("makeBackupDb");
         return true;
     }
 

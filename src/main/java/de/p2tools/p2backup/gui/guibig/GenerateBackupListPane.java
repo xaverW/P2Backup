@@ -75,26 +75,26 @@ public class GenerateBackupListPane extends VBox {
                 toList().forEach(this::addBackup);
     }
 
-    private void addBackup(BackupInfo backupInfos) {
+    private void addBackup(BackupInfo backupInfo) {
         // ==========
         // Refresh
         Button btnRefresh = new Button("Das gespeicherte\nBackup suchen");
         btnRefresh.setWrapText(true);
         btnRefresh.setGraphic(PIconFactory.PICON.BTN_LOAD_REFRESH_BIG.getFontIcon());
-        btnRefresh.visibleProperty().bind(backupInfos.notReadyProperty().and(backupInfos.backupPathProperty().isEmpty().not()));
-        btnRefresh.managedProperty().bind(backupInfos.notReadyProperty().and(backupInfos.backupPathProperty().isEmpty().not()));
+        btnRefresh.visibleProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
+        btnRefresh.managedProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
         btnRefresh.setTooltip(new Tooltip("Gespeichertes suchen"));
-        btnRefresh.setOnAction(a -> LoadFactory.reLoadBackupInfo(backupInfos));
+        btnRefresh.setOnAction(a -> LoadFactory.reLoadBackupInfo(backupInfo));
 
         // ==========
         // Load stored
         Button btnLoad = new Button("Ein gespeichertes\nBackup laden");
         btnLoad.setWrapText(true);
         btnLoad.setGraphic(PIconFactory.PICON.BTN_LOAD_BACKUP_BIG_30.getFontIcon());
-        btnLoad.visibleProperty().bind(backupInfos.notReadyProperty());
-        btnLoad.managedProperty().bind(backupInfos.notReadyProperty());
+        btnLoad.visibleProperty().bind(backupInfo.notReadyProperty());
+        btnLoad.managedProperty().bind(backupInfo.notReadyProperty());
         btnLoad.setTooltip(new Tooltip("Ein gespeichertes Backup auswählen und laden"));
-        btnLoad.setOnAction(a -> LoadFactory.loadBackupInfo(backupInfos));
+        btnLoad.setOnAction(a -> LoadFactory.loadBackupInfo(backupInfo));
 
         // ===========
         // From
@@ -106,7 +106,7 @@ public class GenerateBackupListPane extends VBox {
         btnFrom.getStyleClass().add("btnAdjust");
         btnFrom.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
         btnFrom.setOnAction(a -> {
-            progData.backupInfoProperty.set(backupInfos);
+            progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_FROM);
         });
 
@@ -119,7 +119,7 @@ public class GenerateBackupListPane extends VBox {
         btnTo.getStyleClass().add("btnAdjust");
         btnTo.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
         btnTo.setOnAction(a -> {
-            progData.backupInfoProperty.set(backupInfos);
+            progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_TO);
         });
 
@@ -127,18 +127,18 @@ public class GenerateBackupListPane extends VBox {
         // Start
         Button btnStart = new Button("Starten");
         btnStart.setOnAction(a -> {
-            progData.backupInfoProperty.set(backupInfos);
-            new BackupRunner(backupInfos).makeBackup();
+            progData.backupInfoProperty.set(backupInfo);
+            new BackupRunner(backupInfo).makeBackup();
         });
         btnStart.setMaxWidth(Double.MAX_VALUE);
-        btnStart.disableProperty().bind(backupInfos.runnerDto.runningProperty()
-                .or(backupInfos.notReadyProperty()));
+        btnStart.disableProperty().bind(backupInfo.runnerDto.runningProperty()
+                .or(backupInfo.notReadyProperty()));
 
         // ===========
         // Del
         Button btnDel = new Button("Ausblenden");
         btnDel.setOnAction(a -> {
-            progData.backupInfoProperty.set(backupInfos);
+            progData.backupInfoProperty.set(backupInfo);
             if (P2Alert.BUTTON.YES.equals(P2Alert.showAlert_yes_no("Backup entfernen",
                     "Soll das Backup nicht mehr angezeigt werden?",
                     "Die Dateien im Backup-Ordner " +
@@ -146,7 +146,7 @@ public class GenerateBackupListPane extends VBox {
                             "Die gesicherten Dateien müssen, " +
                             "wenn gewollt, selbst gelöscht werden."))) {
                 progData.backupInfoProperty.set(null);
-                progData.backupInfoList.remove(backupInfos);
+                progData.backupInfoList.remove(backupInfo);
             }
         });
         btnDel.setMaxWidth(Double.MAX_VALUE);
@@ -163,7 +163,7 @@ public class GenerateBackupListPane extends VBox {
         // ==========
         // Name
         Label lblName = new Label();
-        lblName.textProperty().bind(backupInfos.nameProperty());
+        lblName.textProperty().bind(backupInfo.nameProperty());
         Label lblN = new Label("Name:");
         gridPane.add(lblN, 0, row);
         gridPane.add(lblName, 2, row);
@@ -172,9 +172,9 @@ public class GenerateBackupListPane extends VBox {
 
         // ==========
         // LastDate
-        if (!P2LDateTimeFactory.toString(backupInfos.getLastStartDate()).isEmpty()) {
+        if (!P2LDateTimeFactory.toString(backupInfo.getLastStartDate()).isEmpty()) {
             Label lblLastDate = new Label();
-            lblLastDate.setText(P2LDateTimeFactory.toString(backupInfos.getLastStartDate()));
+            lblLastDate.setText(P2LDateTimeFactory.toString(backupInfo.getLastStartDate()));
             gridPane.add(new Label("Letztes Backup:"), 0, ++row);
             gridPane.add(lblLastDate, 2, row);
         }
@@ -185,8 +185,8 @@ public class GenerateBackupListPane extends VBox {
         gridPane.add(lblTo, 0, ++row);
 
         Label lblToPath = new Label();
-        lblToPath.textProperty().bind(backupInfos.backupPathProperty());
-        if (backupInfos.getBackupPath().isEmpty()) {
+        lblToPath.textProperty().bind(backupInfo.backupPathProperty());
+        if (backupInfo.getBackupPath().isEmpty()) {
             gridPane.add(btnTo, 1, row);
             GridPane.setValignment(lblTo, VPos.CENTER);
             GridPane.setValignment(btnTo, VPos.CENTER);
@@ -198,14 +198,14 @@ public class GenerateBackupListPane extends VBox {
 
         // From
         Label lblFrom = new Label("Daten zum Sichern:");
-        if (backupInfos.getPathListFrom().isEmpty()) {
+        if (backupInfo.getPathListFrom().isEmpty()) {
             gridPane.add(lblFrom, 0, ++row);
             gridPane.add(btnFrom, 1, row);
             GridPane.setValignment(lblFrom, VPos.CENTER);
             GridPane.setValignment(btnFrom, VPos.CENTER);
 
         } else {
-            for (PathData p : backupInfos.getPathListFrom()) {
+            for (PathData p : backupInfo.getPathListFrom()) {
                 ++row;
                 Label lblFromPath = new Label();
                 lblFromPath.textProperty().bind(p.pathProperty());
@@ -244,21 +244,21 @@ public class GenerateBackupListPane extends VBox {
         VBox vBoxAll = new VBox();
         vBoxAll.setPadding(new Insets(P2LibConst.PADDING_HBOX));
         vBoxAll.setOnMouseClicked(mouseEvent -> {
-            progData.backupInfoProperty.set(backupInfos);
+            progData.backupInfoProperty.set(backupInfo);
             init();
         });
-        this.progData.backupInfoProperty.addListener((u, o, n) -> setStyle(backupInfos, vBoxAll));
-        setStyle(backupInfos, vBoxAll);
+        this.progData.backupInfoProperty.addListener((u, o, n) -> setStyle(backupInfo, vBoxAll));
+        setStyle(backupInfo, vBoxAll);
 
-        vBoxAll.getChildren().addAll(hBox, addProgress(backupInfos));
+        vBoxAll.getChildren().addAll(hBox, addProgress(backupInfo));
         VBox.setVgrow(hBox, Priority.ALWAYS);
         getChildren().addAll(vBoxAll);
     }
 
-    private void setStyle(BackupInfo backupInfos, VBox vBoxAll) {
-        if (progData.backupInfoProperty.get() != null && progData.backupInfoProperty.get().equals(backupInfos)) {
+    private void setStyle(BackupInfo backupInfo, VBox vBoxAll) {
+        if (progData.backupInfoProperty.get() != null && progData.backupInfoProperty.get().equals(backupInfo)) {
             // dann ists ausgewählt
-            if (backupInfos.runnerDto.isRunning()) {
+            if (backupInfo.runnerDto.isRunning()) {
                 vBoxAll.setStyle("-fx-border-color: red; -fx-border-width: 4px;");
             } else {
                 if (progData.backupInfoList.size() <= 1) {
@@ -269,7 +269,7 @@ public class GenerateBackupListPane extends VBox {
             }
 
         } else {
-            if (backupInfos.runnerDto.isRunning()) {
+            if (backupInfo.runnerDto.isRunning()) {
                 vBoxAll.setStyle("-fx-border-color: red; -fx-border-width: 1px; -fx-border-insets: 3px;");
             } else {
                 vBoxAll.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-border-insets: 2px;");
@@ -282,14 +282,6 @@ public class GenerateBackupListPane extends VBox {
         Button btnStop = new Button();
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
-
-        Label lblText = new Label();
-        lblText.setMaxWidth(Double.MAX_VALUE);
-        lblText.textProperty().bind(backupInfo.runnerDto.textProperty());
-
-        Label lblFileName = new Label();
-        lblFileName.setMaxWidth(Double.MAX_VALUE);
-        lblFileName.textProperty().bind(backupInfo.runnerDto.fileNameProperty());
 
         final PProgressBar pProgressBar = new PProgressBar(true, true);
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

@@ -8,7 +8,6 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
-import de.p2tools.p2backup.controller.runner.copyrunner.CopyAllFactory;
 import de.p2tools.p2backup.controller.runner.copyrunner.CopyDiffFactory;
 import de.p2tools.p2backup.controller.runner.copyrunner.CopyFactory;
 import de.p2tools.p2backup.controller.runner.deleterunner.DeleteRunner;
@@ -34,45 +33,45 @@ public class BackupRunnerFactory {
     private BackupRunnerFactory() {
     }
 
-    public static boolean collectInfos(BackupInfo backupInfos) {
-        backupInfos.runnerDto.initRunner();
+    public static boolean collectInfos(BackupInfo backupInfo) {
+        backupInfo.runnerDto.initRunner();
 
-        if (!checkName(backupInfos)) {
+        if (!checkName(backupInfo)) {
             return false;
         }
-        if (!checkFrom(backupInfos)) {
+        if (!checkFrom(backupInfo)) {
             return false;
         }
-        if (!checkBackupPath(backupInfos)) {
+        if (!checkBackupPath(backupInfo)) {
             return false;
         }
 
         LocalDateTime localDateTime = LocalDateTime.now();
         String subPath = FileFactory.initSubPath(localDateTime);
-        Path toPath = FileFactory.getToPath(backupInfos, subPath);
+        Path toPath = FileFactory.getToPath(backupInfo, subPath);
 
         AtomicBoolean a = new AtomicBoolean(true);
         Platform.runLater(() -> {
             // ändert das GUI
-            backupInfos.setLastStartDate(localDateTime);
+            backupInfo.setLastStartDate(localDateTime);
             a.set(false);
         });
         while (a.get()) {
             P2Wait.pause(100);
         }
 
-        backupInfos.runnerDto.setDataSubPath(subPath);
-        backupInfos.runnerDto.setToPath(toPath);
+        backupInfo.runnerDto.setDataSubPath(subPath);
+        backupInfo.runnerDto.setToPath(toPath);
 
         return true;
     }
 
-    private static boolean checkName(BackupInfo backupInfos) {
-        if (backupInfos.getName().isEmpty()) {
+    private static boolean checkName(BackupInfo backupInfo) {
+        if (backupInfo.getName().isEmpty()) {
             P2AlertAppThread.getTextAlert("Backup", "Name fürs Backup",
                     "Bitte einen Namen für das Backup vergeben.",
-                    "Name:", backupInfos.nameProperty());
-            if (backupInfos.nameProperty().getValueSafe().isEmpty()) {
+                    "Name:", backupInfo.nameProperty());
+            if (backupInfo.nameProperty().getValueSafe().isEmpty()) {
                 return false;
             }
         }
@@ -80,14 +79,14 @@ public class BackupRunnerFactory {
         return true;
     }
 
-    private static boolean checkFrom(BackupInfo backupInfos) {
-        if (backupInfos.getPathListFrom().isEmpty()) {
+    private static boolean checkFrom(BackupInfo backupInfo) {
+        if (backupInfo.getPathListFrom().isEmpty()) {
             P2AlertAppThread.showErrorAlert("Backup",
                     "Es sind keine Verzeichnisse zum Sichern angeben.");
             return false;
         }
 
-        for (PathData p : backupInfos.getPathListFrom()) {
+        for (PathData p : backupInfo.getPathListFrom()) {
             File path = new File(p.getPath());
             if (!path.exists()) {
                 P2AlertAppThread.showErrorAlert("Backup",
@@ -100,8 +99,8 @@ public class BackupRunnerFactory {
         return true;
     }
 
-    private static boolean checkBackupPath(BackupInfo backupInfos) {
-        if (backupInfos.getBackupPath().isEmpty()) {
+    private static boolean checkBackupPath(BackupInfo backupInfo) {
+        if (backupInfo.getBackupPath().isEmpty()) {
             if (!P2AlertAppThread.showAlertOkCancel("Zielordner",
                     "Zielordner ist nicht angegeben!",
                     "Soll der Ordner angelegt \n" +
@@ -110,14 +109,14 @@ public class BackupRunnerFactory {
             }
 
             String backupPath = P2DirFileChooserAppThread.DirChooser(ProgData.getInstance().primaryStage, "");
-            if (backupInfos.getBackupPath().isEmpty()) {
+            if (backupInfo.getBackupPath().isEmpty()) {
                 return false;
             }
 
             AtomicBoolean atomicBoolean = new AtomicBoolean(true);
             Platform.runLater(() -> {
                 // wird im GUI angezeigt
-                backupInfos.setBackupPath(backupPath);
+                backupInfo.setBackupPath(backupPath);
                 atomicBoolean.set(false);
             });
             while (atomicBoolean.get()) {
@@ -128,8 +127,8 @@ public class BackupRunnerFactory {
         return true;
     }
 
-    public static boolean makeBackupDirectory(BackupInfo backupInfos) {
-        File backupPath = new File(backupInfos.getBackupPath());
+    public static boolean makeBackupDirectory(BackupInfo backupInfo) {
+        File backupPath = new File(backupInfo.getBackupPath());
 
         try {
             FileStore fileStore = Files.getFileStore(backupPath.toPath());
@@ -180,8 +179,8 @@ public class BackupRunnerFactory {
         }
     }
 
-    public static boolean makeToPathDirectory(BackupInfo backupInfos) {
-        Path toPath = backupInfos.runnerDto.getToPath();
+    public static boolean makeToPathDirectory(BackupInfo backupInfo) {
+        Path toPath = backupInfo.runnerDto.getToPath();
 
         try {
             if (Files.exists(toPath)) {
@@ -215,45 +214,29 @@ public class BackupRunnerFactory {
         return true;
     }
 
-    public static boolean makeFromHash(BackupInfo backupInfos) {
+    public static boolean makeFromHash(BackupInfo backupInfo) {
         // Daten einlesen und ins DTO schreiben
         try {
             AtomicBoolean atomicBoolean = new AtomicBoolean(true);
-            CreateDataHash.create(backupInfos,
-                    backupInfos.runnerDto.getDirFileList(),
-                    backupInfos.runnerDto.getDataFileList(),
-                    false, false, atomicBoolean);
+            CreateDataHash.create(backupInfo,
+                    backupInfo.runnerDto.getDirFileList(),
+                    backupInfo.runnerDto.getDataFileList(),
+                    true, false, atomicBoolean);
 
             while (atomicBoolean.get()) {
                 P2Wait.pause(500);
             }
 
             // toPath eintragen
-            final String toPath = backupInfos.runnerDto.getToPath().toString();
-            for (FileData fileData : backupInfos.runnerDto.getDataFileList()) {
+            final String toPath = backupInfo.runnerDto.getToPath().toString();
+            for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
                 fileData.setToPathStr(toPath);
             }
 
-            if (backupInfos.runnerDto.isStop()) {
+            if (backupInfo.runnerDto.isStop()) {
                 return false;
             }
-
-            // aktuellen Hash der DATEN in der Tabelle dataFiles sichern
-            if (!SqlFileData.writeDataFileList(backupInfos)) {
-                return false;
-            }
-
-            // und jetzt noch die fehlerhaften löschen
-            ArrayList<FileData> removeList = new ArrayList<>();
-            backupInfos.runnerDto.getDataFileList().forEach(f -> {
-                if (f.isError()) {
-                    removeList.add(f);
-                }
-            });
-            if (!removeList.isEmpty()) {
-                P2Log.errorLog(956232145, "Fehlerhafte Dateien: " + removeList.size());
-                backupInfos.runnerDto.getDataFileList().removeAll(removeList);
-            }
+            backupInfo.runnerDto.resetRunnerMax(backupInfo.runnerDto.getDataFileList().size());
 
         } catch (Exception ex) {
             P2AlertAppThread.showErrorAlert("Hash erstellen ",
@@ -276,15 +259,16 @@ public class BackupRunnerFactory {
 
         if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts keinen Vorgänger -> alles kopieren
-            return CopyAllFactory.copyAllFilesToBackup(backupInfo);
+            return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
         }
 
         switch (backupInfo.getHow()) {
-            case ProgConst.BACKUP_ALL -> ret = CopyAllFactory.copyAllFilesToBackup(backupInfo);
-            case ProgConst.BACKUP_DIFF -> ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
-            case ProgConst.BACKUP_INTELLIGENT -> ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
-            default -> ret = CopyAllFactory.copyAllFilesToBackup(backupInfo);
+            case ProgConst.BACKUP_DIFF, ProgConst.BACKUP_INTELLIGENT ->
+                    ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
+            default -> ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
         }
+
+        backupInfo.runnerDto.setRunnerFileName("");
         return ret;
     }
 
@@ -304,13 +288,34 @@ public class BackupRunnerFactory {
         return ret;
     }
 
-    public static boolean updateBackupData(BackupInfo backupInfo) {
+    public static boolean writeBackupData(BackupInfo backupInfo) {
+        // aktuellen Hash der DATEN in der Tabelle dataFiles sichern
+        if (!SqlFileData.writeDataFileList(backupInfo)) {
+            return false;
+        }
+
         // BackupData in die Liste schreiben
         backupInfo.getBackupDataList().add(backupInfo.runnerDto.getBackupData());
-        // und jetzt BackupInfo und alle BackupData in DB schreiben
+
+        // BackupInfo und alle BackupData in DB schreiben
         if (!SqlBackupInfo.addUpdateBackupInfo(backupInfo)) {
             return false;
         }
+
+        // noch die fehlerhaften löschen
+        ArrayList<FileData> removeList = new ArrayList<>();
+        for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
+            if (fileData.isError()) {
+                removeList.add(fileData);
+            }
+        }
+
+        if (!removeList.isEmpty()) {
+            P2Log.errorLog(956232145, "Fehlerhafte Dateien: " + removeList.size());
+            backupInfo.runnerDto.getDataFileList().removeAll(removeList);
+        }
+
+        // BackupFile schreiben
         return SqlFileData.writeBackupFileList(backupInfo);
     }
 }

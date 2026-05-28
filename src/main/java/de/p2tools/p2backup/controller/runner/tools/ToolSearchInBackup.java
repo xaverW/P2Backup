@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ToolSearchInBackup {
 
     private ProgData progData;
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
     private BooleanProperty stop = new SimpleBooleanProperty(false);
@@ -25,10 +25,10 @@ public class ToolSearchInBackup {
 
 
     public ToolSearchInBackup(SearchInBackupDialogController searchInBackupDialogController,
-                              BackupInfo backupInfos, BackupData backupData, AtomicBoolean atomicBoolean) {
+                              BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
         this.searchInBackupDialogController = searchInBackupDialogController;
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         this.backupData = backupData;
         this.atomicBoolean = atomicBoolean;
     }
@@ -38,25 +38,25 @@ public class ToolSearchInBackup {
     }
 
     public void search() {
-        backupInfos.runnerDto.startRunner(backupInfos.getName());
+        backupInfo.runnerDto.startRunner(backupInfo.getName());
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         new Thread(() -> {
-            P2Log.sysLog("Start FileSearchHash: " + backupInfos.getName());
+            P2Log.sysLog("Start FileSearchHash: " + backupInfo.getName());
             P2Log.sysLog("=======================================");
             P2Log.sysLog("   Backup-Suche Start");
             P2Log.sysLog("=======================================");
 
             work();
 
-            backupInfos.runnerDto.stopRunner();
+            backupInfo.runnerDto.stopRunner();
             progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         }).start();
     }
 
     private void work() {
         FileDataList fileDataList = new FileDataList();
-        if (!SqlFileData.readFileListFromBackup(backupInfos, backupData, fileDataList)) {
-            backupInfos.runnerDto.setStop();
+        if (!SqlFileData.readFileListFromBackup(backupInfo, backupData, fileDataList)) {
+            backupInfo.runnerDto.setStop();
         }
         searchInBackupDialogController.setResult(fileDataList);
         atomicBoolean.set(false);

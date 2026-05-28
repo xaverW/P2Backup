@@ -12,8 +12,8 @@ public class SqlBackupData {
     private SqlBackupData() {
     }
 
-    public static boolean readBackupDataList(BackupInfo backupInfos) {
-        String url = SqlFactory.getUrl(backupInfos);
+    public static boolean readBackupDataList(BackupInfo backupInfo) {
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -23,7 +23,7 @@ public class SqlBackupData {
         try (var conn = DriverManager.getConnection(url);
              var pstmt = conn.prepareStatement(sqlBackupInfo)) {
 
-            long backupInfoId = backupInfos.getId();
+            long backupInfoId = backupInfo.getId();
             pstmt.setLong(1, backupInfoId);
             var rs = pstmt.executeQuery();
 
@@ -34,7 +34,7 @@ public class SqlBackupData {
                 backupData.setCount(rs.getInt("count"));
                 backupData.setStartDate(SqlFactory.getLocalDateTime(rs.getString("startDate")));
                 backupData.setSubPath(rs.getString("subPath"));
-                backupInfos.getBackupDataList().add(backupData);
+                backupInfo.getBackupDataList().add(backupData);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -43,11 +43,11 @@ public class SqlBackupData {
         return true;
     }
 
-    public static boolean writeBackupData(BackupInfo backupInfos, BackupData backupData) {
+    public static boolean writeBackupData(BackupInfo backupInfo, BackupData backupData) {
         // BackupDate löschen
         P2Duration.counterStart("writeBackupData");
 
-        String url = SqlFactory.getUrl(backupInfos);
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
@@ -72,7 +72,7 @@ public class SqlBackupData {
     }
 
     public static boolean writeBackupData(BackupData backupData, Connection conn) throws SQLException {
-        // BackupInfos und aktuelles Backup anlegen/updaten
+        // backupInfo und aktuelles Backup anlegen/updaten
         // BackupData
         final String sqlBackup = "INSERT OR REPLACE INTO backupData(id, backupInfoId, count, startDate, " +
                 "subPath) VALUES(?,?,?,?,?)";
@@ -94,11 +94,11 @@ public class SqlBackupData {
         return true;
     }
 
-    public static boolean delBackupData(BackupInfo backupInfos, BackupData backupData) {
+    public static boolean delBackupData(BackupInfo backupInfo, BackupData backupData) {
         // BackupDate löschen
         P2Duration.counterStart("delBackupData");
 
-        String url = SqlFactory.getUrl(backupInfos);
+        String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }

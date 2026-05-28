@@ -32,13 +32,13 @@ import java.time.LocalDateTime;
 public class TableBackupInfo extends PTable<BackupData> {
 
     private final Stage stage;
-    private final ObjectProperty<BackupInfo> backupInfosProp;
+    private final ObjectProperty<BackupInfo> backupInfoProp;
 
-    public TableBackupInfo(Table.TABLE_ENUM table_enum, Stage stage, ObjectProperty<BackupInfo> backupInfosProp) {
+    public TableBackupInfo(Table.TABLE_ENUM table_enum, Stage stage, ObjectProperty<BackupInfo> backupInfoProp) {
         super(table_enum);
         this.table_enum = table_enum;
         this.stage = stage;
-        this.backupInfosProp = backupInfosProp;
+        this.backupInfoProp = backupInfoProp;
 
         initFileRunnerColumn();
     }
@@ -80,11 +80,11 @@ public class TableBackupInfo extends PTable<BackupData> {
 
         final TableColumn<BackupData, String> btnColumn = new TableColumn<>("");
         btnColumn.getStyleClass().add("alignCenter");
-        btnColumn.setCellFactory(new CellOpenDelButton<>(stage, backupInfosProp).cellFactory);
+        btnColumn.setCellFactory(new CellOpenDelButton<>(stage, backupInfoProp).cellFactory);
 
         final TableColumn<BackupData, String> toPathColumn = new TableColumn<>("Pfad");
         toPathColumn.setCellValueFactory(new PropertyValueFactory<>("subPath"));
-        toPathColumn.setCellFactory(new CellToPath<>(stage, backupInfosProp).cellFactory);
+        toPathColumn.setCellFactory(new CellToPath<>(stage, backupInfoProp).cellFactory);
 
         startDateColumn.prefWidthProperty().bind(widthProperty().multiply(0.15));
         okColumn.prefWidthProperty().bind(widthProperty().multiply(0.05));

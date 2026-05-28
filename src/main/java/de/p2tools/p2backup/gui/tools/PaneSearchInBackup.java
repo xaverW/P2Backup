@@ -62,7 +62,7 @@ public class PaneSearchInBackup extends HBox {
     private final TableSearchInBackup tableViewFile;
     private final TreeView<String> treeView = new TreeView<>();
 
-    private final ObjectProperty<BackupInfo> backupInfosProp = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<BackupInfo> backupInfoProp = new SimpleObjectProperty<>(null);
     private final ObjectProperty<BackupData> backupDataProp;
     private final Label lblPath = new Label("");
     private final Label lblFilePath = new Label("");
@@ -70,15 +70,15 @@ public class PaneSearchInBackup extends HBox {
     private final ProgData progData;
     private final Stage stage;
 
-    public PaneSearchInBackup(Stage stage, BackupInfo backupInfos, ObjectProperty<BackupData> backupDataProp) {
+    public PaneSearchInBackup(Stage stage, BackupInfo backupInfo, ObjectProperty<BackupData> backupDataProp) {
         this.stage = stage;
         this.progData = ProgData.getInstance();
-        this.backupInfosProp.set(backupInfos);
+        this.backupInfoProp.set(backupInfo);
         this.backupDataProp = backupDataProp;
 
         this.tableViewFile = new TableSearchInBackup(Table.TABLE_ENUM.SHOW_BACKUP_FILES,
                 progData.primaryStage,
-                backupInfosProp, backupDataProp);
+                backupInfoProp, backupDataProp);
         make();
     }
 
@@ -100,11 +100,11 @@ public class PaneSearchInBackup extends HBox {
     public void clearTree() {
         foundDirList.clear();
         foundFileList.clear();
-        treeView.setRoot(new TreeItem<>(backupInfosProp.get().getName()));
+        treeView.setRoot(new TreeItem<>(backupInfoProp.get().getName()));
     }
 
     public void makeTree(FileDataList fileDataList) {
-        if (backupInfosProp.get() == null || backupDataProp.get() == null) {
+        if (backupInfoProp.get() == null || backupDataProp.get() == null) {
             return;
         }
 
@@ -127,10 +127,10 @@ public class PaneSearchInBackup extends HBox {
         this.foundFileList.getFilteredList().setPredicate(p -> Boolean.FALSE);
         this.foundFileList.setAll(tmpFileList);
 
-        treeView.setRoot(new TreeItem<>(backupInfosProp.get().getName()));
+        treeView.setRoot(new TreeItem<>(backupInfoProp.get().getName()));
 
         backupInfoFromPathList.clear();
-        backupInfosProp.get().getPathListFrom().forEach(pathData -> {
+        backupInfoProp.get().getPathListFrom().forEach(pathData -> {
             String path = pathData.getPath();
             backupInfoFromPathList.add(path);
             TreeItem<String> treeItemPath = new TreeItem<>(path);
@@ -235,7 +235,7 @@ public class PaneSearchInBackup extends HBox {
     }
 
     private void initTree() {
-        treeView.setRoot(new TreeItem<>(backupInfosProp.get().getName()));
+        treeView.setRoot(new TreeItem<>(backupInfoProp.get().getName()));
         treeView.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 expandTreeView(treeView.getRoot(), !treeView.getRoot().isExpanded());
@@ -247,7 +247,7 @@ public class PaneSearchInBackup extends HBox {
             if (treeItem != null && !treeItem.getValue().isEmpty()) {
                 if (backupDataProp.get() != null) {
                     String treeFileData = treeItem.getValue();
-                    lblPath.setText(backupDataProp.get().getToPathStr(backupInfosProp.get()));
+                    lblPath.setText(backupDataProp.get().getToPathStr(backupInfoProp.get()));
                     if (!treeView.getRoot().equals(treeItem)) {
                         Predicate<FileData> pr = f -> {
                             String path = f.getParentFilePathStr();

@@ -39,8 +39,8 @@ public class CellPathButton<S, T> extends TableCell<S, T> {
     private final int what; // 0: fromList, 1: excludeDir, 2: excludeFile
     private final ObjectProperty<BackupInfo> backupDataProps;
 
-    public CellPathButton(ObjectProperty<BackupInfo> backupInfosObjectProperty, int what) {
-        this.backupDataProps = backupInfosObjectProperty;
+    public CellPathButton(ObjectProperty<BackupInfo> backupInfoObjectProperty, int what) {
+        this.backupDataProps = backupInfoObjectProperty;
         this.what = what;
     }
 

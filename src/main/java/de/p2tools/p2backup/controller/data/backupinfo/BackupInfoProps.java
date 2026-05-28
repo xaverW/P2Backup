@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 
-public class BackupInfosProps implements Comparable<BackupInfo> {
+public class BackupInfoProps implements Comparable<BackupInfo> {
 
     private LongProperty id = new SimpleLongProperty(P2Index.getIndex());
     private StringProperty name = new SimpleStringProperty("");

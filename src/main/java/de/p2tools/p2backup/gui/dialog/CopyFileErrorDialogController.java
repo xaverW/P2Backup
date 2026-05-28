@@ -39,17 +39,17 @@ public class CopyFileErrorDialogController extends P2DialogExtra {
     private final Button btnYes = new Button("Ja");
     private final Button btnNo = new Button("Nein");
     private final CheckBox chkAlways;
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final String file;
     private final BooleanProperty yesProp;
     private final boolean isFile;
 
-    public CopyFileErrorDialogController(BackupInfo backupInfos, String file, BooleanProperty yesProp,
+    public CopyFileErrorDialogController(BackupInfo backupInfo, String file, BooleanProperty yesProp,
                                          boolean isFile) {
         super(ProgData.getInstance().primaryStage, null, "Datei kopieren",
                 true, false, false, DECO.NO_BORDER);
 
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         this.file = file;
         this.yesProp = yesProp;
         this.isFile = isFile;
@@ -114,7 +114,7 @@ public class CopyFileErrorDialogController extends P2DialogExtra {
 
     private void yes() {
         yesProp.set(true);
-        backupInfos.runnerDto.goAlwaysOverErrorProperty().set(chkAlways.isSelected());
+        backupInfo.runnerDto.goAlwaysOverErrorProperty().set(chkAlways.isSelected());
         close();
     }
 }

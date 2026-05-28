@@ -28,7 +28,7 @@ public class FileListFactory {
         return foundFileList.size();
     }
 
-    public static void getFileList(BackupInfo backupInfos,
+    public static void getFileList(BackupInfo backupInfo,
                                    List<File> fromPathList,
                                    Set<File> foundDirList,
                                    Set<File> foundFileList,
@@ -36,22 +36,22 @@ public class FileListFactory {
         // in den Verzeichnissen (fromPath) nach Dateien suchen: Dateien, Dirs, geblockte Dateien
         // BackupInfo nur für STOP
         for (File file : fromPathList) {
-            runDirFindFiles(backupInfos, file, foundDirList, foundFileList, blockList);
+            runDirFindFiles(backupInfo, file, foundDirList, foundFileList, blockList);
         }
     }
 
-    public static void getFileList(BackupInfo backupInfos,
+    public static void getFileList(BackupInfo backupInfo,
                                    Set<File> foundDirList,
                                    Set<File> foundFileList,
                                    Set<File> blockList) {
-        // in den Verzeichnissen des BackupInfos nach Dateien suchen: Dateien, Dirs, geblockte Dateien
+        // in den Verzeichnissen des backupInfo nach Dateien suchen: Dateien, Dirs, geblockte Dateien
         // BackupInfo nur für STOP
-        for (PathData p : backupInfos.getPathListFrom()) {
-            runDirFindFiles(backupInfos, p.getFilePathFile(), foundDirList, foundFileList, blockList);
+        for (PathData p : backupInfo.getPathListFrom()) {
+            runDirFindFiles(backupInfo, p.getFilePathFile(), foundDirList, foundFileList, blockList);
         }
     }
 
-    private static int runDirFindFiles(BackupInfo backupInfos,
+    private static int runDirFindFiles(BackupInfo backupInfo,
                                        File file,
                                        Set<File> foundDirList,
                                        Set<File> foundFileList,
@@ -63,7 +63,7 @@ public class FileListFactory {
                 @Override
                 public void workDir(File file) {
                     // alle Dir eintragen
-                    if (backupInfos.runnerDto.isStop()) {
+                    if (backupInfo.runnerDto.isStop()) {
                         this.setStop();
                     }
                     if (foundDirList != null) {
@@ -74,10 +74,10 @@ public class FileListFactory {
                 @Override
                 public void workFile(File file) {
                     // check file
-                    if (backupInfos.runnerDto.isStop()) {
+                    if (backupInfo.runnerDto.isStop()) {
                         this.setStop();
                     }
-                    if (checkFile(file, backupInfos)) {
+                    if (checkFile(file, backupInfo)) {
                         foundFileList.add(file);
                     } else if (blockFileList != null) {
                         blockFileList.add(file);
@@ -90,31 +90,31 @@ public class FileListFactory {
         return foundFileList.size();
     }
 
-    public static boolean checkFile(File file, BackupInfo backupInfos) {
+    public static boolean checkFile(File file, BackupInfo backupInfo) {
         // prüfen ob geblockt
-        if (backupInfos.getPathListExcludeDir().isEmpty() &&
-                backupInfos.getPathListExcludeFile().isEmpty()) {
+        if (backupInfo.getPathListExcludeDir().isEmpty() &&
+                backupInfo.getPathListExcludeFile().isEmpty()) {
             // dann nehmer alle :)
             return true;
         }
 
         String pathFile = file.getAbsolutePath();
-        for (PathData p : backupInfos.getPathListExcludeDir().getValue()) {
+        for (PathData p : backupInfo.getPathListExcludeDir().getValue()) {
             String pathDir = p.getPath();
             if (pathFile.startsWith(pathDir)) {
                 return false;
             }
         }
 
-        if (backupInfos.getPathListExcludeFile().isEmpty()) {
+        if (backupInfo.getPathListExcludeFile().isEmpty()) {
             // dann nehmer jetzt den Rest
             return true;
         }
 
         String strFile = file.getName();
-        if (backupInfos.isFileFilterNot()) {
+        if (backupInfo.isFileFilterNot()) {
             // Treffer sollen nicht gesichert werden
-            for (PathData p : backupInfos.getPathListExcludeFile().getValue()) {
+            for (PathData p : backupInfo.getPathListExcludeFile().getValue()) {
                 String exclude = p.getPath();
                 if (treffer(strFile, exclude)) {
                     return false;
@@ -124,7 +124,7 @@ public class FileListFactory {
 
         } else {
             // nur Treffer sollen gesichert werden
-            for (PathData p : backupInfos.getPathListExcludeFile().getValue()) {
+            for (PathData p : backupInfo.getPathListExcludeFile().getValue()) {
                 String exclude = p.getPath();
                 if (treffer(strFile, exclude)) {
                     return true;

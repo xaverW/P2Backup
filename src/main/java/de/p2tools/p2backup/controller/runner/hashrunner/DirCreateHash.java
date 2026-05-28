@@ -31,10 +31,10 @@ public class DirCreateHash {
     private final AtomicBoolean atomicBoolean;
 
     private final ProgData progData;
-    private final BackupInfo backupInfos; // nur für Info/STOP
+    private final BackupInfo backupInfo; // nur für Info/STOP
     private final Set<File> foundFileList = new HashSet<>(); // nur intern; für die Liste der Dateien
 
-    public DirCreateHash(BackupInfo backupInfos,
+    public DirCreateHash(BackupInfo backupInfo,
                          File fromPath,
                          FileDataList dirDataList,
                          FileDataList fileDataList,
@@ -43,7 +43,7 @@ public class DirCreateHash {
                          AtomicBoolean atomicBoolean) {
 
         this.progData = ProgData.getInstance();
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         this.fromPathList = Collections.singletonList(fromPath);
         this.dirDataList = dirDataList;
         this.fileDataList = fileDataList;
@@ -53,7 +53,7 @@ public class DirCreateHash {
         this.atomicBoolean = atomicBoolean;
     }
 
-    public DirCreateHash(BackupInfo backupInfos,
+    public DirCreateHash(BackupInfo backupInfo,
                          List<File> fromPathList,
                          FileDataList dirDataList,
                          FileDataList fileDataList,
@@ -61,7 +61,7 @@ public class DirCreateHash {
                          boolean quick, boolean followLink,
                          AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         this.fromPathList = fromPathList;
         this.dirDataList = dirDataList;
         this.fileDataList = fileDataList;
@@ -81,21 +81,21 @@ public class DirCreateHash {
                 final Set<File> foundDirList = new HashSet<>(); // nur intern: für die Liste der Dir
                 // ====================
                 // zuerst mal alle Dirs/Dateien im fromPath suchen
-                FileListFactory.getFileList(backupInfos, fromPathList, foundDirList, foundFileList, null);
+                FileListFactory.getFileList(backupInfo, fromPathList, foundDirList, foundFileList, null);
 
-                backupInfos.runnerDto.getBackupData().setCount(foundFileList.size());
-                backupInfos.runnerDto.setRunnerMax(foundFileList.size());
-                backupInfos.runnerDto.setRunnerDone(0);
+                backupInfo.runnerDto.getBackupData().setCount(foundFileList.size());
+                backupInfo.runnerDto.setRunnerMax(foundFileList.size());
+                backupInfo.runnerDto.setRunnerDone(0);
+                backupInfo.runnerDto.setRunnerFileName("");
 
                 // ============================
                 // für jedes Verzeichnis im fromPath ein FileData-Object erstellen (und natürlich ohne Hash),
                 // in DirDataList eintragen
                 if (dirDataList != null) {
                     foundDirList.forEach(f -> {
-                        FileData fileData = FileHashFactory.getFileHashData(backupInfos,
+                        FileData fileData = FileHashFactory.getFileDataHash(backupInfo,
                                 toPath, true, f, followLink);
                         if (fileData != null) {
-//                            FileFactory.cleanFileData(fileData, toPath);
                             dirDataList.add(fileData);
                         }
                     });
@@ -106,7 +106,7 @@ public class DirCreateHash {
                 // Hash berechnen und FileData-Object erstellen, in fileDataList eintragen
                 createFileHash(followLink);
 
-                if (backupInfos.runnerDto.isStop()) {
+                if (backupInfo.runnerDto.isStop()) {
                     fileDataList.clear();
                 }
             } catch (Exception ex) {
@@ -122,13 +122,13 @@ public class DirCreateHash {
         P2Log.sysLog("Start createFileHash");
         int ready = 0;
         for (File file : foundFileList) {
-            if (backupInfos.runnerDto.isStop()) {
+            if (backupInfo.runnerDto.isStop()) {
                 break;
             }
 
-            backupInfos.runnerDto.setRunnerFileName(file.getName());
+            backupInfo.runnerDto.setRunnerFileName(file.getName());
             // Pfad steht im dataPath
-            FileData fileData = FileHashFactory.getFileHashData(backupInfos,
+            FileData fileData = FileHashFactory.getFileDataHash(backupInfo,
                     toPath, quick, file, followLink);
             if (fileData != null) {
                 fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
@@ -136,7 +136,7 @@ public class DirCreateHash {
             }
 
             ++ready;
-            backupInfos.runnerDto.setRunnerDone(ready);
+            backupInfo.runnerDto.setRunnerDone(ready);
         }
     }
 }

@@ -14,7 +14,7 @@ import java.nio.file.Path;
 public class RunnerDto {
     private final BooleanProperty stop = new SimpleBooleanProperty(false); // wird in den nur in Running-Threads verwendet!!
     private final BooleanProperty ok = new SimpleBooleanProperty(false); // war der Lauf fehlerfrei
-    private final BooleanProperty firstRun = new SimpleBooleanProperty(false); // wird nach dem ersten Lauf gesetzt
+    private final BooleanProperty doneFirstRun = new SimpleBooleanProperty(false); // wird nach dem ersten Lauf gesetzt
     private final IntegerProperty max = new SimpleIntegerProperty(0);
     private final IntegerProperty done = new SimpleIntegerProperty(0);
     private final DoubleProperty progress = new SimpleDoubleProperty(0);
@@ -176,16 +176,16 @@ public class RunnerDto {
         this.ok.set(ok);
     }
 
-    public boolean isFirstRun() {
-        return firstRun.get();
+    public boolean getDoneFirstRun() {
+        return doneFirstRun.get();
     }
 
-    public void setFirstRun(boolean firstRun) {
-        this.firstRun.set(firstRun);
+    public void setDoneFirstRun(boolean doneFirstRun) {
+        this.doneFirstRun.set(doneFirstRun);
     }
 
-    public BooleanProperty firstRunProperty() {
-        return firstRun;
+    public BooleanProperty doneFirstRunProperty() {
+        return doneFirstRun;
     }
 
     // ============================
@@ -231,12 +231,22 @@ public class RunnerDto {
 
     // =====================
     // runner
+    public void resetRunnerMax(int runnerMax) {
+        this.runnerMax.set(runnerMax);
+        this.runnerDone.set(0);
+        this.runnerFileName.set("");
+    }
+
     public void setRunnerMax(int runnerMax) {
         this.runnerMax.set(runnerMax);
     }
 
     public void setRunnerDone(int runnerDone) {
         this.runnerDone.set(runnerDone);
+    }
+
+    public void addRunnerDone() {
+        this.runnerDone.set(this.runnerDone.get() + 1);
     }
 
     public void setRunnerText(String runnerText) {
@@ -247,6 +257,8 @@ public class RunnerDto {
         this.runnerFileName.set(runnerFileName);
     }
 
+    // =====================
+    // Einlesefehler
     public boolean getGoAlwaysOverError() {
         return goAlwaysOverError.get();
     }

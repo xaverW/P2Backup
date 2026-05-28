@@ -19,7 +19,7 @@ package de.p2tools.p2backup.controller.data.backupinfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class BackupInfo extends BackupInfosProps {
+public class BackupInfo extends BackupInfoProps {
     // Sind die Daten eines angelegten Backups: Anzahl der Backups (BackupData), Daten zum Sichern, ...
 
     public RunnerDto runnerDto = new RunnerDto();

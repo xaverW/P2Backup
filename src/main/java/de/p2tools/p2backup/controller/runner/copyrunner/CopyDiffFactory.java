@@ -7,6 +7,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
+import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
@@ -37,9 +38,10 @@ public class CopyDiffFactory {
 
         // =====================================
         // erst mal das alte Backup überprüfen
+        // =====================================
         backupInfo.runnerDto.setRunnerText("Altes Backup prüfen");
-        BooleanProperty foundError = new SimpleBooleanProperty(false);
 
+        BooleanProperty foundError = new SimpleBooleanProperty(false);
         AtomicBoolean a = new AtomicBoolean(true);
         new ToolCheckBackupQuick(backupInfo, oldBackup, a).compare(foundError);
         while (a.get()) {
@@ -61,13 +63,17 @@ public class CopyDiffFactory {
                             angelegt werden.
                             
                             Es werden stattdessen wieder alle Dateien gesichert.""");
-            return CopyAllFactory.copyAllFilesToBackup(backupInfo);
+            return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
         }
-        // =====================================
 
+
+        // =====================================
+        // und jetzt Dateien kopieren
+        // =====================================
+        backupInfo.runnerDto.setRunnerText("Dateien kopieren");
+        backupInfo.runnerDto.setRunnerFileName("");
 
         SqlFileData.readBackupFileList(backupInfo, oldBackup, oldFileList);
-
         oldFileList.forEach(fileData -> {
             if (!fileData.getFilePathStr().isEmpty() &&
                     !fileData.getToPathStr().isEmpty() &&
@@ -79,29 +85,25 @@ public class CopyDiffFactory {
 
         // ===============
         // suchen was kopiert werden muss
-        backupInfo.runnerDto.getDataFileList().forEach(f -> {
-            if (f.isError()) {
-                // dann konnte es nicht gelesen werden, also nix!
+        backupInfo.runnerDto.getDataFileList().forEach(fileData -> {
+            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            if (fileData.isError()) {
                 return;
             }
 
-            FileData oldFile = oldBackupFileMap.get(f.getFilePathStr());
-            if (oldFile == null || !f.getHash().equals(oldFile.getHash())) {
+            FileData oldFile = oldBackupFileMap.get(fileData.getFilePathStr());
+            if (oldFile == null || !fileData.getHash().equals(oldFile.getHash())) {
                 // dann gibt es sie nicht oder
                 // oder sie sind nicht gleich -> aus DATEIEN kopieren
-                copyList.add(f);
+                copyList.add(fileData);
 
             } else {
                 // dann sind sie gleich -> move aus altem Backup
-                FileData moveData = f.getCopy();
-//                moveData.setFilePathStr(oldFile.getBackupFilePathStr()); // DATEN-Pfad ist der alte BACKUP-Pfad
+                FileData moveData = fileData.getCopy();
                 if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
                     // aus der Map löschen, gibts dann nicht mehr
                     oldBackupFileMap.remove(oldFile.getFilePathStr());
-                } else if (backupInfo.getHow() == ProgConst.BACKUP_INTELLIGENT) {
-                    // dann muss der toPath geändert werden!
-//                    moveData.setToPathStr(toPathStr);
-
                 }
                 moveList.add(moveData);
             }
@@ -114,12 +116,6 @@ public class CopyDiffFactory {
         if (!SqlFileData.updateBackupFileList(backupInfo, oldBackup.getId(), oldFileList)) {
             backupInfo.runnerDto.setStop();
         }
-
-        // ====================
-        // Dirs für die Dateien anlegen
-//        if (!CopyFactory.makeDirsOfFile(backupInfo.runnerDto.getDataFileList(), toPath)) {
-//            return false;
-//        }
 
         // ======================
         // und jetzt kopieren/linken/moven

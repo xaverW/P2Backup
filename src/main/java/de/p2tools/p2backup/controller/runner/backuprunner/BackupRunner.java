@@ -31,7 +31,7 @@ public class BackupRunner {
 
     public void makeBackup() {
         backupInfo.runnerDto.startRunner(backupInfo.getName());
-        backupInfo.runnerDto.setFirstRun(true);
+        backupInfo.runnerDto.setDoneFirstRun(true);
 
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
 
@@ -43,19 +43,19 @@ public class BackupRunner {
 
             this.backupInfo.runnerDto.setRunnerText("Starte Backup " + this.backupInfo.getName());
 
+
+            // ===============================
             // erst mal alles putzen, prüfen und Infos sammeln
+            // ===============================
             if (!BackupRunnerFactory.collectInfos(this.backupInfo)) {
                 close();
                 return;
             }
 
-            // =======================
-            // dann das Backup starten
-            // =======================
-
 
             // ===============================
             // backup Verzeichnis anlegen
+            // ===============================
             BackupData backupData = new BackupData();
             backupData.setBackupInfoId(backupInfo.getId());
             this.backupInfo.runnerDto.setBackupData(backupData);
@@ -78,14 +78,16 @@ public class BackupRunner {
 
             // ===============================
             // toPath Verzeichnis anlegen
+            // ===============================
             if (!BackupRunnerFactory.makeToPathDirectory(this.backupInfo)) {
                 quitt(false);
                 return;
             }
 
+
             // ================================
-            // falls es das erste Mal ist, muss
             // zuerst die DB angelegt werden
+            // ===============================
             if (!SqlTable.makeBackupDb(this.backupInfo)) {
                 quitt(false);
                 return;
@@ -94,6 +96,7 @@ public class BackupRunner {
 
             // ===============================
             // fromHash erstellen und toPath eintragen
+            // ===============================
             this.backupInfo.runnerDto.setRunnerText("Dateien einlesen");
             if (!BackupRunnerFactory.makeFromHash(this.backupInfo)) {
                 quitt(false);
@@ -104,8 +107,10 @@ public class BackupRunner {
                 return;
             }
 
+
             // ===============================
             // Dateien kopieren
+            // ===============================
             this.backupInfo.runnerDto.setRunnerText("Dateien kopieren");
             if (!BackupRunnerFactory.copyFilesToBackup(this.backupInfo)) {
                 quitt(false);
@@ -116,16 +121,21 @@ public class BackupRunner {
                 return;
             }
 
+
             // ============================
-            // Überzählige Backups löschen
-            if (!BackupRunnerFactory.deleteBackupData(this.backupInfo)) {
+            // BackupData schreiben
+            // ===============================
+            backupInfo.runnerDto.setRunnerText("Aufräumen");
+            if (!BackupRunnerFactory.writeBackupData(this.backupInfo)) {
                 quitt(false);
                 return;
             }
 
+
             // ============================
-            // Update BackupData
-            if (!BackupRunnerFactory.updateBackupData(this.backupInfo)) {
+            // Überzählige Backups löschen (max Anzahl)
+            // ===============================
+            if (!BackupRunnerFactory.deleteBackupData(this.backupInfo)) {
                 quitt(false);
                 return;
             }
@@ -137,6 +147,9 @@ public class BackupRunner {
     private void quitt(boolean ret) {
         backupInfo.runnerDto.getBackupData().setOk(ret);
 
+        // ==============================================
+        // Fehler
+        // ==============================================
         if (backupInfo.runnerDto.isStop() || !ret) {
             backupInfo.runnerDto.setOk(false);
             // dann wurde abgebrochen oder hatte einen Fehler
@@ -166,8 +179,12 @@ public class BackupRunner {
             SqlFileData.deleteFileList(backupInfo, backupInfo.runnerDto.getBackupData());
 
         } else {
+            // ==============================================
+            // dann passts
+            // ==============================================
             backupInfo.runnerDto.setOk(true);
         }
+
         close();
     }
 

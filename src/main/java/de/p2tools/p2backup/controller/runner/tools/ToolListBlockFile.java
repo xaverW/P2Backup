@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ToolListBlockFile {
 
     private ProgData progData;
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final AtomicBoolean atomicBoolean;
     private BooleanProperty stop = new SimpleBooleanProperty(false);
     private final BlockedFilesDialogController blockedFilesDialogController;
@@ -26,11 +26,11 @@ public class ToolListBlockFile {
 
 
     public ToolListBlockFile(BlockedFilesDialogController blockedFilesDialogController,
-                             BackupInfo backupInfos,
+                             BackupInfo backupInfo,
                              Set<File> foundFileList, Set<File> blockedFileList, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
         this.blockedFilesDialogController = blockedFilesDialogController;
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         this.foundFileList = foundFileList;
         this.blockedFileList = blockedFileList;
         this.atomicBoolean = atomicBoolean;
@@ -41,29 +41,29 @@ public class ToolListBlockFile {
     }
 
     public void search() {
-        backupInfos.runnerDto.startRunner(backupInfos.getName());
+        backupInfo.runnerDto.startRunner(backupInfo.getName());
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         new Thread(() -> {
-            P2Log.sysLog("Start FileSearchHash: " + backupInfos.getName());
+            P2Log.sysLog("Start FileSearchHash: " + backupInfo.getName());
             P2Log.sysLog("=======================================");
             P2Log.sysLog("   Backup-Suche Start");
             P2Log.sysLog("=======================================");
 
             work();
 
-            backupInfos.runnerDto.stopRunner();
+            backupInfo.runnerDto.stopRunner();
             progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         }).start();
     }
 
     private void work() {
-        FileListFactory.getFileList(backupInfos, null, foundFileList, blockedFileList);
-        if (backupInfos.runnerDto.isStop()) {
+        FileListFactory.getFileList(backupInfo, null, foundFileList, blockedFileList);
+        if (backupInfo.runnerDto.isStop()) {
             // wenn abgebrochen, löschen
             foundFileList.clear();
             blockedFileList.clear();
         }
-        
+
         blockedFilesDialogController.setResult();
         atomicBoolean.set(false);
     }

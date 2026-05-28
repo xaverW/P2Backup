@@ -75,11 +75,11 @@ public class BackupSmallGui extends P2DialogOnly {
         initDialog();
         addBtn();
         addProgress();
-        progData.backupInfoList.addListener((u, o, n) -> {
-            setStartAll();
-            addProgress();
-            getStage().sizeToScene();
-        });
+//        progData.backupInfoList.addListener((u, o, n) -> {
+//            setStartAll();
+//            addProgress();
+//            getStage().sizeToScene();
+//        });
     }
 
     public void restartShowing() {
@@ -164,11 +164,11 @@ public class BackupSmallGui extends P2DialogOnly {
             progressBar.progressProperty().bind(backupInfo.runnerDto.progressProperty());
 
             final Label lblOk = new Label("  ");
-            final Label lblName = new Label(/*backupInfo.getName()*/);
+            final Label lblName = new Label();
             lblName.textProperty().bind(backupInfo.nameProperty());
             lblName.setMaxWidth(Double.MAX_VALUE);
 
-            if (backupInfo.runnerDto.isFirstRun()) {
+            if (backupInfo.runnerDto.getDoneFirstRun()) {
                 if (backupInfo.runnerDto.isRunning()) {
                     lblOk.getStyleClass().add("smallGuiNameRun");
                 } else if (backupInfo.runnerDto.isOk()) {

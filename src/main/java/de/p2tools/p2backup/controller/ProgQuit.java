@@ -72,17 +72,17 @@ public class ProgQuit {
 
     private static void saveDb() {
         ProgData.getInstance().dbDataList.clear();
-        ProgData.getInstance().backupInfoList.forEach(backupInfos -> {
-            DbData dbData = new DbData(backupInfos);
+        ProgData.getInstance().backupInfoList.forEach(backupInfo -> {
+            DbData dbData = new DbData(backupInfo);
             ProgData.getInstance().dbDataList.add(dbData);
             if (!dbData.getPath().isEmpty() &&
                     Path.of(dbData.getPath()).toFile().exists()) {
 
-                if (!Path.of(FileFactory.getBackupDbPath(backupInfos)).toFile().exists()) {
+                if (!Path.of(FileFactory.getBackupDbPath(backupInfo)).toFile().exists()) {
                     // dann ist das Backup noch nicht gelaufen, DB existiert noch nicht -> anlegen
-                    SqlTable.makeBackupDb(backupInfos);
+                    SqlTable.makeBackupDb(backupInfo);
                 }
-                SqlBackupInfo.addUpdateBackupInfo(backupInfos);
+                SqlBackupInfo.addUpdateBackupInfo(backupInfo);
             }
         });
     }

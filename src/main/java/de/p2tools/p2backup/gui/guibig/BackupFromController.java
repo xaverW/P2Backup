@@ -40,7 +40,7 @@ public class BackupFromController extends VBox {
     private final TableView<PathData> tableViewFrom = new TableView<>();
     private final TableView<PathData> tableViewExcludeDir = new TableView<>();
     private final TableView<PathData> tableViewExcludeFile = new TableView<>();
-    private BackupInfo backupInfos = null;
+    private BackupInfo backupInfo = null;
     private final Accordion accordion = new Accordion();
     private final RadioButton rbNot = new RadioButton("Dateien ausschießen");
     private final RadioButton rbOnly = new RadioButton("Nur diese Dateien sichern");
@@ -98,7 +98,7 @@ public class BackupFromController extends VBox {
             String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_FROM_PATH.get());
             if (!path.isEmpty()) {
                 ProgConfig.SYSTEM_FROM_PATH.set(path);
-                backupInfos.getPathListFrom().add(new PathData(path));
+                backupInfo.getPathListFrom().add(new PathData(path));
             }
         });
         Button btnHelp = PIconFactory.getHelpButton("Sichern", "Hier können die Ordner die gesichert " +
@@ -129,7 +129,7 @@ public class BackupFromController extends VBox {
         btnPath.setOnAction(event -> {
             String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, "");
             if (!path.isEmpty()) {
-                backupInfos.getPathListExcludeDir().add(new PathData(path));
+                backupInfo.getPathListExcludeDir().add(new PathData(path));
             }
         });
         Button btnHelp = PIconFactory.getHelpButton("Ordner ausschließen",
@@ -175,7 +175,7 @@ public class BackupFromController extends VBox {
             }
 
             if (!exclude.isEmpty()) {
-                backupInfos.getPathListExcludeFile().add(new PathData(exclude));
+                backupInfo.getPathListExcludeFile().add(new PathData(exclude));
             }
         });
         btnAddFile.disableProperty().bind(txtExclude.textProperty().isEmpty());
@@ -253,18 +253,18 @@ public class BackupFromController extends VBox {
     }
 
     private void setBackup() {
-        if (backupInfos != null) {
-            rbNot.selectedProperty().unbindBidirectional(backupInfos.fileFilterNotProperty());
-            backupInfos = null;
+        if (backupInfo != null) {
+            rbNot.selectedProperty().unbindBidirectional(backupInfo.fileFilterNotProperty());
+            backupInfo = null;
         }
         if (progData.backupInfoProperty.get() != null) {
-            backupInfos = progData.backupInfoProperty.get();
+            backupInfo = progData.backupInfoProperty.get();
 
-            rbNot.selectedProperty().bindBidirectional(backupInfos.fileFilterNotProperty());
+            rbNot.selectedProperty().bindBidirectional(backupInfo.fileFilterNotProperty());
             rbOnly.setSelected(!rbNot.isSelected());
-            tableViewFrom.setItems(backupInfos.getPathListFrom());
-            tableViewExcludeDir.setItems(backupInfos.getPathListExcludeDir());
-            tableViewExcludeFile.setItems(backupInfos.getPathListExcludeFile());
+            tableViewFrom.setItems(backupInfo.getPathListFrom());
+            tableViewExcludeDir.setItems(backupInfo.getPathListExcludeDir());
+            tableViewExcludeFile.setItems(backupInfo.getPathListExcludeFile());
         }
     }
 }

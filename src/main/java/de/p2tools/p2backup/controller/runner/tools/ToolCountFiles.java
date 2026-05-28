@@ -44,13 +44,13 @@ public class ToolCountFiles {
     private final BackupInfoDialogController backupInfoDialogController;
 
     public ToolCountFiles(ProgData progData, BackupInfoDialogController backupInfoDialogController,
-                          BackupInfo backupInfos, boolean noBlocked, boolean recursive) {
+                          BackupInfo backupInfo, boolean noBlocked, boolean recursive) {
         this.progData = progData;
         this.backupInfoDialogController = backupInfoDialogController;
-        this.backupInfo = backupInfos;
+        this.backupInfo = backupInfo;
         this.noBlocked = noBlocked;
         this.recursive.set(recursive);
-        backupInfos.clear();
+        backupInfo.clear();
     }
 
     public void setStop() {
@@ -81,19 +81,19 @@ public class ToolCountFiles {
     }
 
     private class CountFile implements Runnable {
-        final BackupInfo backupInfos;
+        final BackupInfo backupInfo;
         private final boolean recursive;
         int countAll = 0;
 
 
-        public CountFile(BackupInfo backupInfos, boolean recursive) {
-            this.backupInfos = backupInfos;
+        public CountFile(BackupInfo backupInfo, boolean recursive) {
+            this.backupInfo = backupInfo;
             this.recursive = recursive;
         }
 
         public synchronized void run() {
             try {
-                for (PathData p : backupInfos.getPathListFrom()) {
+                for (PathData p : backupInfo.getPathListFrom()) {
                     int n = runDirFindFilesFrom(p);
                     p.setCount(n);
                 }
@@ -101,7 +101,7 @@ public class ToolCountFiles {
                 P2Log.errorLog(952145036, ex.getMessage());
             }
             try {
-                for (BackupData p : backupInfos.getBackupDataList()) {
+                for (BackupData p : backupInfo.getBackupDataList()) {
                     int n = runDirFindFilesBackup(p);
                     p.setCount(n);
                 }
@@ -113,10 +113,10 @@ public class ToolCountFiles {
             LongProperty size = new SimpleLongProperty(0);
 
             // FROM-Pfad die Gesamt-Summe eintragen
-            backupInfos.getPathListFrom().forEach(pathData -> count.set(count.get() + pathData.getCount()));
-            backupInfos.setCount(count.get());
-            backupInfos.getPathListFrom().forEach(p -> size.set(size.get() + p.getSize()));
-            backupInfos.setSize(size.get());
+            backupInfo.getPathListFrom().forEach(pathData -> count.set(count.get() + pathData.getCount()));
+            backupInfo.setCount(count.get());
+            backupInfo.getPathListFrom().forEach(p -> size.set(size.get() + p.getSize()));
+            backupInfo.setSize(size.get());
 
             ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
             Platform.runLater(backupInfoDialogController::set);
@@ -134,7 +134,7 @@ public class ToolCountFiles {
                     public void workFile(File file) {
                         if (file.exists()) {
                             if (noBlocked &&
-                                    !FileListFactory.checkFile(file, backupInfos)) {
+                                    !FileListFactory.checkFile(file, backupInfo)) {
                                 return;
                             }
                             ++countAll;
@@ -157,7 +157,7 @@ public class ToolCountFiles {
 
         private int runDirFindFilesBackup(BackupData backupData) {
             //Verzeichnis ablaufen und Dateien zählen
-            File path = backupData.getToPath(backupInfos).toFile();
+            File path = backupData.getToPath(backupInfo).toFile();
             countAll = 0;
 
             try {

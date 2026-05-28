@@ -37,16 +37,16 @@ public class AddBackupDialogController extends P2DialogExtra {
 
     private final Button btnOk = new Button("OK");
     private final Button btnCancel = new Button("Abbrechen");
-    private final ObjectProperty<BackupInfo> backupInfosProb;
+    private final ObjectProperty<BackupInfo> backupInfoProb;
     private final ProgData progData;
     private boolean ok = false;
 
-    public AddBackupDialogController(ProgData progData, ObjectProperty<BackupInfo> backupInfosProb) {
+    public AddBackupDialogController(ProgData progData, ObjectProperty<BackupInfo> backupInfoProb) {
         super(ProgData.getInstance().primaryStage, null, "Backup anlegen",
                 true, false, false, DECO.NO_BORDER);
 
         this.progData = progData;
-        this.backupInfosProb = backupInfosProb;
+        this.backupInfoProb = backupInfoProb;
         init(true);
     }
 
@@ -57,7 +57,7 @@ public class AddBackupDialogController extends P2DialogExtra {
     @Override
     public void make() {
         TextField txtName = new TextField();
-        backupInfosProb.get().nameProperty().bind(txtName.textProperty());
+        backupInfoProb.get().nameProperty().bind(txtName.textProperty());
         txtName.setOnAction(a -> {
             if (!txtName.getText().isEmpty()) {
                 add();
@@ -65,7 +65,7 @@ public class AddBackupDialogController extends P2DialogExtra {
         });
 
         TextArea txtDescription = new TextArea();
-        backupInfosProb.get().descriptionProperty().bind(txtDescription.textProperty());
+        backupInfoProb.get().descriptionProperty().bind(txtDescription.textProperty());
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(P2LibConst.DIST_GRIDPANE_HGAP);
@@ -100,8 +100,8 @@ public class AddBackupDialogController extends P2DialogExtra {
 
     private void add() {
         ok = true;
-        backupInfosProb.get().nameProperty().unbind();
-        backupInfosProb.get().descriptionProperty().unbind();
+        backupInfoProb.get().nameProperty().unbind();
+        backupInfoProb.get().descriptionProperty().unbind();
         close();
     }
 }

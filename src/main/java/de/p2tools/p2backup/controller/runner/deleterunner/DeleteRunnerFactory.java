@@ -13,11 +13,11 @@ public class DeleteRunnerFactory {
     private DeleteRunnerFactory() {
     }
 
-    public static boolean deleteBackup(BackupInfo backupInfos, BackupData backupData) {
+    public static boolean deleteBackup(BackupInfo backupInfo, BackupData backupData) {
         // das Backup wird einfach gelöscht
         boolean ret = false;
         try {
-            Path file = backupData.getToPath(backupInfos);
+            Path file = backupData.getToPath(backupInfo);
             File f = file.toFile();
             if (f.exists() && f.isDirectory()) {
                 FileUtils.deleteDirectory(f);

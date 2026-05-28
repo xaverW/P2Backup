@@ -50,7 +50,6 @@ public class ToolCheckBackupQuick {
     }
 
     public void compare(BooleanProperty foundError) {
-        backupInfo.runnerDto.startRunner(backupInfo.getName());
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         new Thread(() -> {
             P2Log.sysLog("Start CheckBackup QUICK: " + backupInfo.getName());

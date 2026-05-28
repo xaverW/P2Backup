@@ -16,27 +16,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DeleteRunner {
 
     private final ProgData progData;
-    private final BackupInfo backupInfos;
+    private final BackupInfo backupInfo;
     private final BackupData backupData;
     private boolean ret = true;
     private final AtomicBoolean a = new AtomicBoolean(true);
 
-    public DeleteRunner(BackupInfo backupInfos, BackupData backupData) {
+    public DeleteRunner(BackupInfo backupInfo, BackupData backupData) {
         this.progData = ProgData.getInstance();
-        this.backupInfos = backupInfos;
+        this.backupInfo = backupInfo;
         this.backupData = backupData;
     }
 
     public boolean deleteBackupDoNotAsk() {
         // ========================
         // Backup-Listen suchen und löschen
-        if (backupInfos.getBackupDataList().isEmpty()) {
+        if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts nix
             return false;
         }
 
-        if (backupInfos.getBackupDataList().size() > 1 &&
-                backupInfos.getBackupDataList().get(backupInfos.getBackupDataList().size() - 1).equals(backupData)) {
+        if (backupInfo.getBackupDataList().size() > 1 &&
+                backupInfo.getBackupDataList().get(backupInfo.getBackupDataList().size() - 1).equals(backupData)) {
             return false;
         }
         delete();
@@ -49,13 +49,13 @@ public class DeleteRunner {
     public void deleteBackup() {
         // ========================
         // Backup-Listen suchen und löschen
-        if (backupInfos.getBackupDataList().isEmpty()) {
+        if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts nix
             return;
         }
 
-        if (backupInfos.getBackupDataList().size() > 1 &&
-                backupInfos.getBackupDataList().get(backupInfos.getBackupDataList().size() - 1).equals(backupData)) {
+        if (backupInfo.getBackupDataList().size() > 1 &&
+                backupInfo.getBackupDataList().get(backupInfo.getBackupDataList().size() - 1).equals(backupData)) {
             P2Alert.showInfoAlert("Backup löschen", "Erstes Backup löschen",
                     "Das erste Backup " +
                             "kann nicht sofort gelöscht werden. Zuerst müssen die älteren Backups " +
@@ -63,7 +63,7 @@ public class DeleteRunner {
             return;
         }
 
-        Path path = backupData.getToPath(backupInfos);
+        Path path = backupData.getToPath(backupInfo);
         if (P2Alert.BUTTON.NO == P2Alert.showAlert_yes_no(progData.primaryStage, "Löschen",
                 "Backup löschen", "Soll das Backup:" +
                         (path == null ? "" : "\n\n" + path + "\n\n") +
@@ -73,8 +73,8 @@ public class DeleteRunner {
 
         // ==================
         // und jetzt löschen
-        this.backupInfos.runnerDto.startRunner(this.backupInfos.getName());
-        this.backupInfos.runnerDto.setFirstRun(true);
+        this.backupInfo.runnerDto.startRunner(this.backupInfo.getName());
+        this.backupInfo.runnerDto.setDoneFirstRun(true);
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
 
         delete();
@@ -83,38 +83,38 @@ public class DeleteRunner {
     private void delete() {
         // ==================
         // und jetzt löschen
-        this.backupInfos.runnerDto.startRunner(this.backupInfos.getName());
-        this.backupInfos.runnerDto.setFirstRun(true);
+        this.backupInfo.runnerDto.startRunner(this.backupInfo.getName());
+        this.backupInfo.runnerDto.setDoneFirstRun(true);
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
 
         new Thread(() -> {
-            P2Log.sysLog("Start DeleteRunner: " + this.backupInfos.getName());
+            P2Log.sysLog("Start DeleteRunner: " + this.backupInfo.getName());
             P2Log.sysLog("=======================================");
             P2Log.sysLog("   Delete Start");
             P2Log.sysLog("=======================================");
-            this.backupInfos.runnerDto.setRunnerText("Start Delete");
+            this.backupInfo.runnerDto.setRunnerText("Start Delete");
 
             // zuerst die Dateien löschen
-            if (!DeleteRunnerFactory.deleteBackup(backupInfos, backupData)) {
+            if (!DeleteRunnerFactory.deleteBackup(backupInfo, backupData)) {
                 quitt(false);
                 return;
             }
 
             // dann aus der DB löschen
-            if (!SqlBackupData.delBackupData(backupInfos, backupData)) {
+            if (!SqlBackupData.delBackupData(backupInfo, backupData)) {
                 quitt(false);
                 return;
             }
 
-            // und noch im BackupInfos löschen^^^
-            backupInfos.getBackupDataList().remove(backupData);
+            // und noch im BackupInfo löschen^^^
+            backupInfo.getBackupDataList().remove(backupData);
             quitt(true);
         }).start();
     }
 
     private void quitt(boolean r) {
         ret = r;
-        backupInfos.runnerDto.stopRunner();
+        backupInfo.runnerDto.stopRunner();
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         a.set(false);
     }
