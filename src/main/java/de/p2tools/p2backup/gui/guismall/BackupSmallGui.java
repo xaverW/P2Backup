@@ -108,7 +108,7 @@ public class BackupSmallGui extends P2DialogOnly {
 
         btnStartAll.getStyleClass().addAll("smallGuiBtn");
         btnStartAll.setOnAction(a -> progData.backupInfoList.forEach(b -> {
-            if ((!b.runnerDto.isRunning()) && (!b.isNotReady())) {
+            if ((!b.runnerDto.getGuiRunning()) && (!b.isNotReady())) {
                 new BackupRunner(b).makeBackup();
             }
         }));
@@ -146,22 +146,22 @@ public class BackupSmallGui extends P2DialogOnly {
             btnStart.setMinHeight(18);
             btnStart.setMaxHeight(18);
             btnStart.setGraphic(PIconFactory.PICON.BTN_START_BACKUP.getFontIcon());
-            btnStart.disableProperty().bind(backupInfo.runnerDto.runningProperty());
+            btnStart.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
             btnStart.setOnAction(a -> {
                 new BackupRunner(backupInfo).makeBackup();
             });
-            btnStart.disableProperty().bind(backupInfo.runnerDto.runningProperty()
+            btnStart.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty()
                     .or(backupInfo.notReadyProperty()));
 
             Button btnStop = new Button();
             btnStop.setMinHeight(18);
             btnStop.setMaxHeight(18);
             btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
-            btnStop.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
+            btnStop.visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
             btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
             final ProgressBar progressBar = new ProgressBar();
-            progressBar.progressProperty().bind(backupInfo.runnerDto.progressProperty());
+            progressBar.progressProperty().bind(backupInfo.runnerDto.guiProgressProperty());
 
             final Label lblOk = new Label("  ");
             final Label lblName = new Label();
@@ -169,7 +169,7 @@ public class BackupSmallGui extends P2DialogOnly {
             lblName.setMaxWidth(Double.MAX_VALUE);
 
             if (backupInfo.runnerDto.getDoneFirstRun()) {
-                if (backupInfo.runnerDto.isRunning()) {
+                if (backupInfo.runnerDto.getGuiRunning()) {
                     lblOk.getStyleClass().add("smallGuiNameRun");
                 } else if (backupInfo.runnerDto.isOk()) {
                     lblOk.getStyleClass().add("smallGuiNameOk");
@@ -178,12 +178,12 @@ public class BackupSmallGui extends P2DialogOnly {
                 }
             }
 
-            backupInfo.runnerDto.runningProperty().addListener((u, o, n) -> {
+            backupInfo.runnerDto.guiRunningProperty().addListener((u, o, n) -> {
                 lblOk.getStyleClass().remove("smallGuiNameRun");
                 lblOk.getStyleClass().remove("smallGuiNameOk");
                 lblOk.getStyleClass().remove("smallGuiNameError");
 
-                if (backupInfo.runnerDto.isRunning()) {
+                if (backupInfo.runnerDto.getGuiRunning()) {
                     lblOk.getStyleClass().add("smallGuiNameRun");
                 } else if (backupInfo.runnerDto.isOk()) {
                     lblOk.getStyleClass().add("smallGuiNameOk");

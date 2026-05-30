@@ -115,13 +115,12 @@ public class DirCreateHash {
     private void createFileHash(boolean followLink) {
         // FileData-Object für alle gefundenen Dateien erstellen
         P2Log.sysLog("Start createFileHash");
-        int ready = 0;
+        backupInfo.runnerDto.setRunnerMax(foundFileList.size());
         for (File file : foundFileList) {
             if (backupInfo.runnerDto.isStop()) {
                 break;
             }
 
-            backupInfo.runnerDto.setRunnerFileName(file.getName());
             // Pfad steht im dataPath
             FileData fileData = FileHashFactory.getFileDataHash(backupInfo,
                     toPath, quick, file, followLink);
@@ -130,8 +129,9 @@ public class DirCreateHash {
                 fileDataList.add(fileData);
             }
 
-            ++ready;
-            backupInfo.runnerDto.setRunnerDone(ready);
+            backupInfo.runnerDto.setRunnerFileName(file.getName());
+            backupInfo.runnerDto.addRunnerAlreadyDone();
         }
+        backupInfo.runnerDto.setRunnerMax(0);
     }
 }

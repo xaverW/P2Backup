@@ -44,7 +44,6 @@ public class CopyFactory {
     public static boolean copyFiles(BackupInfo backupInfo,
                                     List<FileData> fileDataList) {
 
-        backupInfo.runnerDto.setRunnerText("Dateien kopieren");
         ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         for (FileData fileData : fileDataList) {
             // toFilePath:  /tmp/usb/backup/2025-10-21__16-29-29/Daten/home/emil/Desktop/daten/file2/1972/bild.jpg
@@ -72,15 +71,17 @@ public class CopyFactory {
 
             try {
                 backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
-                backupInfo.runnerDto.addRunnerDone();
+                backupInfo.runnerDto.addRunnerAlreadyDone();
                 FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
             } catch (Exception ex) {
                 if (!FileFactory.goOnError(backupInfo, fromPath.toString(), true)) {
+                    backupInfo.runnerDto.setRunnerFileName("");
                     return false;
                 }
             }
         }
 
+        backupInfo.runnerDto.setRunnerFileName("");
         ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         return true;
     }
@@ -100,15 +101,17 @@ public class CopyFactory {
             File toFile = fileData.getBackupFilePath().toFile();
             try {
                 backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
-                backupInfo.runnerDto.addRunnerDone();
+                backupInfo.runnerDto.addRunnerAlreadyDone();
                 FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
             } catch (IOException e) {
                 if (!FileFactory.goOnError(backupInfo, fromFile.toString(), true)) {
+                    backupInfo.runnerDto.setRunnerFileName("");
                     return false;
                 }
             }
         }
 
+        backupInfo.runnerDto.setRunnerFileName("");
         return true;
     }
 
@@ -129,16 +132,18 @@ public class CopyFactory {
             try {
                 // create a hard link
                 backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
-                backupInfo.runnerDto.addRunnerDone();
+                backupInfo.runnerDto.addRunnerAlreadyDone();
                 FileUtils.createParentDirectories(toFile.toFile());
                 Files.createLink(toFile, fromFile);
             } catch (Exception ex) {
                 if (!FileFactory.goOnError(backupInfo, fromFile.toString(), true)) {
+                    backupInfo.runnerDto.setRunnerFileName("");
                     return false;
                 }
             }
         }
 
+        backupInfo.runnerDto.setRunnerFileName("");
         return true;
     }
 }

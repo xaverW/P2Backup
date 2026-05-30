@@ -57,7 +57,7 @@ public class StatusBarController extends AnchorPane {
         hBox.getChildren().clear();
         progData.backupInfoList.forEach(b -> {
             RunnerDto runnerDto = b.runnerDto;
-            if (runnerDto.isRunning()) {
+            if (runnerDto.getGuiRunning()) {
                 Label lblRunning = new Label(b.getName());
                 hBox.getChildren().add(lblRunning);
             }

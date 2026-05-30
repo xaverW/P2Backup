@@ -41,12 +41,11 @@ public class BackupRunner {
             P2Log.sysLog("   Backup Start");
             P2Log.sysLog("=======================================");
 
-            this.backupInfo.runnerDto.setRunnerText("Starte Backup " + this.backupInfo.getName());
-
 
             // ===============================
             // erst mal alles putzen, prüfen und Infos sammeln
             // ===============================
+            this.backupInfo.runnerDto.setRunnerText("Starte Backup: " + this.backupInfo.getName());
             if (!BackupRunnerFactory.collectInfos(this.backupInfo)) {
                 close();
                 return;
@@ -97,7 +96,7 @@ public class BackupRunner {
             // ===============================
             // fromHash erstellen und toPath eintragen
             // ===============================
-            this.backupInfo.runnerDto.setRunnerText("Dateien einlesen");
+            this.backupInfo.runnerDto.setRunnerText("Dateien lesen");
             if (!BackupRunnerFactory.makeFromHash(this.backupInfo)) {
                 quitt(false);
                 return;
@@ -125,7 +124,9 @@ public class BackupRunner {
             // ============================
             // BackupData schreiben
             // ===============================
+            backupInfo.runnerDto.resetRunner();
             backupInfo.runnerDto.setRunnerText("Aufräumen");
+
             if (!BackupRunnerFactory.writeBackupData(this.backupInfo)) {
                 quitt(false);
                 return;

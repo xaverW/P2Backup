@@ -56,7 +56,7 @@ public class BackupHowController extends VBox {
             vBoxContent.disableProperty().unbind();
             vBoxContent.setDisable(progData.backupInfoProperty.get() == null);
             if (progData.backupInfoProperty.get() != null) {
-                vBoxContent.disableProperty().bind(progData.backupInfoProperty.get().runnerDto.runningProperty());
+                vBoxContent.disableProperty().bind(progData.backupInfoProperty.get().runnerDto.guiRunningProperty());
             }
         });
         spinnerCount.valueProperty().addListener((u, o, n) -> {

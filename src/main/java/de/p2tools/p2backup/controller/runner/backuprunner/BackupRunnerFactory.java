@@ -135,9 +135,6 @@ public class BackupRunnerFactory {
             String type = fileStore.type();
             System.out.println("========================");
             System.out.println("========================");
-            System.out.println("========================");
-            System.out.println("========================");
-            System.out.println("========================");
             System.out.println("Type: " + type);
             System.out.println("========================");
             // "FAT32" oder "vfat"
@@ -146,8 +143,6 @@ public class BackupRunnerFactory {
                 System.out.println("Type: " + type);
                 System.out.println("========================");
             }
-            System.out.println("========================");
-            System.out.println("========================");
             System.out.println("========================");
             System.out.println("========================");
         } catch (IOException e) {
@@ -236,7 +231,6 @@ public class BackupRunnerFactory {
             if (backupInfo.runnerDto.isStop()) {
                 return false;
             }
-            backupInfo.runnerDto.resetRunnerMax(backupInfo.runnerDto.getDataFileList().size());
 
         } catch (Exception ex) {
             P2AlertAppThread.showErrorAlert("Hash erstellen ",
@@ -250,9 +244,8 @@ public class BackupRunnerFactory {
 
     public static boolean copyFilesToBackup(BackupInfo backupInfo) {
         boolean ret;
-
         // wieder neu auf Anfang setzen
-        backupInfo.runnerDto.resetRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
+        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
         // ====================
         // BackupPfad nochmal prüfen, ist doppelt, schadet aber nicht
         if (!CopyFactory.checkToPath(FileFactory.getToPath(backupInfo))) {
@@ -261,7 +254,8 @@ public class BackupRunnerFactory {
 
         if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts keinen Vorgänger -> alles kopieren
-            return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+            ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+            return ret;
         }
 
         switch (backupInfo.getHow()) {
@@ -270,7 +264,6 @@ public class BackupRunnerFactory {
             default -> ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
         }
 
-        backupInfo.runnerDto.setRunnerFileName("");
         return ret;
     }
 

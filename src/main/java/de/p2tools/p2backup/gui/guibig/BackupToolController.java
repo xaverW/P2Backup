@@ -54,11 +54,11 @@ public class BackupToolController extends VBox {
             vBoxContent.disableProperty().unbind();
             vBoxContent.setDisable(backupInfo == null);
             if (backupInfo != null) {
-                vBoxContent.disableProperty().bind(backupInfo.runnerDto.runningProperty());
+                vBoxContent.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
                 btnBlocked.setVisible(!backupInfo.getPathListExcludeDir().isEmpty() ||
                         !backupInfo.getPathListExcludeFile().isEmpty());
                 btnBlocked.managedProperty().bind(btnBlocked.visibleProperty());
-                
+
                 lblBlocked.setVisible(!backupInfo.getPathListExcludeDir().isEmpty() ||
                         !backupInfo.getPathListExcludeFile().isEmpty());
                 lblBlocked.managedProperty().bind(lblBlocked.visibleProperty());

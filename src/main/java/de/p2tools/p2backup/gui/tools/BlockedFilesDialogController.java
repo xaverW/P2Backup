@@ -196,7 +196,7 @@ public class BlockedFilesDialogController extends P2DialogExtra {
         hBoxProgress.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(pProgressBar, Priority.ALWAYS);
 
-        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
+        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
         return hBoxProgress;
     }
 }

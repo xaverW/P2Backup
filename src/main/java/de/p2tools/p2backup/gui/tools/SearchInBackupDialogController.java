@@ -130,7 +130,7 @@ public class SearchInBackupDialogController extends P2DialogExtra {
         hBoxProgress.getChildren().addAll(/*P2GuiTools.getHBoxGrower(),*/ pProgressBar, btnStop);
         hBoxProgress.setAlignment(Pos.CENTER);
 
-        hBoxProgress.visibleProperty().bind(backupInfoProp.get().runnerDto.runningProperty());
+        hBoxProgress.visibleProperty().bind(backupInfoProp.get().runnerDto.guiRunningProperty());
         return hBoxProgress;
     }
 

@@ -39,8 +39,6 @@ public class CopyDiffFactory {
         // =====================================
         // erst mal das alte Backup überprüfen
         // =====================================
-        backupInfo.runnerDto.setRunnerText("Altes Backup prüfen");
-
         BooleanProperty foundError = new SimpleBooleanProperty(false);
         AtomicBoolean a = new AtomicBoolean(true);
         new ToolCheckBackupQuick(backupInfo, oldBackup, a).compare(foundError);
@@ -70,9 +68,6 @@ public class CopyDiffFactory {
         // =====================================
         // und jetzt Dateien kopieren
         // =====================================
-        backupInfo.runnerDto.setRunnerText("Dateien kopieren");
-        backupInfo.runnerDto.setRunnerFileName("");
-
         SqlFileData.readBackupFileList(backupInfo, oldBackup, oldFileList);
         oldFileList.forEach(fileData -> {
             if (!fileData.getFilePathStr().isEmpty() &&

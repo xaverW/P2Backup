@@ -131,7 +131,7 @@ public class GenerateBackupListPane extends VBox {
             new BackupRunner(backupInfo).makeBackup();
         });
         btnStart.setMaxWidth(Double.MAX_VALUE);
-        btnStart.disableProperty().bind(backupInfo.runnerDto.runningProperty()
+        btnStart.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty()
                 .or(backupInfo.notReadyProperty()));
 
         // ===========
@@ -258,7 +258,7 @@ public class GenerateBackupListPane extends VBox {
     private void setStyle(BackupInfo backupInfo, VBox vBoxAll) {
         if (progData.backupInfoProperty.get() != null && progData.backupInfoProperty.get().equals(backupInfo)) {
             // dann ists ausgewählt
-            if (backupInfo.runnerDto.isRunning()) {
+            if (backupInfo.runnerDto.getGuiRunning()) {
                 vBoxAll.setStyle("-fx-border-color: red; -fx-border-width: 4px;");
             } else {
                 if (progData.backupInfoList.size() <= 1) {
@@ -269,7 +269,7 @@ public class GenerateBackupListPane extends VBox {
             }
 
         } else {
-            if (backupInfo.runnerDto.isRunning()) {
+            if (backupInfo.runnerDto.getGuiRunning()) {
                 vBoxAll.setStyle("-fx-border-color: red; -fx-border-width: 1px; -fx-border-insets: 3px;");
             } else {
                 vBoxAll.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-border-insets: 2px;");
@@ -290,8 +290,8 @@ public class GenerateBackupListPane extends VBox {
         HBox.setHgrow(pProgressBar, Priority.ALWAYS);
         hBoxProgress.setAlignment(Pos.CENTER);
 
-        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.runningProperty());
-        hBoxProgress.managedProperty().bind(backupInfo.runnerDto.runningProperty());
+        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
+        hBoxProgress.managedProperty().bind(backupInfo.runnerDto.guiRunningProperty());
         return hBoxProgress;
     }
 }

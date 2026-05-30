@@ -67,10 +67,10 @@ public class PProgressBar extends StackPane {
         BackupInfo backupInfo = ProgData.getInstance().backupInfoProperty.get();
         setVisible(backupInfo != null);
         if (backupInfo != null) {
-            visibleProperty().bind(backupInfo.runnerDto.runningProperty());
-            progressBar.progressProperty().bind(backupInfo.runnerDto.progressProperty());
-            lblText.textProperty().bind(backupInfo.runnerDto.textProperty());
-            lblName.textProperty().bind(backupInfo.runnerDto.fileNameProperty());
+            visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
+            progressBar.progressProperty().bind(backupInfo.runnerDto.guiProgressProperty());
+            lblText.textProperty().bind(backupInfo.runnerDto.guiTextProperty());
+            lblName.textProperty().bind(backupInfo.runnerDto.guiFileNameProperty());
 
             lblText.setVisible(text);
             lblText.setManaged(text);

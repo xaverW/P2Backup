@@ -13,7 +13,7 @@ public class BackupInfoFactory {
     public static boolean isRunning() {
         BooleanProperty running = new SimpleBooleanProperty(false);
         ProgData.getInstance().backupInfoList.forEach(bi -> {
-            if (bi.runnerDto.isRunning()) {
+            if (bi.runnerDto.getGuiRunning()) {
                 running.set(true);
             }
         });

@@ -15,19 +15,21 @@ public class RunnerDto {
     private final BooleanProperty stop = new SimpleBooleanProperty(false); // wird in den nur in Running-Threads verwendet!!
     private final BooleanProperty ok = new SimpleBooleanProperty(false); // war der Lauf fehlerfrei
     private final BooleanProperty doneFirstRun = new SimpleBooleanProperty(false); // wird nach dem ersten Lauf gesetzt
-    private final IntegerProperty max = new SimpleIntegerProperty(0);
-    private final IntegerProperty done = new SimpleIntegerProperty(0);
-    private final DoubleProperty progress = new SimpleDoubleProperty(0);
-    private final BooleanProperty running = new SimpleBooleanProperty(false); // wird im GUI ausgewertet
     private final BooleanProperty goAlwaysOverError = new SimpleBooleanProperty(false); // Lesefehler überspringen
     private final BooleanProperty ask = new SimpleBooleanProperty(true); // bei Lesefehler fragen
 
+    // Infos im GUI
+    private final BooleanProperty guiRunning = new SimpleBooleanProperty(false); // wird im GUI ausgewertet
+    private final IntegerProperty guiMax = new SimpleIntegerProperty(0);
+    private final IntegerProperty guiDone = new SimpleIntegerProperty(0);
+    private final DoubleProperty guiProgress = new SimpleDoubleProperty(0);
+    private final StringProperty guiText = new SimpleStringProperty(""); // ist der RunnerText im GUI
+    private final StringProperty guiFileName = new SimpleStringProperty(""); // ist der Name der im Progress-Info angezeigt wird
+
     // Infos die angezeigt werden beim Lauf
-    private final StringProperty fileName = new SimpleStringProperty(""); // ist der Name der im Progress-Info angezeigt wird
     private final IntegerProperty runnerMax = new SimpleIntegerProperty(0); // Anzahl Dateien
-    private final IntegerProperty runnerDone = new SimpleIntegerProperty(0); // schon fertig
+    private final IntegerProperty runnerAlreadyDone = new SimpleIntegerProperty(0); // schon fertig
     private final StringProperty runnerText = new SimpleStringProperty(""); // Text, was Runner macht
-    private final StringProperty text = new SimpleStringProperty(""); // ist der RunnerText im GUI
     private final StringProperty runnerFileName = new SimpleStringProperty(""); // aktuelle Datei (zum Erstellen des Hash)
 
     // backupPath   /tmp/usb/backup
@@ -47,29 +49,32 @@ public class RunnerDto {
         ProgData.getInstance().pEventHandler.addListener(new P2Listener(PEvents.EVENT_TIMER_HALF_SECOND) {
             @Override
             public void pingGui(P2Event event) {
-                if (runnerMax.get() != getMax()) {
-                    max.set(runnerMax.get());
-                    System.out.println("===> max " + max.get());
+                if (runnerMax.get() != getGuiMax()) {
+                    guiMax.set(runnerMax.get());
+                    System.out.println("===> max " + guiMax.get());
                 }
 
-                if (runnerDone.get() != getDone()) {
-                    done.set(runnerDone.get());
-                    if (max.get() > 0) {
-                        progress.set(1.0 * done.get() / max.get());
-                    }
-                    System.out.println("===> done " + done.get());
-                    System.out.println("     max " + max.get());
-                    System.out.println("     progress " + progress.get());
+                if (runnerAlreadyDone.get() != getGuiDone()) {
+                    guiDone.set(runnerAlreadyDone.get());
+                    System.out.println("===> done " + guiDone.get());
+                    System.out.println("     max " + guiMax.get());
+                    System.out.println("     progress " + guiProgress.get());
                 }
 
-                if (!runnerText.get().equals(getText())) {
-                    text.set(runnerText.get());
-                    System.out.println("===> text " + text.get());
+                if (guiMax.get() > 0) {
+                    guiProgress.set(1.0 * guiDone.get() / guiMax.get());
+                } else {
+                    guiProgress.set(0);
                 }
 
-                if (!runnerFileName.get().equals(getFileName())) {
-                    fileName.set(runnerFileName.get());
-                    System.out.println("===> fileName " + fileName.get());
+                if (!runnerText.get().equals(getGuiText())) {
+                    guiText.set(runnerText.get());
+                    System.out.println("===> text " + guiText.get());
+                }
+
+                if (!runnerFileName.get().equals(getGuiFileName())) {
+                    guiFileName.set(runnerFileName.get());
+                    System.out.println("===> fileName " + guiFileName.get());
                 }
             }
         });
@@ -122,38 +127,40 @@ public class RunnerDto {
 
     //===============
     public void startRunner(String name) {
+        stop.set(false);
         runnerMax.set(0);
-        runnerDone.set(0);
+        runnerAlreadyDone.set(0);
         runnerText.set(name);
         runnerFileName.set("");
 
         Platform.runLater(() -> {
-            stop.set(false);
-            progress.set(0);
-            running.set(true);
-//            text.set(name);
+            guiMax.set(0);
+            guiDone.set(0);
+            guiProgress.set(0);
+            guiRunning.set(true);
+            guiFileName.set("");
         });
     }
 
     public void stopRunner() {
         runnerMax.set(0);
-        runnerDone.set(0);
+        runnerAlreadyDone.set(0);
         runnerText.set("");
         runnerFileName.set("");
 
         Platform.runLater(() -> {
             stop.set(false);
-            progress.set(0);
-            running.set(false);
+            guiProgress.set(0);
+            guiRunning.set(false);
         });
     }
 
-    public boolean isRunning() {
-        return running.get();
+    public boolean getGuiRunning() {
+        return guiRunning.get();
     }
 
-    public BooleanProperty runningProperty() {
-        return running;
+    public BooleanProperty guiRunningProperty() {
+        return guiRunning;
     }
 
     public boolean isStop() {
@@ -189,64 +196,67 @@ public class RunnerDto {
     }
 
     // ============================
-    public int getMax() {
-        return max.get();
+    public int getGuiMax() {
+        return guiMax.get();
     }
 
-    public IntegerProperty maxProperty() {
-        return max;
+    public IntegerProperty guiMaxProperty() {
+        return guiMax;
     }
 
-    public int getDone() {
-        return done.get();
+    public int getGuiDone() {
+        return guiDone.get();
     }
 
-    public IntegerProperty doneProperty() {
-        return done;
+    public IntegerProperty guiDoneProperty() {
+        return guiDone;
     }
 
-    public double getProgress() {
-        return progress.get();
+    public double getGuiProgress() {
+        return guiProgress.get();
     }
 
-    public DoubleProperty progressProperty() {
-        return progress;
+    public DoubleProperty guiProgressProperty() {
+        return guiProgress;
     }
 
-    public String getText() {
-        return text.get();
+    public String getGuiText() {
+        return guiText.get();
     }
 
-    public StringProperty textProperty() {
-        return text;
+    public StringProperty guiTextProperty() {
+        return guiText;
     }
 
-    public String getFileName() {
-        return fileName.get();
+    public String getGuiFileName() {
+        return guiFileName.get();
     }
 
-    public StringProperty fileNameProperty() {
-        return fileName;
+    public StringProperty guiFileNameProperty() {
+        return guiFileName;
     }
 
     // =====================
     // runner
-    public void resetRunnerMax(int runnerMax) {
-        this.runnerMax.set(runnerMax);
-        this.runnerDone.set(0);
+    public void resetRunner() {
+        this.runnerMax.set(0);
+        this.runnerAlreadyDone.set(0);
         this.runnerFileName.set("");
+        this.runnerText.set("");
     }
 
     public void setRunnerMax(int runnerMax) {
         this.runnerMax.set(runnerMax);
+        this.runnerAlreadyDone.set(0);
+        this.runnerFileName.set("");
     }
 
-    public void setRunnerDone(int runnerDone) {
-        this.runnerDone.set(runnerDone);
+    public void setRunnerAlreadyDone(int runnerAlreadyDone) {
+        this.runnerAlreadyDone.set(runnerAlreadyDone);
     }
 
-    public void addRunnerDone() {
-        this.runnerDone.set(this.runnerDone.get() + 1);
+    public void addRunnerAlreadyDone() {
+        this.runnerAlreadyDone.set(this.runnerAlreadyDone.get() + 1);
     }
 
     public void setRunnerText(String runnerText) {
