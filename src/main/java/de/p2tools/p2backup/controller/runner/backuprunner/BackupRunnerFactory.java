@@ -251,6 +251,8 @@ public class BackupRunnerFactory {
     public static boolean copyFilesToBackup(BackupInfo backupInfo) {
         boolean ret;
 
+        // wieder neu auf Anfang setzen
+        backupInfo.runnerDto.resetRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
         // ====================
         // BackupPfad nochmal prüfen, ist doppelt, schadet aber nicht
         if (!CopyFactory.checkToPath(FileFactory.getToPath(backupInfo))) {
@@ -314,6 +316,7 @@ public class BackupRunnerFactory {
             P2Log.errorLog(956232145, "Fehlerhafte Dateien: " + removeList.size());
             backupInfo.runnerDto.getDataFileList().removeAll(removeList);
         }
+        backupInfo.runnerDto.getBackupData().setCount(backupInfo.runnerDto.getDataFileList().size());
 
         // BackupFile schreiben
         return SqlFileData.writeBackupFileList(backupInfo);

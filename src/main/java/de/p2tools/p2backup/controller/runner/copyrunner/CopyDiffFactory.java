@@ -86,6 +86,7 @@ public class CopyDiffFactory {
         // ===============
         // suchen was kopiert werden muss
         backupInfo.runnerDto.getDataFileList().forEach(fileData -> {
+            backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
             FileHashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (fileData.isError()) {

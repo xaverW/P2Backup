@@ -83,11 +83,6 @@ public class DirCreateHash {
                 // zuerst mal alle Dirs/Dateien im fromPath suchen
                 FileListFactory.getFileList(backupInfo, fromPathList, foundDirList, foundFileList, null);
 
-                backupInfo.runnerDto.getBackupData().setCount(foundFileList.size());
-                backupInfo.runnerDto.setRunnerMax(foundFileList.size());
-                backupInfo.runnerDto.setRunnerDone(0);
-                backupInfo.runnerDto.setRunnerFileName("");
-
                 // ============================
                 // für jedes Verzeichnis im fromPath ein FileData-Object erstellen (und natürlich ohne Hash),
                 // in DirDataList eintragen
