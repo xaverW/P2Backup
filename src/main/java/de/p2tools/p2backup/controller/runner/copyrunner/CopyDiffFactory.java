@@ -15,7 +15,10 @@ import de.p2tools.p2lib.tools.P2Wait;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,6 +32,14 @@ public class CopyDiffFactory {
         FileDataList copyList = new FileDataList();
         FileDataList moveList = new FileDataList();
         final Map<String, FileData> oldBackupFileMap = new HashMap<>(); // sind alle Dateien im alten Backup
+
+        Stage stage;
+        if (ProgData.getInstance().primaryStageSmall != null &&
+                ProgData.getInstance().primaryStageSmall.isShowing()) {
+            stage = ProgData.getInstance().primaryStageSmall;
+        } else {
+            stage = ProgData.getInstance().primaryStage;
+        }
 
         // ======================
         // altes Backup laden
@@ -46,14 +57,10 @@ public class CopyDiffFactory {
             P2Wait.pause(500);
         }
 
+        // wieder neu auf Anfang setzen
+        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
+
         if (foundError.get()) {
-            Stage stage;
-            if (ProgData.getInstance().primaryStageSmall != null &&
-                    ProgData.getInstance().primaryStageSmall.isShowing()) {
-                stage = ProgData.getInstance().primaryStageSmall;
-            } else {
-                stage = ProgData.getInstance().primaryStage;
-            }
             P2AlertAppThread.showErrorAlert(stage, "Backup erstellen",
                     """
                             Das vorherige Backup ist beschädigt. Es kann dann kein neues Backup mit
@@ -76,22 +83,26 @@ public class CopyDiffFactory {
                 oldBackupFileMap.put(fileData.getFilePathStr(), fileData);
             }
         });
-        oldFileList.clear();
+
 
         // ===============
         // suchen was kopiert werden muss
-        backupInfo.runnerDto.getDataFileList().forEach(fileData -> {
+        for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
             backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
+            backupInfo.runnerDto.addRunnerAlreadyDone();
             FileHashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            if (backupInfo.runnerDto.isStop()) {
+                return false;
+            }
             if (fileData.isError()) {
-                return;
+                continue;
             }
 
             FileData oldFile = oldBackupFileMap.get(fileData.getFilePathStr());
             if (oldFile == null || !fileData.getHash().equals(oldFile.getHash())) {
                 // dann gibt es sie nicht oder
-                // oder sie sind nicht gleich -> aus DATEIEN kopieren
+                // sie sind nicht gleich -> aus DATEIEN kopieren
                 copyList.add(fileData);
 
             } else {
@@ -103,26 +114,56 @@ public class CopyDiffFactory {
                 }
                 moveList.add(moveData);
             }
-        });
-
-        // ===============
-        // oldBackup aktualisieren, backupFiles des alten Backup
-        oldFileList.setAll(oldBackupFileMap.values()); // sind alle bei INTELLIGENT oder der Rest bei DIFF
-        oldBackup.setCount(oldFileList.size());
-        if (!SqlFileData.updateBackupFileList(backupInfo, oldBackup.getId(), oldFileList)) {
-            backupInfo.runnerDto.setStop();
         }
 
+
         // ======================
+        // wieder neu auf Anfang setzen
+        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
         // und jetzt kopieren/linken/moven
         if (!CopyFactory.copyFiles(backupInfo, copyList)) {
             return false;
         }
 
+
         if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
+            // ==============================
             // move files form OldBAckup
-            return CopyFactory.moveFiles(backupInfo, oldToPathStr, moveList);
+            oldFileList.setAll(oldBackupFileMap.values()); // ist der Rest bei DIFF
+            FileDataList resetList = new FileDataList();
+            boolean ret = CopyFactory.moveFiles(backupInfo, oldToPathStr, moveList, resetList);
+
+            if (backupInfo.runnerDto.isStop() && !resetList.isEmpty()) {
+                // die gesamte moveList wieder eintragen
+                oldFileList.addAll(moveList);
+
+                // dann wieder alles zurückfahren, resetList sind die kopierten
+                backupInfo.runnerDto.setRunnerMax(resetList.size());
+                for (FileData fileData : resetList) {
+                    File fromFile = fileData.getBackupFilePath().toFile();
+                    File toFile = fileData.getBackupFilePath(oldToPathStr).toFile();
+                    try {
+                        backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
+                        backupInfo.runnerDto.addRunnerAlreadyDone();
+                        FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
+                    } catch (IOException e) {
+                        P2AlertAppThread.showErrorAlert(stage, "Backup abbrechen", "Es können nicht alle " +
+                                "Dateien wieder hergestellt werden. Bitte nochmals ein Backup machen!");
+                    }
+                }
+            }
+
+            // ===============
+            // oldBackup aktualisieren, backupFiles des alten Backup
+            oldBackup.setCount(oldFileList.size());
+            if (!SqlFileData.updateBackupFileList(backupInfo, oldBackup.getId(), oldFileList)) {
+                backupInfo.runnerDto.setStop();
+            }
+            return ret;
+
+
         } else {
+            // ==============================
             // link files from OldBackup
             return CopyFactory.linkFiles(backupInfo, oldToPathStr, moveList);
         }

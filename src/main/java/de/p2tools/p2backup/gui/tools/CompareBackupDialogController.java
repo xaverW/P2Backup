@@ -131,9 +131,6 @@ public class CompareBackupDialogController extends P2DialogExtra {
                         "neu gelesen und werden dann verglichen. Ansonsten werden die gespeicherten Infos " +
                         "verglichen. Das \"neue Einlesen\" kann bei vielen Dateien lange dauern.");
 
-//        HBox hBoxProgress = getProgress();
-//        HBox.setHgrow(hBoxProgress, Priority.ALWAYS);
-
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.setAlignment(Pos.CENTER_RIGHT);
         hBox.getChildren().addAll(new Label("Backup:"), cboBackup, chkLong,

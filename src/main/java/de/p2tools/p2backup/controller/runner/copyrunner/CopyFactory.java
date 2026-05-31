@@ -50,14 +50,14 @@ public class CopyFactory {
             // toPath:      /tmp/usb/backup/2025-10-23__10-12-00
             // filePath:    /home/emil/Desktop/daten/file1/1970/1960_05.jpg
 
+            if (backupInfo.runnerDto.isStop()) {
+                return false;
+            }
+
             FileHashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (fileData.isError()) {
                 continue;
-            }
-
-            if (backupInfo.runnerDto.isStop()) {
-                return false;
             }
 
             if (fileData.getFilePathStr().isEmpty() ||
@@ -75,6 +75,7 @@ public class CopyFactory {
                 FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
             } catch (Exception ex) {
                 if (!FileFactory.goOnError(backupInfo, fromPath.toString(), true)) {
+                    backupInfo.runnerDto.setRunnerMax(0);
                     backupInfo.runnerDto.setRunnerFileName("");
                     return false;
                 }
@@ -87,9 +88,12 @@ public class CopyFactory {
     }
 
     public static boolean moveFiles(BackupInfo backupInfo, String oldToPath,
-                                    FileDataList fileDataList) {
+                                    FileDataList fileDataList, FileDataList resetList) {
         // move
         for (FileData fileData : fileDataList) {
+            if (backupInfo.runnerDto.isStop()) {
+                break;
+            }
 
             FileHashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
@@ -97,12 +101,14 @@ public class CopyFactory {
                 continue;
             }
 
+
             File fromFile = fileData.getBackupFilePath(oldToPath).toFile();
             File toFile = fileData.getBackupFilePath().toFile();
             try {
                 backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
                 backupInfo.runnerDto.addRunnerAlreadyDone();
                 FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
+                resetList.add(fileData);
             } catch (IOException e) {
                 if (!FileFactory.goOnError(backupInfo, fromFile.toString(), true)) {
                     backupInfo.runnerDto.setRunnerFileName("");
@@ -110,6 +116,7 @@ public class CopyFactory {
                 }
             }
         }
+
 
         backupInfo.runnerDto.setRunnerFileName("");
         return true;
@@ -119,6 +126,9 @@ public class CopyFactory {
                                     List<FileData> fileDataList) {
         // in der FileDataList sind die Dateien aus dem Backup die verlinkt werden
         for (FileData fileData : fileDataList) {
+            if (backupInfo.runnerDto.isStop()) {
+                break;
+            }
 
             FileHashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));

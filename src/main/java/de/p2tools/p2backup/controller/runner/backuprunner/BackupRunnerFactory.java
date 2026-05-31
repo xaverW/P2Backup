@@ -33,6 +33,7 @@ public class BackupRunnerFactory {
     private BackupRunnerFactory() {
     }
 
+
     public static boolean collectInfos(BackupInfo backupInfo) {
         backupInfo.runnerDto.initRunner();
 
@@ -66,6 +67,7 @@ public class BackupRunnerFactory {
         return true;
     }
 
+
     private static boolean checkName(BackupInfo backupInfo) {
         if (backupInfo.getName().isEmpty()) {
             P2AlertAppThread.getTextAlert("Backup", "Name fürs Backup",
@@ -78,6 +80,7 @@ public class BackupRunnerFactory {
 
         return true;
     }
+
 
     private static boolean checkFrom(BackupInfo backupInfo) {
         if (backupInfo.getPathListFrom().isEmpty()) {
@@ -98,6 +101,7 @@ public class BackupRunnerFactory {
         }
         return true;
     }
+
 
     private static boolean checkBackupPath(BackupInfo backupInfo) {
         if (backupInfo.getBackupPath().isEmpty()) {
@@ -126,6 +130,7 @@ public class BackupRunnerFactory {
 
         return true;
     }
+
 
     public static boolean makeBackupDirectory(BackupInfo backupInfo) {
         File backupPath = new File(backupInfo.getBackupPath());
@@ -174,6 +179,7 @@ public class BackupRunnerFactory {
         }
     }
 
+
     public static boolean makeToPathDirectory(BackupInfo backupInfo) {
         Path toPath = backupInfo.runnerDto.getToPath();
 
@@ -209,7 +215,8 @@ public class BackupRunnerFactory {
         return true;
     }
 
-    public static boolean makeFromHash(BackupInfo backupInfo) {
+
+    public static boolean searchFromDate(BackupInfo backupInfo) {
         // Daten einlesen und ins DTO schreiben
         try {
             AtomicBoolean atomicBoolean = new AtomicBoolean(true);
@@ -233,14 +240,15 @@ public class BackupRunnerFactory {
             }
 
         } catch (Exception ex) {
-            P2AlertAppThread.showErrorAlert("Hash erstellen ",
-                    "Konnte den Hash der Dateien " +
-                            "nicht erstellen.");
+            P2AlertAppThread.showErrorAlert("Daten einlesen ",
+                    "Konnte die zu sichernden Dateien " +
+                            "nicht laden.");
             return false;
         }
 
         return true;
     }
+
 
     public static boolean copyFilesToBackup(BackupInfo backupInfo) {
         boolean ret;
@@ -267,6 +275,7 @@ public class BackupRunnerFactory {
         return ret;
     }
 
+
     public static boolean deleteBackupData(BackupInfo backupInfo) {
         boolean ret = true;
         BackupDataList backupDataList = backupInfo.getBackupDataList();
@@ -282,6 +291,7 @@ public class BackupRunnerFactory {
 
         return ret;
     }
+    
 
     public static boolean writeBackupData(BackupInfo backupInfo) {
         // aktuellen Hash der DATEN in der Tabelle dataFiles sichern

@@ -97,7 +97,7 @@ public class BackupRunner {
             // fromHash erstellen und toPath eintragen
             // ===============================
             this.backupInfo.runnerDto.setRunnerText("Dateien lesen");
-            if (!BackupRunnerFactory.makeFromHash(this.backupInfo)) {
+            if (!BackupRunnerFactory.searchFromDate(this.backupInfo)) {
                 quitt(false);
                 return;
             }
@@ -126,7 +126,6 @@ public class BackupRunner {
             // ===============================
             backupInfo.runnerDto.resetRunner();
             backupInfo.runnerDto.setRunnerText("Aufräumen");
-
             if (!BackupRunnerFactory.writeBackupData(this.backupInfo)) {
                 quitt(false);
                 return;
