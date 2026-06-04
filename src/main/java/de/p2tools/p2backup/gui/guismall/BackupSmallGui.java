@@ -49,8 +49,7 @@ public class BackupSmallGui extends P2DialogOnly {
     private final Button btnStartAll = new Button("Alle Starten");
 
     public BackupSmallGui() {
-        super(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_SIZE_SMALL_GUI, "P2Backup",
-                false, false, true, false);
+        super(ProgData.getInstance().primaryStage, null, "P2Backup");
 
         this.progData = ProgData.getInstance();
         init(false);
@@ -68,18 +67,18 @@ public class BackupSmallGui extends P2DialogOnly {
         saveDialog();
         P2DialogExtra.getDialogList().remove(this);
         P2Log.debugLog("Anzahl Dialoge: " + P2DialogExtra.getDialogList().size());
+        super.close();
     }
 
     @Override
     public void make() {
         initDialog();
         addBtn();
-        addProgress();
-//        progData.backupInfoList.addListener((u, o, n) -> {
-//            setStartAll();
-//            addProgress();
-//            getStage().sizeToScene();
-//        });
+        addBackupList();
+        progData.backupInfoList.addListener((u, o, n) -> {
+            addBackupList();
+            getStage().sizeToScene();
+        });
     }
 
     public void restartShowing() {
@@ -94,7 +93,6 @@ public class BackupSmallGui extends P2DialogOnly {
         final ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
-        // scrollPane.getStyleClass().add("edge-to-edge");
         scrollPane.getStyleClass().add("smallGuiScrollPane");
         scrollPane.setContent(vBox);
         getVBoxCompleteDialog().getChildren().addAll(scrollPane, P2GuiTools.getVBoxGrower());
@@ -125,7 +123,6 @@ public class BackupSmallGui extends P2DialogOnly {
         hBoxButton.setSpacing(5);
         hBoxButton.setPadding(new Insets(10, 0, 5, 0));
         hBoxButton.setAlignment(Pos.CENTER);
-//        hBoxButton.getStyleClass().add("smallGuiBtnBox");
         getVBoxCompleteDialog().getChildren().addAll(hBoxButton);
     }
 
@@ -138,7 +135,7 @@ public class BackupSmallGui extends P2DialogOnly {
         }
     }
 
-    private void addProgress() {
+    private void addBackupList() {
         vBox.getChildren().clear();
 
         for (BackupInfo backupInfo : progData.backupInfoList) {

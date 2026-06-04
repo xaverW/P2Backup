@@ -200,7 +200,6 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty BACKUP_INFO_TABLE_ORDER = addStrProp("backup-info-table-order");
 
     // SmallBackupDialog
-    public static StringProperty SYSTEM_SIZE_SMALL_GUI = addStrProp("system-size-small-gui");
     public static BooleanProperty SYSTEM_SMALL_GUI_SHOW_START_HELP = addBoolProp("system-small-gui-show-start-help", false);
 
     // BigBackupDialog
