@@ -76,13 +76,10 @@ public class BackupSmallGui extends P2DialogOnly {
         addBtn();
         addBackupList();
         progData.backupInfoList.addListener((u, o, n) -> {
+            setStartAll();
             addBackupList();
             getStage().sizeToScene();
         });
-    }
-
-    public void restartShowing() {
-        setStartAll();
     }
 
     private void initDialog() {
