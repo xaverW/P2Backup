@@ -66,7 +66,7 @@ public class ToolCheckBackupQuick {
     private void compareDir(BooleanProperty foundError) {
         // Daten laden
         FileDataList fileListDb = new FileDataList();
-        if (!SqlFileData.readFileListFromBackup(backupInfo, backupData, fileListDb)) {
+        if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileListDb)) {
             backupInfo.runnerDto.setStop();
         }
 

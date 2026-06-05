@@ -2,11 +2,10 @@ package de.p2tools.p2backup.controller.runner.tools;
 
 import de.p2tools.p2backup.controller.config.PEvents;
 import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.tools.SearchInBackupDialogController;
+import de.p2tools.p2backup.gui.tools.FileHistoryDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.beans.property.BooleanProperty;
@@ -14,22 +13,20 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ToolSearchInBackup {
+public class ToolFileHistoryInBackup {
 
     private ProgData progData;
     private final BackupInfo backupInfo;
-    private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
     private BooleanProperty stop = new SimpleBooleanProperty(false);
-    private final SearchInBackupDialogController searchInBackupDialogController;
+    private final FileHistoryDialogController fileHistoryDialogController;
 
 
-    public ToolSearchInBackup(SearchInBackupDialogController searchInBackupDialogController,
-                              BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
+    public ToolFileHistoryInBackup(FileHistoryDialogController fileHistoryDialogController,
+                                   BackupInfo backupInfo, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.searchInBackupDialogController = searchInBackupDialogController;
+        this.fileHistoryDialogController = fileHistoryDialogController;
         this.backupInfo = backupInfo;
-        this.backupData = backupData;
         this.atomicBoolean = atomicBoolean;
     }
 
@@ -54,11 +51,12 @@ public class ToolSearchInBackup {
     }
 
     private void work() {
-        FileDataList fileDataList = new FileDataList();
-        if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileDataList)) {
+        FileDataList fileListData = new FileDataList();
+        backupInfo.runnerDto.setRunnerText("Daten laden");
+        if (!SqlFileData.readDataFileList(backupInfo, fileListData)) {
             backupInfo.runnerDto.setStop();
         }
-        searchInBackupDialogController.setResult(fileDataList);
+        fileHistoryDialogController.setResult(fileListData);
         atomicBoolean.set(false);
     }
 }

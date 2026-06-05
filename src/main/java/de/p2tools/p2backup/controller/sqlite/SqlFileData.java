@@ -4,10 +4,12 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
+import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 public class SqlFileData {
 
@@ -86,24 +88,25 @@ public class SqlFileData {
         return true;
     }
 
-    public static boolean readFileListFromBackup(BackupInfo backupInfo, BackupData backupData,
-                                                 FileDataList fileDataList) {
+    public static boolean readFileHistoryList(BackupInfo backupInfo, String filePath,
+                                              List<HistoryFileData> fileDataList) {
+
         String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;
         }
-        final String to = backupData.getToPathStr(backupInfo);
+
         final String sqlBackupInfo = "SELECT id, backupId, dataFile, " +
                 "date, size, link, hash, error FROM backupFiles " +
-                "WHERE backupId == ? ";
+                "WHERE dataFile == ? ";
 
         try (var conn = DriverManager.getConnection(url);
              var pstmt = conn.prepareStatement(sqlBackupInfo)) {
 
-            pstmt.setLong(1, backupData.getId());
+            pstmt.setString(1, filePath);
             var rs = pstmt.executeQuery();
             while (rs.next()) {
-                FileData fileData = new FileData();
+                HistoryFileData fileData = new HistoryFileData();
                 fileData.setId(rs.getLong("id"));
                 fileData.setBackupId(rs.getLong("backupId"));
                 fileData.setFilePathStr(rs.getString("dataFile"));
@@ -113,14 +116,19 @@ public class SqlFileData {
                 fileData.setHash(rs.getString("hash"));
                 fileData.setError(rs.getBoolean("error"));
 
-                fileData.setToPathStr(to);
-                fileDataList.add(fileData);
+                BackupData backupData = SqlBackupData.getBackupData(backupInfo, fileData.getBackupId());
+                if (backupData != null) {
+                    fileData.setToPathStr(backupData.getToPathStr(backupInfo));
+                    fileData.setStartDate(backupData.getStartDate());
+                    fileDataList.add(fileData);
+                }
             }
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             return false;
         }
+
         return true;
     }
 

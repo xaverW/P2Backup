@@ -95,6 +95,20 @@ public class BackupToolController extends VBox {
         lblBackup.getStyleClass().add("lblToolInfo");
 
 
+        // File History
+        Button btnHistory = new Button("Änderungen einer Datei");
+        btnHistory.setMaxWidth(Double.MAX_VALUE);
+        btnHistory.setOnAction(a -> {
+            if (progData.backupInfoProperty.get() != null) {
+                new FileHistoryDialogController(progData.backupInfoProperty.get()).showDialog();
+            }
+        });
+        Label lblHistory = new Label("Hier ist der Verlauf der Änderungen einer " +
+                "Datei, zu sehen.");
+        lblHistory.setWrapText(true);
+        lblHistory.getStyleClass().add("lblToolInfo");
+
+
         // Vergleich
         Button btnCompare = new Button("Daten und Backup vergleichen");
         btnCompare.setMaxWidth(Double.MAX_VALUE);
@@ -147,6 +161,9 @@ public class BackupToolController extends VBox {
         gridPane.add(btnBackup, 0, ++row);
         gridPane.add(lblBackup, 1, row);
 
+        gridPane.add(btnHistory, 0, ++row);
+        gridPane.add(lblHistory, 1, row);
+
         gridPane.add(btnCompare, 0, ++row);
         gridPane.add(lblCompare, 1, row);
 
@@ -160,6 +177,8 @@ public class BackupToolController extends VBox {
         GridPane.setVgrow(lblInfo, Priority.ALWAYS);
         lblBackup.setMaxWidth(Double.MAX_VALUE);
         GridPane.setVgrow(lblInfo, Priority.ALWAYS);
+        lblHistory.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setVgrow(lblHistory, Priority.ALWAYS);
         lblCompare.setMaxWidth(Double.MAX_VALUE);
         GridPane.setVgrow(lblCompare, Priority.ALWAYS);
         lblCheck.setMaxWidth(Double.MAX_VALUE);

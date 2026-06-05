@@ -27,7 +27,7 @@ public class PTable<E> extends TableView<E> {
         this.table_enum = table_enum;
     }
 
-    public Table.TABLE_ENUM getETable() {
+    public Table.TABLE_ENUM getTable() {
         return table_enum;
     }
 

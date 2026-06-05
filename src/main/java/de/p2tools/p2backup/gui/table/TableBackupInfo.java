@@ -44,7 +44,7 @@ public class TableBackupInfo extends PTable<BackupData> {
     }
 
     @Override
-    public Table.TABLE_ENUM getETable() {
+    public Table.TABLE_ENUM getTable() {
         return table_enum;
     }
 

@@ -12,6 +12,36 @@ public class SqlBackupData {
     private SqlBackupData() {
     }
 
+    public static BackupData getBackupData(BackupInfo backupInfo, long id) {
+        String url = SqlFactory.getUrl(backupInfo);
+        if (url.isEmpty()) {
+            return null;
+        }
+
+        final BackupData backupData = new BackupData();
+        final String sqlBackupInfo = "SELECT id, backupInfoId, count, startDate, subPath FROM backupData " +
+                "WHERE id == ?";
+
+        try (var conn = DriverManager.getConnection(url);
+             var pstmt = conn.prepareStatement(sqlBackupInfo)) {
+
+            pstmt.setLong(1, id);
+            var rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                backupData.setId(rs.getLong("id"));
+                backupData.setBackupInfoId(rs.getLong("backupInfoId"));
+                backupData.setCount(rs.getInt("count"));
+                backupData.setStartDate(SqlFactory.getLocalDateTime(rs.getString("startDate")));
+                backupData.setSubPath(rs.getString("subPath"));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+        return backupData;
+    }
+
     public static boolean readBackupDataList(BackupInfo backupInfo) {
         String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {

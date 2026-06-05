@@ -71,7 +71,7 @@ public class ToolCheckBackup {
         // Daten laden
         backupInfo.runnerDto.setRunnerText("Gespeicherte Backup-Dateien laden");
         FileDataList fileListDb = new FileDataList();
-        if (!SqlFileData.readFileListFromBackup(backupInfo, backupData, fileListDb)) {
+        if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileListDb)) {
             backupInfo.runnerDto.setStop();
         }
 

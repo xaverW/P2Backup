@@ -26,7 +26,8 @@ import javafx.scene.control.TableView;
 
 public class Table {
     public enum TABLE_ENUM {
-        DIR_COMPARE, BLOCKED_FILE, BACKUP_INFO, SHOW_BACKUP_FILES, CHECK_BACKUP
+        DIR_COMPARE, BLOCKED_FILE, BACKUP_INFO, SHOW_BACKUP_FILES,
+        CHECK_BACKUP, FILE_HISTORY
     }
 
     private static final String SORT_ASCENDING = "ASCENDING";
@@ -51,7 +52,7 @@ public class Table {
     public static void setTable(PTable table) {
         // Tabelle setzen
         try {
-            initConf(table.getETable());
+            initConf(table.getTable());
             initColumn(table);
 
             maxSpalten = table.getColumns().size();
@@ -138,7 +139,7 @@ public class Table {
 
 
     public static void resetTable(PTable ta) {
-        initConf(ta.getETable());
+        initConf(ta.getTable());
         reset(ta);
         setTable(ta);
     }
@@ -179,6 +180,13 @@ public class Table {
                 confUpDown = ProgConfig.BACKUP_FILES_TABLE_UP_DOWN;
                 confVis = ProgConfig.BACKUP_FILES_TABLE_VIS;
                 confOrder = ProgConfig.BACKUP_FILES_TABLE_ORDER;
+                break;
+            case FILE_HISTORY:
+                confWidth = ProgConfig.FILE_HISTORY_TABLE_WIDTH;
+                confSort = ProgConfig.FILE_HISTORY_TABLE_SORT;
+                confUpDown = ProgConfig.FILE_HISTORY_TABLE_UP_DOWN;
+                confVis = ProgConfig.FILE_HISTORY_TABLE_VIS;
+                confOrder = ProgConfig.FILE_HISTORY_TABLE_ORDER;
                 break;
         }
     }

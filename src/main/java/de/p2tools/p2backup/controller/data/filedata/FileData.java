@@ -26,6 +26,8 @@ public class FileData extends FileDataProps {
      * wird erstellt, bei FileRun und liegen in den BackupHashData
      */
 
+    String parentFilePathStr = "";
+
     public FileData() {
     }
 
@@ -51,6 +53,10 @@ public class FileData extends FileDataProps {
             return "";
         }
         return FileFactory.setCorrPath(getFilePathStr());
+    }
+
+    public void setParentFilePathStr(String parentFilePathStr) {
+        this.parentFilePathStr = parentFilePathStr;
     }
 
     public Path getParentFilePath() {

@@ -46,7 +46,7 @@ public class TableSearchInBackup extends PTable<FileData> {
     }
 
     @Override
-    public Table.TABLE_ENUM getETable() {
+    public Table.TABLE_ENUM getTable() {
         return table_enum;
     }
 
