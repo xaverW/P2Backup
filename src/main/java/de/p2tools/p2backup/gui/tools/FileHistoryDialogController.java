@@ -119,13 +119,29 @@ public class FileHistoryDialogController extends P2DialogExtra {
         gridPane.add(P2Text.getLblTextBold("Backupordner:"), 0, 2);
         gridPane.add(lblToPath, 1, 2);
 
-        VBox vBoxTable = new VBox(P2LibConst.SPACING_VBOX);
-        vBoxTable.setPadding(new Insets(5));
+        Label lblDaten = P2Text.getLblTextBold("Daten");
+        Label lblBackup = P2Text.getLblTextBold("Backup");
+        HBox hBoxDaten = new HBox();
+        hBoxDaten.getStyleClass().add("dialogInfo");
+        hBoxDaten.setAlignment(Pos.CENTER);
+        hBoxDaten.getChildren().add(lblDaten);
+        HBox hBoxBackup = new HBox();
+        hBoxBackup.getStyleClass().add("dialogInfo");
+        hBoxBackup.setAlignment(Pos.CENTER);
+        hBoxBackup.getChildren().add(lblBackup);
+
+        VBox vBoxDaten = new VBox(P2LibConst.SPACING_VBOX);
+        vBoxDaten.setPadding(new Insets(5));
+        vBoxDaten.getChildren().addAll(hBoxDaten, listViewFile);
+        VBox.setVgrow(listViewFile, Priority.ALWAYS);
+
+        VBox vBoxBackup = new VBox(P2LibConst.SPACING_VBOX);
+        vBoxBackup.setPadding(new Insets(5));
         VBox.setVgrow(tableView, Priority.ALWAYS);
-        vBoxTable.getChildren().addAll(gridPane, tableView);
+        vBoxBackup.getChildren().addAll(hBoxBackup, gridPane, tableView);
 
         SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(listViewFile, vBoxTable);
+        splitPane.getItems().addAll(vBoxDaten, vBoxBackup);
         splitPane.getDividers().getFirst().positionProperty().bindBidirectional(ProgConfig.FILE_HISTORY_SPLIT_DIVIDER);
         VBox.setVgrow(splitPane, Priority.ALWAYS);
         getVBoxCont().getChildren().addAll(splitPane);
@@ -173,6 +189,7 @@ public class FileHistoryDialogController extends P2DialogExtra {
         ObservableList<HistoryFileData> list = FXCollections.observableArrayList();
         SqlFileData.readFileHistoryList(backupInfoProp.get(), fileData.getFilePathStr(), list);
         tableView.setItems(list);
+        tableView.getSelectionModel().selectFirst();
         lblSum.setText(tableView.getItems().size() + "");
     }
 

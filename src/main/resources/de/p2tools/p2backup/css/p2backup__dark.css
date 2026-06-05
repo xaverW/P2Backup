@@ -82,4 +82,8 @@
     -fx-background-color: #838383;
 }
 
+.dialogInfo {
+    -fx-border-color: lightgrey;
+    -fx-background-color: grey;
+}
 
