@@ -144,7 +144,8 @@ public class PaneSearchInBackup extends HBox {
     private void addSubNode(TreeItem<String> start, String subDir) {
         HashSet<String> subList = new HashSet<>();
         foundDirList.forEach(s -> {
-            if (!s.equals(subDir) && s.startsWith(subDir)) {
+            final String sPath = subDir + File.separator; // damit auch wirklich ein DIR
+            if (!s.equals(subDir) && s.startsWith(sPath)) {
                 // dann ein SubDir
                 String sub = s.replace(subDir, "");
                 if (sub.startsWith(File.separator)) {
