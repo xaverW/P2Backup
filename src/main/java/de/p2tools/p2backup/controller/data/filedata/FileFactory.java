@@ -55,7 +55,8 @@ public class FileFactory {
     public static String cleanFileData(FileData fileData, String toPath) {
         String path = fileData.getFilePathStr();
         if (!toPath.isEmpty() && path.startsWith(toPath)) {
-            path = path.replaceFirst(toPath, "");
+            // path = path.replaceAll(toPath, ""); Win mal wieder
+            path = path.substring(toPath.length());
         }
         if (!path.startsWith(File.separator)) {
             path = File.separator + path;
@@ -67,19 +68,19 @@ public class FileFactory {
         return path;
     }
 
-    public static String cleanFileData(String path, String toPath) {
-        if (!toPath.isEmpty() && path.startsWith(toPath)) {
-            path = path.replaceFirst(toPath, "");
-        }
-        if (!path.startsWith(File.separator)) {
-            path = File.separator + path;
-        }
-        if (path.endsWith(File.separator)) {
-            path = path.substring(0, path.length() - 1);
-        }
-
-        return path;
-    }
+//    public static String cleanFileData(String path, String toPath) {
+//        if (!toPath.isEmpty() && path.startsWith(toPath)) {
+//            path = path.replaceFirst(toPath, "");
+//        }
+//        if (!path.startsWith(File.separator)) {
+//            path = File.separator + path;
+//        }
+//        if (path.endsWith(File.separator)) {
+//            path = path.substring(0, path.length() - 1);
+//        }
+//
+//        return path;
+//    }
 
     public static void setCorrPath(List<FileData> fileList) {
         fileList.forEach(f -> f.setFilePathStr(setCorrPath(f.getToPathStr())));
@@ -89,10 +90,12 @@ public class FileFactory {
         if (ProgData.getInstance().WINDOWS) {
             // Win macht einfach nur MIST!
             // C:\Documents\Newsletters\Summer2018.pdf
+            // \C__\Documents\Newsletters\Summer2018.pdf
             return File.separator + path.replace(":", ProgConst.WIN_REPLACE_PATH);
 
         } else {
             // /Documents/Newsletters/Summer2018.pdf
+            // /__Documents/Newsletters/Summer2018.pdf
             return File.separator + path.replaceFirst("/", ProgConst.WIN_REPLACE_PATH);
         }
     }
@@ -108,32 +111,42 @@ public class FileFactory {
     public static String unSetCorrPath(String path) {
         if (ProgData.getInstance().WINDOWS) {
             // Win macht einfach nur MIST!
-            // C:\Documents\Newsletters\Summer2018.pdf
+            // \C__\Documents\Newsletters\Summer2018.pdf
             if (path.startsWith(File.separator)) {
-                // \C__\Documents\Newsletters\Summer2018.pdf
+                // C__\Documents\Newsletters\Summer2018.pdf
                 path = path.substring(1);
             }
-            return path.replace(ProgConst.WIN_REPLACE_PATH, ":");
+            if (path.startsWith(ProgConst.WIN_REPLACE_PATH, 1)) {
+                // C:\Documents\Newsletters\Summer2018.pdf
+                // path = path.replace(ProgConst.WIN_REPLACE_PATH, ":"); sonst werden alle geändert!!
+                path = path.charAt(0) + ":" + path.substring(1 + ProgConst.WIN_REPLACE_PATH.length());
+            }
+            return path;
 
         } else {
-            // /Documents/Newsletters/Summer2018.pdf
             // /__Documents/Newsletters/Summer2018.pdf
-            return path.replaceFirst(ProgConst.WIN_REPLACE_PATH, "");
+            // /Documents/Newsletters/Summer2018.pdf
+            // return path.replaceFirst(ProgConst.WIN_REPLACE_PATH, ""); und wieder Win
+            if (path.startsWith(File.separator)) {
+                return File.separator + path.substring(ProgConst.WIN_REPLACE_PATH.length() + 1);
+            } else {
+                return File.separator + path.substring(ProgConst.WIN_REPLACE_PATH.length());
+            }
         }
     }
 
-    public static String getCleanPath(String s) {
-        if (s.isEmpty()) {
-            return s;
-        }
-        if (!s.startsWith(File.separator)) {
-            s = File.separator + s;
-        }
-        if (s.endsWith(File.separator)) {
-            s = s.substring(0, s.length() - 1);
-        }
-        return s;
-    }
+//    public static String getCleanPath(String s) {
+//        if (s.isEmpty()) {
+//            return s;
+//        }
+//        if (!s.startsWith(File.separator)) {
+//            s = File.separator + s;
+//        }
+//        if (s.endsWith(File.separator)) {
+//            s = s.substring(0, s.length() - 1);
+//        }
+//        return s;
+//    }
 
     // =======================
     // backup
@@ -214,38 +227,4 @@ public class FileFactory {
 
         return strDate;
     }
-
-//    public static String getLastSubPath(BackupInfo backupInfo) {
-//        ObservableList<String> fileNameList = getAllSubPath(backupInfo);
-//        if (!fileNameList.isEmpty()) {
-//            return fileNameList.get(0);
-//        } else {
-//            return "";
-//        }
-//    }
-//
-//    public static ObservableList<String> getAllSubPath(BackupInfo backupInfo) {
-//        ObservableList<String> fileNameList = FXCollections.observableArrayList();
-//        Path path = null;
-//        try {
-//            for (BackupData backupData : backupInfo.getBackupDataList()) {
-//                path = FileFactory.getToPath(backupInfo, backupData);
-//                if (path.toFile().exists()) {
-//                    fileNameList.add(path.getFileName().toString());
-//                } else {
-//                    P2AlertAppThread.showErrorAlert("Kann die Backup-Ordner nicht lesen!",
-//                            "Kann Dateien des Ordners \"" + backupInfo.getBackupPath() + "\" nicht lesen");
-//                }
-//            }
-//        } catch (Exception ex) {
-//            P2AlertAppThread.showErrorAlert(ProgData.getInstance().primaryStage,
-//                    "Kann die Backup-Ordner nicht lesen!",
-//                    "Kann Dateien des Ordners \"" + backupInfo.getBackupPath() +
-//                            (path != null ? (" - " + path) : "") +
-//                            "\" nicht lesen");
-//        }
-//
-//        fileNameList.sort(Collections.reverseOrder());
-//        return fileNameList;
-//    }
 }
