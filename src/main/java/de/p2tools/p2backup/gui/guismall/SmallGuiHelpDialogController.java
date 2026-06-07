@@ -69,7 +69,7 @@ public class SmallGuiHelpDialogController extends P2DialogExtra {
     }
 
     private Image getHelpScreen() {
-        final String path = "/de/p2tools/p2backup/res/p2Backup-startpage-small.png";
+        final String path = "/de/p2tools/p2backup/res/small.png";
         return new Image(path, 400, 400, true, true);
     }
 
