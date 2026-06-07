@@ -211,6 +211,7 @@ public class FileHistoryDialogController extends P2DialogExtra {
         });
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
+        hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER);
         hBox.getChildren().addAll(new Label("Suchen: "), txtSearch, P2GuiTools.getHBoxGrower(), btnLoad);
         getVBoxCont().getChildren().addAll(hBox);

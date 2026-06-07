@@ -132,6 +132,7 @@ public class CompareBackupDialogController extends P2DialogExtra {
                         "verglichen. Das \"neue Einlesen\" kann bei vielen Dateien lange dauern.");
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
+        hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER_RIGHT);
         hBox.getChildren().addAll(new Label("Backup:"), cboBackup, chkLong,
                 P2GuiTools.getHBoxGrower(), btnHelp, btnStart);

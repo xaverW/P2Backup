@@ -107,11 +107,9 @@ public class SearchInBackupDialogController extends P2DialogExtra {
             }
         });
 
-//        lblPath.getStyleClass().add("p2FileLabel");
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
+        hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER);
-//        HBox hBoxProgress = addProgress();
-//        HBox.setHgrow(hBoxProgress, Priority.ALWAYS);
         hBox.getChildren().addAll(cboBackup, P2GuiTools.getHBoxGrower()/*, hBoxProgress*/, btnLoad);
         getVBoxCont().getChildren().addAll(hBox);
     }

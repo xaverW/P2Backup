@@ -129,8 +129,10 @@ public class BlockedFilesDialogController extends P2DialogExtra {
         btnClear.setOnAction(a -> txtSearch.clear());
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
+        hBox.getStyleClass().add("infoDialogTop");
+        hBox.setAlignment(Pos.CENTER);
         hBox.getChildren().addAll(new Label("Suchen:"), txtSearch, btnClear,
-                P2GuiTools.getHBoxGrower(), /*addProgress(),*/ btnStart);
+                P2GuiTools.getHBoxGrower(), btnStart);
         getVBoxCont().getChildren().add(hBox);
         txtSearch.textProperty().addListener((u, o, n) -> setPredicate());
     }
@@ -146,7 +148,7 @@ public class BlockedFilesDialogController extends P2DialogExtra {
         rbAll.setToggleGroup(tg);
         rbFound.setToggleGroup(tg);
         rbBlock.setToggleGroup(tg);
-        rbBlock.setSelected(true);
+        rbAll.setSelected(true);
 
         rbAll.setOnAction(a -> set());
         rbFound.setOnAction(a -> set());

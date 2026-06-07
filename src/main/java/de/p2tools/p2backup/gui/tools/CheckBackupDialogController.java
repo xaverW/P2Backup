@@ -116,12 +116,10 @@ public class CheckBackupDialogController extends P2DialogExtra {
 
         btnStart.disableProperty().bind((cboBackup.getSelectionModel().selectedItemProperty().isNull()));
 
-//        HBox hBoxProgress = addProgress();
-//        HBox.setHgrow(hBoxProgress, Priority.ALWAYS);
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
+        hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, P2GuiTools.getHBoxGrower(),
-                /*hBoxProgress,*/ btnStart);
+        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, P2GuiTools.getHBoxGrower(), btnStart);
         getVBoxCont().getChildren().addAll(hBox/*, hBoxProgress*/);
     }
 

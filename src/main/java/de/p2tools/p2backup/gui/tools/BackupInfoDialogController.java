@@ -22,20 +22,26 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
+import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCountFiles;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.mediathek.tools.P2SizeTools;
+import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.nio.file.Path;
 
 public class BackupInfoDialogController extends P2DialogExtra {
 
@@ -45,7 +51,7 @@ public class BackupInfoDialogController extends P2DialogExtra {
 
     public BackupInfoDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BACKUP_INFO_DIALOG_SIZE, "Infos über die Daten",
-                true, true, true, DECO.NO_BORDER);
+                true, true, false, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
         this.backupInfo = backupInfo;
@@ -78,8 +84,9 @@ public class BackupInfoDialogController extends P2DialogExtra {
         gridPane.setVgap(5);
         gridPane.getStyleClass().add("infoBackupDialogGridPane");
         gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
-                P2GridConstraints.getCcComputedSizeAndHgrowRight(),
-                P2GridConstraints.getCcComputedSizeAndHgrowRight());
+                P2GridConstraints.getCcPrefSize(),
+                P2GridConstraints.getCcPrefSize(),
+                P2GridConstraints.getCcPrefSize());
 
         int row = 0;
         Label lblSum = new Label("Anzahl Dateien");
@@ -98,9 +105,24 @@ public class BackupInfoDialogController extends P2DialogExtra {
         gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 2, row);
 
         for (PathData p : backupInfo.getPathListFrom()) {
+            final Button btnOpenDirectory;
+            btnOpenDirectory = new Button();
+            btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
+            btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
+            btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+            btnOpenDirectory.setOnAction((ActionEvent event) -> {
+                Path path = p.getFilePathPath();
+                if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
+                    P2Open.openDir(getStage(), path.toFile().toString());
+                }
+            });
+            btnOpenDirectory.setMinHeight(18);
+            btnOpenDirectory.setMaxHeight(18);
+
             gridPane.add(new Label(p.getPath()), 0, ++row);
-            gridPane.add(new Label(p.getCount() + ""), 1, row);
-            gridPane.add(new Label(P2SizeTools.humanReadableByteCount(p.getSize(), true)), 2, row);
+            gridPane.add(btnOpenDirectory, 1, row);
+            gridPane.add(new Label(p.getCount() + ""), 2, row);
+            gridPane.add(new Label(P2SizeTools.humanReadableByteCount(p.getSize(), true)), 3, row);
         }
 
 
@@ -108,9 +130,24 @@ public class BackupInfoDialogController extends P2DialogExtra {
         gridPane.add(new Label(""), 0, ++row);
         gridPane.add(P2Text.getLblTextBold("Backups:"), 0, ++row);
         for (BackupData backupData : backupInfo.getBackupDataList()) {
+            final Button btnOpenDirectory;
+            btnOpenDirectory = new Button();
+            btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
+            btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
+            btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+            btnOpenDirectory.setOnAction((ActionEvent event) -> {
+                Path path = backupData.getToPath(backupInfo);
+                if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
+                    P2Open.openDir(getStage(), path.toFile().toString());
+                }
+            });
+            btnOpenDirectory.setMinHeight(18);
+            btnOpenDirectory.setMaxHeight(18);
+
             gridPane.add(new Label(backupData.getSubPath()), 0, ++row);
-            gridPane.add(new Label(backupData.getCount() + ""), 1, row);
-            gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupData.getSize(), true)), 2, row);
+            gridPane.add(btnOpenDirectory, 1, row);
+            gridPane.add(new Label(backupData.getCount() + ""), 2, row);
+            gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupData.getSize(), true)), 3, row);
         }
 
         vBoxGrid.getChildren().add(gridPane);
@@ -123,7 +160,7 @@ public class BackupInfoDialogController extends P2DialogExtra {
         HBox hBoxBtn = new HBox(P2LibConst.SPACING_HBOX);
         hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfo.getName()), P2GuiTools.getHBoxGrower(), btnSearch);
         hBoxBtn.setAlignment(Pos.CENTER_RIGHT);
-        hBoxBtn.getStyleClass().add("infoBackupDialogTop");
+        hBoxBtn.getStyleClass().add("infoDialogTop");
         getVBoxCont().getChildren().addAll(hBoxBtn);
 
         getVBoxCont().getChildren().add(vBoxGrid);
