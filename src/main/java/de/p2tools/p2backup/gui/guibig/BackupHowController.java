@@ -22,7 +22,11 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.gui.dialog.HowHelpDialog;
 import de.p2tools.p2lib.P2LibConst;
+import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -103,7 +107,8 @@ public class BackupHowController extends VBox {
         gridPaneHow.add(rbDiff, 0, ++row);
         gridPaneHow.add(rbIntelligent, 0, ++row);
 
-        final Button btnHowHelp = new Button("Wie jetzt?");
+        final Button btnHowHelp = new Button();
+        btnHowHelp.setGraphic(P2IconFactory.P2ICON.BTN_HELP.getFontIcon());
         btnHowHelp.setOnAction(a -> new HowHelpDialog());
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
@@ -114,13 +119,23 @@ public class BackupHowController extends VBox {
         vBoxContent.getChildren().addAll(BackupGuiFactory.getInfoPane("Wie wird gesichert?"),
                 hBox);
 
+        Button btnHelp = P2Button.helpButton("Anzahl der Backups",
+                "Hier kann man vorgeben, wie viele Backups vorgehalten werden sollen." +
+                        "\n\n" +
+                        "Sind mehr als die Vorgabe vorhanden, wird das " +
+                        "älteste gelöscht.");
         row = 0;
         GridPane gridPaneCount = new GridPane();
         gridPaneCount.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);
         gridPaneCount.setHgap(P2LibConst.DIST_GRIDPANE_HGAP);
+        gridPaneCount.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
+                P2GridConstraints.getCcPrefSize(),
+                P2GridConstraints.getCcComputedSizeAndHgrow());
 
         gridPaneCount.add(new Label("Anzahl:"), 0, row);
         gridPaneCount.add(spinnerCount, 1, row);
+        gridPaneCount.add(btnHelp, 2, row);
+        GridPane.setHalignment(btnHelp, HPos.RIGHT);
 
         vBoxContent.getChildren().addAll(P2GuiTools.getHDistance(10),
                 BackupGuiFactory.getInfoPane("Wie viele Backups sollen gespeichert werden?"),

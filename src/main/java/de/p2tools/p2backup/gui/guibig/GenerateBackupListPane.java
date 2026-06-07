@@ -78,18 +78,16 @@ public class GenerateBackupListPane extends VBox {
     private void addBackup(BackupInfo backupInfo) {
         // ==========
         // Refresh
-        Button btnRefresh = new Button("Das gespeicherte\nBackup suchen");
-        btnRefresh.setWrapText(true);
-        btnRefresh.setGraphic(PIconFactory.PICON.BTN_LOAD_REFRESH_BIG.getFontIcon());
-        btnRefresh.visibleProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
-        btnRefresh.managedProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
-        btnRefresh.setTooltip(new Tooltip("Gespeichertes suchen"));
-        btnRefresh.setOnAction(a -> LoadFactory.reLoadBackupInfo(backupInfo));
+        Button btnSearch = new Button("Gespeichertes Backup suchen");
+        btnSearch.setGraphic(PIconFactory.PICON.BTN_LOAD_REFRESH_BIG.getFontIcon());
+        btnSearch.visibleProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
+        btnSearch.managedProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
+        btnSearch.setTooltip(new Tooltip("Gespeichertes suchen"));
+        btnSearch.setOnAction(a -> LoadFactory.reLoadBackupInfo(backupInfo));
 
         // ==========
         // Load stored
-        Button btnLoad = new Button("Ein gespeichertes\nBackup laden");
-        btnLoad.setWrapText(true);
+        Button btnLoad = new Button("Gespeichertes Backup laden");
         btnLoad.setGraphic(PIconFactory.PICON.BTN_LOAD_BACKUP_BIG_30.getFontIcon());
         btnLoad.visibleProperty().bind(backupInfo.notReadyProperty());
         btnLoad.managedProperty().bind(backupInfo.notReadyProperty());
@@ -219,19 +217,23 @@ public class GenerateBackupListPane extends VBox {
             }
         }
 
-        HBox hBoxRefresh = new HBox();
-        hBoxRefresh.getChildren().add(btnRefresh);
-        HBox.setHgrow(btnRefresh, Priority.ALWAYS);
-        btnRefresh.setMaxWidth(Double.MAX_VALUE);
+
+        HBox hBoxSearch = new HBox();
+        hBoxSearch.getChildren().add(btnSearch);
+        btnSearch.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(btnSearch, Priority.ALWAYS);
+//        VBox.setVgrow(hBoxSearch, Priority.ALWAYS);
 
         HBox hBoxLoad = new HBox();
         hBoxLoad.getChildren().add(btnLoad);
-        HBox.setHgrow(btnLoad, Priority.ALWAYS);
         btnLoad.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(btnLoad, Priority.ALWAYS);
+//        VBox.setVgrow(hBoxLoad, Priority.ALWAYS);
 
         VBox vBoxLoad = new VBox(5);
         vBoxLoad.setAlignment(Pos.TOP_CENTER);
-        vBoxLoad.getChildren().addAll(hBoxLoad, hBoxRefresh);
+        vBoxLoad.getChildren().addAll(hBoxLoad, hBoxSearch);
+        VBox.setVgrow(vBoxLoad, Priority.ALWAYS);
 
         VBox vBoxButton = new VBox(5);
         vBoxButton.setAlignment(Pos.TOP_CENTER);
@@ -240,6 +242,7 @@ public class GenerateBackupListPane extends VBox {
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getChildren().addAll(gridPane, vBoxLoad, vBoxButton);
         HBox.setHgrow(gridPane, Priority.ALWAYS);
+        VBox.setVgrow(hBox, Priority.ALWAYS);
 
         VBox vBoxAll = new VBox();
         vBoxAll.setPadding(new Insets(P2LibConst.PADDING_HBOX));
@@ -249,9 +252,9 @@ public class GenerateBackupListPane extends VBox {
         });
         this.progData.backupInfoProperty.addListener((u, o, n) -> setStyle(backupInfo, vBoxAll));
         setStyle(backupInfo, vBoxAll);
-
         vBoxAll.getChildren().addAll(hBox, addProgress(backupInfo));
-        VBox.setVgrow(hBox, Priority.ALWAYS);
+        VBox.setVgrow(vBoxAll, Priority.ALWAYS);
+
         getChildren().addAll(vBoxAll);
     }
 

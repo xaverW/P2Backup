@@ -32,15 +32,16 @@ import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.mediathek.tools.P2SizeTools;
 import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
 import java.nio.file.Path;
 
 public class BackupInfoDialogController extends P2DialogExtra {
@@ -81,28 +82,34 @@ public class BackupInfoDialogController extends P2DialogExtra {
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(20);
-        gridPane.setVgap(5);
-        gridPane.getStyleClass().add("infoBackupDialogGridPane");
+        gridPane.setVgap(10);
         gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
-                P2GridConstraints.getCcPrefSize(),
-                P2GridConstraints.getCcPrefSize(),
-                P2GridConstraints.getCcPrefSize());
+                P2GridConstraints.getCcPrefSizeCenter(),
+                P2GridConstraints.getCcPrefSizeRight(),
+                P2GridConstraints.getCcPrefSizeRight());
+
+        gridPane.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(gridPane, Priority.ALWAYS);
+        gridPane.getStyleClass().add("dialogInfo");
 
         int row = 0;
-        Label lblSum = new Label("Anzahl Dateien");
-        gridPane.add(lblSum, 0, row, 2, 1);
-        GridPane.setHalignment(lblSum, HPos.RIGHT);
-        gridPane.add(new Label("Größe"), 2, row);
+        Label lblSum = P2Text.getLblTextBold("Anzahl\nDateien");
+        lblSum.setWrapText(true);
+        gridPane.add(lblSum, 2, row);
+        Label lblSize = P2Text.getLblTextBold("Größe\nOrdner");
+        lblSize.setWrapText(true);
+        gridPane.add(lblSize, 3, row);
 
 
         // zuerst die DATEN
-        gridPane.add(new Label(""), 0, ++row);
+//        gridPane.add(new Label(""), 0, ++row);
         gridPane.add(P2Text.getLblTextBold("Daten"), 0, ++row);
+        ++row;
         if (backupInfo.getPathListFrom().size() > 1) {
             gridPane.add(new Label("Summe aller Dateien:"), 0, ++row);
         }
-        gridPane.add(new Label(backupInfo.getCount() + ""), 1, row);
-        gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 2, row);
+        gridPane.add(new Label(backupInfo.getCount() + ""), 2, row);
+        gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 3, row);
 
         for (PathData p : backupInfo.getPathListFrom()) {
             final Button btnOpenDirectory;
@@ -128,7 +135,9 @@ public class BackupInfoDialogController extends P2DialogExtra {
 
         // Dann die angelegten Backups
         gridPane.add(new Label(""), 0, ++row);
-        gridPane.add(P2Text.getLblTextBold("Backups:"), 0, ++row);
+        gridPane.add(P2Text.getLblTextBold("Backup-Ordner"), 0, ++row);
+        ++row;
+//        gridPane.add(new Label(backupInfo.getBackupPath() + File.separator), 0, ++row, 4, 1);
         for (BackupData backupData : backupInfo.getBackupDataList()) {
             final Button btnOpenDirectory;
             btnOpenDirectory = new Button();
@@ -144,7 +153,7 @@ public class BackupInfoDialogController extends P2DialogExtra {
             btnOpenDirectory.setMinHeight(18);
             btnOpenDirectory.setMaxHeight(18);
 
-            gridPane.add(new Label(backupData.getSubPath()), 0, ++row);
+            gridPane.add(new Label(backupInfo.getBackupPath() + File.separator + backupData.getSubPath()), 0, ++row);
             gridPane.add(btnOpenDirectory, 1, row);
             gridPane.add(new Label(backupData.getCount() + ""), 2, row);
             gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupData.getSize(), true)), 3, row);
@@ -163,7 +172,8 @@ public class BackupInfoDialogController extends P2DialogExtra {
         hBoxBtn.getStyleClass().add("infoDialogTop");
         getVBoxCont().getChildren().addAll(hBoxBtn);
 
+        vBoxGrid.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(vBoxGrid, Priority.ALWAYS);
         getVBoxCont().getChildren().add(vBoxGrid);
-        getVBoxCont().getChildren().add(P2GuiTools.getVBoxGrower());
     }
 }
