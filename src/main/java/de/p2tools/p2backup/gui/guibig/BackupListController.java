@@ -37,12 +37,12 @@ public class BackupListController extends VBox {
 
     private final ProgData progData;
     private final ScrollPane scrollPane = new ScrollPane();
-    private final GenerateBackupListPane generateBackupListPane;
+    private final PaneGenerateBackupList paneGenerateBackupList;
     private final VBox vBoxContent = new VBox();
 
     public BackupListController() {
         progData = ProgData.getInstance();
-        this.generateBackupListPane = new GenerateBackupListPane();
+        this.paneGenerateBackupList = new PaneGenerateBackupList();
 
         setPadding(new Insets(P2LibConst.PADDING_VBOX));
         setSpacing(P2LibConst.SPACING_VBOX);
@@ -54,7 +54,7 @@ public class BackupListController extends VBox {
     private void init() {
         vBoxContent.getChildren().addAll(BackupGuiFactory.getInfoPane("Liste der angelegten Backups"));
 
-        scrollPane.setContent(generateBackupListPane);
+        scrollPane.setContent(paneGenerateBackupList);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("edge-to-edge");

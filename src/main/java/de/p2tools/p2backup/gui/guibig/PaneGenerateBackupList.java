@@ -29,10 +29,10 @@ import javafx.scene.layout.VBox;
 
 import java.util.Comparator;
 
-public class GenerateBackupListPane extends VBox {
+public class PaneGenerateBackupList extends VBox {
     private ProgData progData;
 
-    public GenerateBackupListPane() {
+    public PaneGenerateBackupList() {
         this.progData = ProgData.getInstance();
 
         setSpacing(P2LibConst.SPACING_VBOX);
@@ -78,21 +78,13 @@ public class GenerateBackupListPane extends VBox {
     private void addBackup(BackupInfo backupInfo) {
         // ==========
         // Refresh
-        Button btnSearch = new Button("Gespeichertes Backup suchen");
+        Button btnSearch = new Button("Das gespeicherte\nBackup suchen");
+        btnSearch.setWrapText(true);
         btnSearch.setGraphic(PIconFactory.PICON.BTN_LOAD_REFRESH_BIG.getFontIcon());
         btnSearch.visibleProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
         btnSearch.managedProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
         btnSearch.setTooltip(new Tooltip("Gespeichertes suchen"));
         btnSearch.setOnAction(a -> LoadFactory.reLoadBackupInfo(backupInfo));
-
-        // ==========
-        // Load stored
-        Button btnLoad = new Button("Gespeichertes Backup laden");
-        btnLoad.setGraphic(PIconFactory.PICON.BTN_LOAD_BACKUP_BIG_30.getFontIcon());
-        btnLoad.visibleProperty().bind(backupInfo.notReadyProperty());
-        btnLoad.managedProperty().bind(backupInfo.notReadyProperty());
-        btnLoad.setTooltip(new Tooltip("Ein gespeichertes Backup auswählen und laden"));
-        btnLoad.setOnAction(a -> LoadFactory.loadBackupInfo(backupInfo));
 
         // ===========
         // From
@@ -218,21 +210,14 @@ public class GenerateBackupListPane extends VBox {
         }
 
 
-        HBox hBoxSearch = new HBox();
-        hBoxSearch.getChildren().add(btnSearch);
-        btnSearch.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(btnSearch, Priority.ALWAYS);
-//        VBox.setVgrow(hBoxSearch, Priority.ALWAYS);
-
-        HBox hBoxLoad = new HBox();
-        hBoxLoad.getChildren().add(btnLoad);
-        btnLoad.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(btnLoad, Priority.ALWAYS);
-//        VBox.setVgrow(hBoxLoad, Priority.ALWAYS);
+//        HBox hBoxSearch = new HBox();
+//        hBoxSearch.getChildren().add(btnSearch);
+//        btnSearch.setMaxWidth(Double.MAX_VALUE);
+//        HBox.setHgrow(btnSearch, Priority.ALWAYS);
 
         VBox vBoxLoad = new VBox(5);
-        vBoxLoad.setAlignment(Pos.TOP_CENTER);
-        vBoxLoad.getChildren().addAll(hBoxLoad, hBoxSearch);
+        vBoxLoad.setAlignment(Pos.CENTER);
+        vBoxLoad.getChildren().addAll(btnSearch);
         VBox.setVgrow(vBoxLoad, Priority.ALWAYS);
 
         VBox vBoxButton = new VBox(5);

@@ -49,6 +49,7 @@ public class LoadFactory {
     }
 
     public static void loadBackupInfo(BackupInfo backupInfo) {
+        // Dialog zum Laden eines Backups
         String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_TO_PATH.get());
         if (path.isEmpty()) {
             return;
@@ -59,7 +60,7 @@ public class LoadFactory {
             return;
         }
 
-        BackupInfo backupInfoLoad = SqlBackupInfo.readBackupInfo(/*backupInfo.getId(),*/ path);
+        BackupInfo backupInfoLoad = SqlBackupInfo.readBackupInfo(path);
         if (backupInfoLoad != null) {
             if (backupInfo != null) {
                 ProgData.getInstance().backupInfoList.remove(backupInfo);
@@ -81,28 +82,17 @@ public class LoadFactory {
     public static void reLoadBackupInfo(BackupInfo backupInfo) {
         String path = backupInfo.getBackupPath();
         if (path.isEmpty()) {
-            P2Alert.showErrorAlert(ProgData.getInstance().primaryStage, "Backup laden",
-                    "Kein Pfad für das Backup angegeben!");
+            loadBackupInfo(backupInfo);
             return;
         }
 
         if (!Path.of(path).toFile().exists()) {
-            P2Alert.showErrorAlert(ProgData.getInstance().primaryStage, "Backup laden",
-                    "Der Pfad zum den Backup-Einstellungen: " +
-                            "\n\n" +
-                            path +
-                            "\n\n" +
-                            "existiert nicht.");
+            loadBackupInfo(backupInfo);
             return;
         }
 
         if (!Path.of(FileFactory.getBackupDbPath(path)).toFile().exists()) {
-            P2Alert.showErrorAlert(ProgData.getInstance().primaryStage, "Backup laden",
-                    "Die Backup-Einstellungen: " +
-                            "\n\n" +
-                            path +
-                            "\n\n" +
-                            "können nicht geladen werden.");
+            loadBackupInfo(backupInfo);
             return;
         }
 
@@ -114,11 +104,11 @@ public class LoadFactory {
 
         } else {
             P2Alert.showErrorAlert(ProgData.getInstance().primaryStage, "Backup laden",
-                    "Konnte die Backup-Einstellungen von:" +
+                    "Das Backup wurde gefunden. Die Backup-Einstellungen von:" +
                             "\n\n" +
                             path +
                             "\n\n" +
-                            "nicht laden.");
+                            "konnten aber nicht geladen werden.");
         }
     }
 }
