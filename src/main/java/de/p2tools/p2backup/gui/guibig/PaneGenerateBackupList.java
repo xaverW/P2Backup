@@ -77,7 +77,7 @@ public class PaneGenerateBackupList extends VBox {
 
     private void addBackup(BackupInfo backupInfo) {
         // ==========
-        // Refresh
+        // Backup suchen
         Button btnSearch = new Button("Das gespeicherte\nBackup suchen");
         btnSearch.setWrapText(true);
         btnSearch.setGraphic(PIconFactory.PICON.BTN_LOAD_REFRESH_BIG.getFontIcon());
@@ -186,6 +186,20 @@ public class PaneGenerateBackupList extends VBox {
             gridPane.add(lblToPath, 2, row);
         }
 
+        if (backupInfo.isNotReady() && !backupInfo.getBackupPath().isEmpty()) {
+            lblToPath.getStyleClass().add("emptyBackupPath");
+        } else {
+            lblToPath.getStyleClass().remove("emptyBackupPath");
+        }
+        backupInfo.backupPathProperty().addListener((u, o, n) -> {
+            if (backupInfo.isNotReady() && !backupInfo.getBackupPath().isEmpty()) {
+                lblToPath.getStyleClass().add("emptyBackupPath");
+            } else {
+                lblToPath.getStyleClass().remove("emptyBackupPath");
+            }
+        });
+
+
         // From
         Label lblFrom = new Label("Daten zum Sichern:");
         if (backupInfo.getPathListFrom().isEmpty()) {
@@ -209,11 +223,6 @@ public class PaneGenerateBackupList extends VBox {
             }
         }
 
-
-//        HBox hBoxSearch = new HBox();
-//        hBoxSearch.getChildren().add(btnSearch);
-//        btnSearch.setMaxWidth(Double.MAX_VALUE);
-//        HBox.setHgrow(btnSearch, Priority.ALWAYS);
 
         VBox vBoxLoad = new VBox(5);
         vBoxLoad.setAlignment(Pos.CENTER);

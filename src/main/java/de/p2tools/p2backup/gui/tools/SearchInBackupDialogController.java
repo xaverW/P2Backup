@@ -82,6 +82,9 @@ public class SearchInBackupDialogController extends P2DialogExtra {
 
     public void close() {
         paneSearchInBackup.close();
+        if (backupInfoProp.get() != null) {
+            backupInfoProp.get().runnerDto.setStop();
+        }
         super.close();
     }
 

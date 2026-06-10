@@ -95,6 +95,7 @@ public class BlockedFilesDialogController extends P2DialogExtra {
 
     public void close() {
         Table.saveTable(tableView, Table.TABLE_ENUM.BLOCKED_FILE);
+        backupInfo.runnerDto.setStop();
         super.close();
     }
 

@@ -90,6 +90,7 @@ public class CompareBackupDialogController extends P2DialogExtra {
 
     public void close() {
         Table.saveTable(tableView, Table.TABLE_ENUM.DIR_COMPARE);
+        backupInfo.runnerDto.setStop();
         super.close();
     }
 

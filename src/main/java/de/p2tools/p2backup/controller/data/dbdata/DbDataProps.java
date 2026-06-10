@@ -18,12 +18,15 @@
 package de.p2tools.p2backup.controller.data.dbdata;
 
 import de.p2tools.p2lib.configfile.config.Config;
+import de.p2tools.p2lib.configfile.config.Config_lDateTimeProp;
 import de.p2tools.p2lib.configfile.config.Config_longProp;
 import de.p2tools.p2lib.configfile.config.Config_stringProp;
 import de.p2tools.p2lib.configfile.pdata.P2DataSample;
 import de.p2tools.p2lib.tools.P2Index;
+import de.p2tools.p2lib.tools.date.P2LDateTimeProperty;
 import javafx.beans.property.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class DbDataProps extends P2DataSample<DbData> {
@@ -34,6 +37,7 @@ public class DbDataProps extends P2DataSample<DbData> {
     private LongProperty backupInfoId = new SimpleLongProperty(0);
     private StringProperty name = new SimpleStringProperty("");
     private StringProperty path = new SimpleStringProperty("");
+    private P2LDateTimeProperty lastStartDate = new P2LDateTimeProperty(LocalDateTime.MIN); // letztes Backup
 
     public final Property[] properties = {id, backupInfoId, name, path};
 
@@ -44,6 +48,7 @@ public class DbDataProps extends P2DataSample<DbData> {
         configList.add(new Config_longProp("backupInfoId", backupInfoId));
         configList.add(new Config_stringProp("name", name));
         configList.add(new Config_stringProp("path", path));
+        configList.add(new Config_lDateTimeProp("lastStartDate", lastStartDate));
         return configList.toArray(new Config[]{});
     }
 
@@ -98,6 +103,18 @@ public class DbDataProps extends P2DataSample<DbData> {
 
     public void setPath(String path) {
         this.path.set(path);
+    }
+
+    public LocalDateTime getLastStartDate() {
+        return lastStartDate.get();
+    }
+
+    public P2LDateTimeProperty lastStartDateProperty() {
+        return lastStartDate;
+    }
+
+    public void setLastStartDate(LocalDateTime lastStartDate) {
+        this.lastStartDate.set(lastStartDate);
     }
 
     public void copyToMe(DbData dbData) {

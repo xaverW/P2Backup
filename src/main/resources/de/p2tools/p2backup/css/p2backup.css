@@ -227,3 +227,8 @@
     -fx-background-color: lightgrey;
 }
 
+.emptyBackupPath {
+    -fx-font-weight: bold;
+    -fx-text-fill: red;
+}
+

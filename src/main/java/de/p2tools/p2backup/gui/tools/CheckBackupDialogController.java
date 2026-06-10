@@ -87,6 +87,7 @@ public class CheckBackupDialogController extends P2DialogExtra {
 
     public void close() {
         Table.saveTable(tableView, Table.TABLE_ENUM.CHECK_BACKUP);
+        backupInfo.runnerDto.setStop();
         super.close();
     }
 

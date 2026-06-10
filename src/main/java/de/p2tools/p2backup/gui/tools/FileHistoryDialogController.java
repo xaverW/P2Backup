@@ -96,6 +96,7 @@ public class FileHistoryDialogController extends P2DialogExtra {
 
     public void close() {
         Table.saveTable(tableView, Table.TABLE_ENUM.FILE_HISTORY);
+        backupInfoProp.get().runnerDto.setStop();
         super.close();
     }
 

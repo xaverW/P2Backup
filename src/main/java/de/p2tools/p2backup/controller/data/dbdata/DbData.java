@@ -28,5 +28,6 @@ public class DbData extends DbDataProps {
         setBackupInfoId(backupInfo.getId());
         setName(backupInfo.getName());
         setPath(backupInfo.getBackupPath());
+        setLastStartDate(backupInfo.getLastStartDate());
     }
 }

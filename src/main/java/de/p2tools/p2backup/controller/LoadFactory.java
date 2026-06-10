@@ -23,7 +23,7 @@ public class LoadFactory {
                     Path.of(dbData.getPath()).toFile().exists() &&
                     Path.of(FileFactory.getBackupDbPath(dbData.getPath())).toFile().exists()) {
                 // sonst ists noch nicht gelaufen
-                BackupInfo backupInfo = SqlBackupInfo.readBackupInfo(/*dbData.getBackupInfoId(),*/ dbData.getPath());
+                BackupInfo backupInfo = SqlBackupInfo.readBackupInfo(dbData.getPath());
                 if (backupInfo != null) {
                     tmp.add(backupInfo);
 
@@ -41,6 +41,7 @@ public class LoadFactory {
                 BackupInfo backupInfo = new BackupInfo();
                 backupInfo.setName(dbData.getName());
                 backupInfo.setBackupPath(dbData.getPath());
+                backupInfo.setLastStartDate(dbData.getLastStartDate());
                 tmp.add(backupInfo);
             }
         });

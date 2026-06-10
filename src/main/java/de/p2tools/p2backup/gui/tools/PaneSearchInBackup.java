@@ -89,6 +89,7 @@ public class PaneSearchInBackup extends HBox {
 
     public void close() {
         Table.saveTable(tableViewFile, Table.TABLE_ENUM.SHOW_BACKUP_FILES);
+        backupInfoProp.get().runnerDto.setStop();
     }
 
     // ===============

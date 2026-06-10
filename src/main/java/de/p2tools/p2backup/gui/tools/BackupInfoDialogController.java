@@ -60,6 +60,12 @@ public class BackupInfoDialogController extends P2DialogExtra {
     }
 
     @Override
+    public void close() {
+        backupInfo.runnerDto.setStop();
+        super.close();
+    }
+
+    @Override
     public void make() {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
