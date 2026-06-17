@@ -16,6 +16,13 @@ public class PProgressBar extends StackPane {
     private final Label lblName = new Label();
     private final boolean text;
     private final boolean name;
+    private BackupInfo backupInfo = null;
+
+    public PProgressBar() {
+        text = true;
+        name = false;
+        setProgress();
+    }
 
     public PProgressBar(boolean text, boolean name) {
         this.text = text;
@@ -23,9 +30,10 @@ public class PProgressBar extends StackPane {
         setProgress();
     }
 
-    public PProgressBar() {
-        text = true;
-        name = false;
+    public PProgressBar(BackupInfo backupInfo, boolean text, boolean name) {
+        this.backupInfo = backupInfo;
+        this.text = text;
+        this.name = name;
         setProgress();
     }
 
@@ -40,7 +48,6 @@ public class PProgressBar extends StackPane {
 
         HBox hBoxName = new HBox(10);
         hBoxName.getChildren().addAll(lblText, lblName);
-//        HBox.setHgrow(lblName, Priority.ALWAYS);
 
         progressBar.setMinWidth(250);
         progressBar.setMaxWidth(Double.MAX_VALUE);
@@ -64,14 +71,14 @@ public class PProgressBar extends StackPane {
         lblText.textProperty().unbind();
         lblName.textProperty().unbind();
 
-        BackupInfo backupInfo = ProgData.getInstance().backupInfoProperty.get();
-        setVisible(backupInfo != null);
-        if (backupInfo != null) {
-            visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
-            progressBar.progressProperty().bind(backupInfo.runnerDto.guiProgressProperty());
-            lblText.textProperty().bind(backupInfo.runnerDto.guiTextProperty());
-            lblName.textProperty().bind(backupInfo.runnerDto.guiFileNameProperty());
+        BackupInfo baInfo = backupInfo == null ? ProgData.getInstance().backupInfoProperty.get() : backupInfo;
+        setVisible(baInfo != null);
 
+        if (baInfo != null) {
+            visibleProperty().bind(baInfo.runnerDto.guiRunningProperty());
+            progressBar.progressProperty().bind(baInfo.runnerDto.guiProgressProperty());
+            lblText.textProperty().bind(baInfo.runnerDto.guiTextProperty());
+            lblName.textProperty().bind(baInfo.runnerDto.guiFileNameProperty());
             lblText.setVisible(text);
             lblText.setManaged(text);
             lblName.setVisible(name);

@@ -280,10 +280,10 @@ public class PaneGenerateBackupList extends VBox {
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
-        final PProgressBar pProgressBar = new PProgressBar(true, true);
+        final PProgressBar pProgressBar = new PProgressBar(backupInfo, true, true);
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(10, 0, 0, 0));
-        hBoxProgress.getChildren().addAll(/*lblText, lblFileName, P2GuiTools.getHBoxGrower(),*/ pProgressBar, btnStop);
+        hBoxProgress.getChildren().addAll(pProgressBar, btnStop);
         HBox.setHgrow(pProgressBar, Priority.ALWAYS);
         hBoxProgress.setAlignment(Pos.CENTER);
 
