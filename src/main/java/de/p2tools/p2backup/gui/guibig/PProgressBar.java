@@ -16,6 +16,7 @@ public class PProgressBar extends StackPane {
     private final Label lblName = new Label();
     private final boolean text;
     private final boolean name;
+    private boolean indeterminate = false;
     private BackupInfo backupInfo = null;
 
     public PProgressBar() {
@@ -30,10 +31,11 @@ public class PProgressBar extends StackPane {
         setProgress();
     }
 
-    public PProgressBar(BackupInfo backupInfo, boolean text, boolean name) {
+    public PProgressBar(BackupInfo backupInfo, boolean text, boolean name, boolean indeterminate) {
         this.backupInfo = backupInfo;
         this.text = text;
         this.name = name;
+        this.indeterminate = indeterminate;
         setProgress();
     }
 
@@ -76,7 +78,12 @@ public class PProgressBar extends StackPane {
 
         if (baInfo != null) {
             visibleProperty().bind(baInfo.runnerDto.guiRunningProperty());
-            progressBar.progressProperty().bind(baInfo.runnerDto.guiProgressProperty());
+            if (indeterminate) {
+                progressBar.progressProperty().unbind();
+                progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+            } else {
+                progressBar.progressProperty().bind(baInfo.runnerDto.guiProgressProperty());
+            }
             lblText.textProperty().bind(baInfo.runnerDto.guiTextProperty());
             lblName.textProperty().bind(baInfo.runnerDto.guiFileNameProperty());
             lblText.setVisible(text);

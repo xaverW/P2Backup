@@ -24,6 +24,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCountFiles;
+import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -108,7 +109,6 @@ public class BackupInfoDialogController extends P2DialogExtra {
 
 
         // zuerst die DATEN
-//        gridPane.add(new Label(""), 0, ++row);
         gridPane.add(P2Text.getLblTextBold("Daten"), 0, ++row);
         ++row;
         if (backupInfo.getPathListFrom().size() > 1) {
@@ -143,7 +143,6 @@ public class BackupInfoDialogController extends P2DialogExtra {
         gridPane.add(new Label(""), 0, ++row);
         gridPane.add(P2Text.getLblTextBold("Backup-Ordner"), 0, ++row);
         ++row;
-//        gridPane.add(new Label(backupInfo.getBackupPath() + File.separator), 0, ++row, 4, 1);
         for (BackupData backupData : backupInfo.getBackupDataList()) {
             final Button btnOpenDirectory;
             btnOpenDirectory = new Button();
@@ -170,10 +169,12 @@ public class BackupInfoDialogController extends P2DialogExtra {
 
     private void add() {
         Button btnSearch = new Button("Infos laden");
+        btnSearch.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
         btnSearch.setOnAction(a -> search());
 
         HBox hBoxBtn = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfo.getName()), P2GuiTools.getHBoxGrower(), btnSearch);
+        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfo.getName()), P2GuiTools.getHBoxGrower(),
+                new PProgressBar(backupInfo, true, false, true), btnSearch);
         hBoxBtn.setAlignment(Pos.CENTER_RIGHT);
         hBoxBtn.getStyleClass().add("infoDialogTop");
         getVBoxCont().getChildren().addAll(hBoxBtn);

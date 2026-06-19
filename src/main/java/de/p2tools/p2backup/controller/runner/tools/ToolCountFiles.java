@@ -58,8 +58,8 @@ public class ToolCountFiles {
     }
 
     public void count() {
+        backupInfo.runnerDto.startRunner(backupInfo.getName());
         P2Log.sysLog("Start count: " + searchDir.getValueSafe());
-        stop.set(false);
 
         // zuerst mal die Zähler zurücksetzen
         backupInfo.setSize(0);
@@ -120,7 +120,7 @@ public class ToolCountFiles {
 
             ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
             Platform.runLater(backupInfoDialogController::set);
-
+            backupInfo.runnerDto.stopRunner();
         }
 
         private int runDirFindFilesFrom(PathData pathData) {
