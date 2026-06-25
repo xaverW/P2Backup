@@ -26,6 +26,7 @@ public class ProgConst {
     public static final String CONFIG_DB_FILE = "p2backup.db"; // Name der DB
 
     public static final String LOG_DIR = "Log";
+    public static final int BACUP_VERSION = 1;
 
     // Website
     public static final String URL_WEBSITE = "https://www.p2tools.de/";

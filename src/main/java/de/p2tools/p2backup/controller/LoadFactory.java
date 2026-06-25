@@ -23,6 +23,7 @@ public class LoadFactory {
                     Path.of(dbData.getPath()).toFile().exists() &&
                     Path.of(FileFactory.getBackupDbPath(dbData.getPath())).toFile().exists()) {
                 // sonst ists noch nicht gelaufen
+                SqlBackupInfo.checkDb(dbData.getPath());
                 BackupInfo backupInfo = SqlBackupInfo.readBackupInfo(dbData.getPath());
                 if (backupInfo != null) {
                     tmp.add(backupInfo);

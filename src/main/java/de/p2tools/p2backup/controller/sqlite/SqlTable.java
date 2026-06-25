@@ -46,6 +46,7 @@ public class SqlTable {
         // Tabellen anlegen: backupInfo
         var sql = "CREATE TABLE IF NOT EXISTS backupInfo ("
                 + "	id LONG PRIMARY KEY,"
+                + "	version LONG NOT NULL,"
                 + " name STRING NOT NULL,"
                 + " color STRING NOT NULL,"
                 + " description STRING NOT NULL,"

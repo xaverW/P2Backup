@@ -1,11 +1,13 @@
 package de.p2tools.p2backup.controller.sqlite;
 
+import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
 import de.p2tools.p2backup.controller.data.pathdata.PathDataList;
 import de.p2tools.p2lib.tools.date.P2LDateFactory;
 import de.p2tools.p2lib.tools.duration.P2Duration;
+import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +15,40 @@ import java.sql.SQLException;
 
 public class SqlBackupInfo {
     private SqlBackupInfo() {
+    }
+
+    public static boolean checkDb(String backupPath) {
+        // erst mal die Version überprüfen und evt. anpassen
+        String url = SqlFactory.getUrl(backupPath);
+        if (url.isEmpty()) {
+            return false;
+        }
+
+        long id = -1;
+        long version = -1;
+
+        final String sqlBackupInfo = "SELECT id, version FROM backupInfo"; // kann ja nur eine in der DB geben
+        try (var conn = DriverManager.getConnection(url);
+             var pstmt = conn.prepareStatement(sqlBackupInfo)) {
+
+            var rs = pstmt.executeQuery();
+            while (rs.next()) {
+                id = rs.getLong("id");
+                version = rs.getLong("version");
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        P2Log.sysLog("BackupInfo laden");
+        P2Log.sysLog(" -> id: " + id);
+        P2Log.sysLog(" -> version: " + version);
+
+        if (version < ProgConst.BACUP_VERSION) {
+            // UPDATE
+            P2Log.sysLog("UPDATE von Version: " + version);
+        }
+
+        return true;
     }
 
     public static BackupInfo readBackupInfo(String backupPath) {
@@ -280,27 +316,28 @@ public class SqlBackupInfo {
         P2Duration.counterStart("addBackupInfo");
 
         // BackupInfo
-        final String sqlBackupInfo = "INSERT OR REPLACE INTO backupInfo(id, name, color, description, backupPath," +
+        final String sqlBackupInfo = "INSERT OR REPLACE INTO backupInfo(id, name, version, color, description, backupPath," +
                 "lastBackupId, lastStartDate, " +
                 "how, fileFilterNot, " +
                 "sumDay, sumWeek, sumMonth, " +
-                "genDate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "genDate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (var pstmt = conn.prepareStatement(sqlBackupInfo)) {
             pstmt.setLong(1, backupInfo.getId());
-            pstmt.setString(2, backupInfo.getName());
-            pstmt.setString(3, backupInfo.getColor());
-            pstmt.setString(4, backupInfo.getDescription());
-            pstmt.setString(5, backupInfo.getBackupPath());
-            pstmt.setLong(6, backupInfo.getLastBackupId());
-            pstmt.setString(7, SqlFactory.fromLocalDate(backupInfo.getLastStartDate()));
+            pstmt.setLong(2, backupInfo.getVersion());
+            pstmt.setString(3, backupInfo.getName());
+            pstmt.setString(4, backupInfo.getColor());
+            pstmt.setString(5, backupInfo.getDescription());
+            pstmt.setString(6, backupInfo.getBackupPath());
+            pstmt.setLong(7, backupInfo.getLastBackupId());
+            pstmt.setString(8, SqlFactory.fromLocalDate(backupInfo.getLastStartDate()));
 
-            pstmt.setInt(8, backupInfo.getHow());
-            pstmt.setBoolean(9, backupInfo.isFileFilterNot());
+            pstmt.setInt(9, backupInfo.getHow());
+            pstmt.setBoolean(10, backupInfo.isFileFilterNot());
 
-            pstmt.setInt(10, backupInfo.getSumDay());
-            pstmt.setInt(11, backupInfo.getSumWeek());
-            pstmt.setInt(12, backupInfo.getSumMonth());
-            pstmt.setString(13, backupInfo.getGenDate().toString());
+            pstmt.setInt(11, backupInfo.getSumDay());
+            pstmt.setInt(12, backupInfo.getSumWeek());
+            pstmt.setInt(13, backupInfo.getSumMonth());
+            pstmt.setString(14, backupInfo.getGenDate().toString());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
