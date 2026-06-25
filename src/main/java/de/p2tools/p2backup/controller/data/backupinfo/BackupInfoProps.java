@@ -32,6 +32,7 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
 
     private LongProperty id = new SimpleLongProperty(P2Index.getIndex());
     private StringProperty name = new SimpleStringProperty("");
+    private StringProperty color = new SimpleStringProperty("#000000");
     private StringProperty description = new SimpleStringProperty("");
     private StringProperty backupPath = new SimpleStringProperty("");
     private LongProperty lastBackupId = new SimpleLongProperty(0);
@@ -58,7 +59,7 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
     private IntegerProperty count = new SimpleIntegerProperty(0); // Anzahl aller Dateien
     private LongProperty size = new SimpleLongProperty(0); // Größe aller Dateien
 
-    public final Property[] properties = {id, name, description, backupPath, lastBackupId, lastStartDate,
+    public final Property[] properties = {id, name, color, description, backupPath, lastBackupId, lastStartDate,
             how, fileFilterNot,
             sumDay, sumWeek, sumMonth, genDate};
 
@@ -85,6 +86,18 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
 
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    public String getColor() {
+        return color.get();
+    }
+
+    public StringProperty colorProperty() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color.set(color);
     }
 
     public String getDescription() {

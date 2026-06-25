@@ -15,31 +15,28 @@ public class SqlBackupInfo {
     private SqlBackupInfo() {
     }
 
-    public static BackupInfo readBackupInfo(/*long id,*/ String backupPath) {
+    public static BackupInfo readBackupInfo(String backupPath) {
         String url = SqlFactory.getUrl(backupPath);
         if (url.isEmpty()) {
             return null;
         }
 
-        final String sqlBackupInfo = "SELECT id, name, description, backupPath, " +
+        final String sqlBackupInfo = "SELECT id, name, color, description, backupPath, " +
                 "lastBackupId, lastStartDate, " +
                 "how, fileFilterNot, " +
                 "sumDay, sumWeek, sumMonth, " +
                 "genDate " +
-//                "FROM backupInfo WHERE id == ?";
                 "FROM backupInfo"; // kann ja nur eine in der DB geben
 
         try (var conn = DriverManager.getConnection(url);
              var pstmt = conn.prepareStatement(sqlBackupInfo)) {
-
-//            pstmt.setLong(1, id);
             var rs = pstmt.executeQuery();
-
 
             BackupInfo backupInfo = new BackupInfo();
             while (rs.next()) {
                 backupInfo.setId(rs.getLong("id"));
                 backupInfo.setName(rs.getString("name"));
+                backupInfo.setColor(rs.getString("color"));
                 backupInfo.setDescription(rs.getString("description"));
                 backupInfo.setBackupPath(rs.getString("backupPath"));
                 backupInfo.setLastBackupId(rs.getLong("lastBackupId"));
@@ -220,12 +217,6 @@ public class SqlBackupInfo {
 
             long id = backupInfo.getId();
 
-
-//            // zuerst DB erstellen
-//            if (!SqlTable.makeBackupDb(url, conn)) {
-//                conn.rollback();
-//            }
-
             // dann alte PATH löschen
             // PathData
             String sql = "DELETE FROM pathData WHERE backupInfoId=?";
@@ -289,26 +280,27 @@ public class SqlBackupInfo {
         P2Duration.counterStart("addBackupInfo");
 
         // BackupInfo
-        final String sqlBackupInfo = "INSERT OR REPLACE INTO backupInfo(id, name, description, backupPath," +
+        final String sqlBackupInfo = "INSERT OR REPLACE INTO backupInfo(id, name, color, description, backupPath," +
                 "lastBackupId, lastStartDate, " +
                 "how, fileFilterNot, " +
                 "sumDay, sumWeek, sumMonth, " +
-                "genDate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+                "genDate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (var pstmt = conn.prepareStatement(sqlBackupInfo)) {
             pstmt.setLong(1, backupInfo.getId());
             pstmt.setString(2, backupInfo.getName());
-            pstmt.setString(3, backupInfo.getDescription());
-            pstmt.setString(4, backupInfo.getBackupPath());
-            pstmt.setLong(5, backupInfo.getLastBackupId());
-            pstmt.setString(6, SqlFactory.fromLocalDate(backupInfo.getLastStartDate()));
+            pstmt.setString(3, backupInfo.getColor());
+            pstmt.setString(4, backupInfo.getDescription());
+            pstmt.setString(5, backupInfo.getBackupPath());
+            pstmt.setLong(6, backupInfo.getLastBackupId());
+            pstmt.setString(7, SqlFactory.fromLocalDate(backupInfo.getLastStartDate()));
 
-            pstmt.setInt(7, backupInfo.getHow());
-            pstmt.setBoolean(8, backupInfo.isFileFilterNot());
+            pstmt.setInt(8, backupInfo.getHow());
+            pstmt.setBoolean(9, backupInfo.isFileFilterNot());
 
-            pstmt.setInt(9, backupInfo.getSumDay());
-            pstmt.setInt(10, backupInfo.getSumWeek());
-            pstmt.setInt(11, backupInfo.getSumMonth());
-            pstmt.setString(12, backupInfo.getGenDate().toString());
+            pstmt.setInt(10, backupInfo.getSumDay());
+            pstmt.setInt(11, backupInfo.getSumWeek());
+            pstmt.setInt(12, backupInfo.getSumMonth());
+            pstmt.setString(13, backupInfo.getGenDate().toString());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());

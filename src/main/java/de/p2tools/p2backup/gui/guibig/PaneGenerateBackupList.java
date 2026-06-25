@@ -14,6 +14,7 @@ import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.p2event.P2Listener;
+import de.p2tools.p2lib.tools.P2ColorFactory;
 import de.p2tools.p2lib.tools.date.P2LDateTimeFactory;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
@@ -154,11 +155,16 @@ public class PaneGenerateBackupList extends VBox {
         // Name
         Label lblName = new Label();
         lblName.textProperty().bind(backupInfo.nameProperty());
+        backupInfo.colorProperty().addListener((u, o, n) -> {
+            lblName.setStyle(getNameColor(backupInfo));
+        });
+        lblName.setStyle(getNameColor(backupInfo));
+
         Label lblN = new Label("Name:");
+        lblN.setStyle("-fx-font-size: 1.1em; -fx-font-weight: bold;");
+
         gridPane.add(lblN, 0, row);
         gridPane.add(lblName, 2, row);
-        lblN.setStyle("-fx-font-size: 1.1em; -fx-font-weight: bold;");
-        lblName.setStyle("-fx-font-size: 1.1em; -fx-font-weight: bold;");
 
         // ==========
         // LastDate
@@ -250,6 +256,11 @@ public class PaneGenerateBackupList extends VBox {
         VBox.setVgrow(vBoxAll, Priority.ALWAYS);
 
         getChildren().addAll(vBoxAll);
+    }
+
+    private String getNameColor(BackupInfo backupInfo) {
+        String color = P2ColorFactory.getColor(backupInfo.getColor());
+        return "-fx-font-size: 1.1em; -fx-font-weight: bold; -fx-text-fill: " + color + ";";
     }
 
     private void setStyle(BackupInfo backupInfo, VBox vBoxAll) {

@@ -96,7 +96,6 @@ public class SearchInBackupDialogController extends P2DialogExtra {
         btnLoad.setOnAction(a -> {
             if (cboBackup.getSelectionModel().getSelectedItem() != null) {
                 backupDataProp.set(cboBackup.getSelectionModel().getSelectedItem());
-//                lblPath.setText("Pfad: " + backupDataProp.get().getToPathStr(backupInfoProp.get()));
                 String subPath = backupDataProp.get().getSubPath();
                 if (!subPath.isEmpty()) {
                     backupInfoProp.get().runnerDto.initRunner();
@@ -113,7 +112,7 @@ public class SearchInBackupDialogController extends P2DialogExtra {
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(cboBackup, P2GuiTools.getHBoxGrower()/*, hBoxProgress*/, btnLoad);
+        hBox.getChildren().addAll(cboBackup, P2GuiTools.getHBoxGrower(), btnLoad);
         getVBoxCont().getChildren().addAll(hBox);
     }
 

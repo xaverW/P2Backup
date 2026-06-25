@@ -47,6 +47,7 @@ public class SqlTable {
         var sql = "CREATE TABLE IF NOT EXISTS backupInfo ("
                 + "	id LONG PRIMARY KEY,"
                 + " name STRING NOT NULL,"
+                + " color STRING NOT NULL,"
                 + " description STRING NOT NULL,"
                 + " backupPath STRING NOT NULL,"
                 + "	lastBackupId LONG NOT NULL,"

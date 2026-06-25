@@ -26,23 +26,39 @@ import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class BackupInfoController extends VBox {
 
     private final ProgData progData;
     private final TextField txtName = new TextField();
+    private final ColorPicker colorPicker = new ColorPicker();
     private final TextArea taDescription = new TextArea();
     private final TableBackupInfo tableView;
     private final Label lblInfoListSize = new Label();
 
     private BackupInfo backupInfo = null;
     private final VBox vBoxContent = new VBox();
+    private final EventHandler eventHandler = new EventHandler() {
+        @Override
+        public void handle(Event event) {
+            if (backupInfo != null) {
+                Color color = colorPicker.getValue();
+                backupInfo.setColor(color.toString());
+                System.out.println("ColorPicker set: " + backupInfo.getColor());
+            }
+        }
+    };
+
 
     public BackupInfoController() {
         progData = ProgData.getInstance();
@@ -62,6 +78,9 @@ public class BackupInfoController extends VBox {
     }
 
     private void init() {
+        colorPicker.getStyleClass().add("split-button");
+        colorPicker.setMinHeight(Region.USE_PREF_SIZE);
+
         progData.backupInfoProperty.addListener((u, o, n) -> {
             vBoxContent.disableProperty().unbind();
             vBoxContent.setDisable(progData.backupInfoProperty.get() == null);
@@ -99,11 +118,12 @@ public class BackupInfoController extends VBox {
         int row = 0;
         gridPane.add(new Label("Name:"), 0, row);
         gridPane.add(txtName, 1, row);
+        gridPane.add(colorPicker, 2, row);
         gridPane.add(new Label("Beschreibung"), 0, ++row);
-        gridPane.add(taDescription, 1, row);
+        gridPane.add(taDescription, 1, row, 2, 1);
 
         gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
-                P2GridConstraints.getCcComputedSizeAndHgrow());
+                P2GridConstraints.getCcComputedSizeAndHgrow(), P2GridConstraints.getCcPrefSize());
 
         vBoxContent.getChildren().addAll(BackupGuiFactory.getInfoPane("Beschreibung des Backup"), gridPane);
     }
@@ -155,6 +175,7 @@ public class BackupInfoController extends VBox {
             taDescription.textProperty().unbindBidirectional(backupInfo.descriptionProperty());
             backupInfo = null;
             setTableItems();
+            colorPicker.setOnAction(null);
         }
 
         if (progData.backupInfoProperty.get() != null) {
@@ -163,7 +184,12 @@ public class BackupInfoController extends VBox {
             txtName.textProperty().bindBidirectional(backupInfo.nameProperty());
             taDescription.textProperty().bindBidirectional(backupInfo.descriptionProperty());
             setTableItems();
+
+            Color c = Color.web(backupInfo.getColor());
+            colorPicker.setValue(c);
+            colorPicker.setOnAction(eventHandler);
         }
+        colorPicker.setDisable(backupInfo == null);
         txtName.requestFocus();
     }
 }
