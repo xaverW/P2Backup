@@ -323,8 +323,8 @@ public class SqlBackupInfo {
                 "genDate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (var pstmt = conn.prepareStatement(sqlBackupInfo)) {
             pstmt.setLong(1, backupInfo.getId());
-            pstmt.setLong(2, backupInfo.getVersion());
-            pstmt.setString(3, backupInfo.getName());
+            pstmt.setString(2, backupInfo.getName());
+            pstmt.setLong(3, backupInfo.getVersion());
             pstmt.setString(4, backupInfo.getColor());
             pstmt.setString(5, backupInfo.getDescription());
             pstmt.setString(6, backupInfo.getBackupPath());
