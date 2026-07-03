@@ -93,12 +93,12 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
         return name.get();
     }
 
-    public StringProperty nameProperty() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    public StringProperty nameProperty() {
+        return name;
     }
 
     public String getColor() {
