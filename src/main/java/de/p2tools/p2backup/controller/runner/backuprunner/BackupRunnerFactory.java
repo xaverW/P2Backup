@@ -256,20 +256,27 @@ public class BackupRunnerFactory {
         backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
         // ====================
         // BackupPfad nochmal prüfen, ist doppelt, schadet aber nicht
+
         if (!CopyFactory.checkToPath(FileFactory.getToPath(backupInfo))) {
             return false;
         }
 
         if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts keinen Vorgänger -> alles kopieren
+            backupInfo.runnerDto.setRunnerText("Alle Dateien kopieren");
             ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
             return ret;
         }
 
         switch (backupInfo.getHow()) {
-            case ProgConst.BACKUP_DIFF, ProgConst.BACKUP_INTELLIGENT ->
-                    ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
-            default -> ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+            case ProgConst.BACKUP_DIFF, ProgConst.BACKUP_INTELLIGENT -> {
+                backupInfo.runnerDto.setRunnerText("Geänderte Dateien kopieren");
+                ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
+            }
+            default -> {
+                backupInfo.runnerDto.setRunnerText("Alle Dateien kopieren");
+                ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+            }
         }
 
         return ret;
@@ -291,7 +298,7 @@ public class BackupRunnerFactory {
 
         return ret;
     }
-    
+
 
     public static boolean writeBackupData(BackupInfo backupInfo) {
         // aktuellen Hash der DATEN in der Tabelle dataFiles sichern

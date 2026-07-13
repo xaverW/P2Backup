@@ -131,6 +131,9 @@ public class CopyDiffFactory {
             // move files form OldBAckup
             oldFileList.setAll(oldBackupFileMap.values()); // ist der Rest bei DIFF
             FileDataList resetList = new FileDataList();
+
+            backupInfo.runnerDto.setRunnerText("Unveränderte Dateien kopieren");
+            backupInfo.runnerDto.setRunnerMax(moveList.size());
             boolean ret = CopyFactory.moveFiles(backupInfo, oldToPathStr, moveList, resetList);
 
             if (backupInfo.runnerDto.isStop() && !resetList.isEmpty()) {
@@ -138,6 +141,7 @@ public class CopyDiffFactory {
                 oldFileList.addAll(moveList);
 
                 // dann wieder alles zurückfahren, resetList sind die kopierten
+                backupInfo.runnerDto.setRunnerText("Abbruch: aufräumen");
                 backupInfo.runnerDto.setRunnerMax(resetList.size());
                 for (FileData fileData : resetList) {
                     File fromFile = fileData.getBackupFilePath().toFile();
