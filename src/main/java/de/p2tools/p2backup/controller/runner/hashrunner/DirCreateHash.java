@@ -72,6 +72,10 @@ public class DirCreateHash {
     }
 
     public synchronized void create() {
+        create(true);
+    }
+
+    public synchronized void create(boolean countRunner) {
         // Dateien suchen und dann FileData mit Hash (wenn nicht quick) anlegen
         P2Log.sysLog("Start DirCreateHash");
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
@@ -99,7 +103,7 @@ public class DirCreateHash {
                 foundDirList.clear();
 
                 // Hash berechnen und FileData-Object erstellen, in fileDataList eintragen
-                createFileHash(followLink);
+                createFileHash(followLink, countRunner);
 
                 if (backupInfo.runnerDto.isStop()) {
                     fileDataList.clear();
@@ -112,10 +116,12 @@ public class DirCreateHash {
         }).start();
     }
 
-    private void createFileHash(boolean followLink) {
+    private void createFileHash(boolean followLink, boolean countRunner) {
         // FileData-Object für alle gefundenen Dateien erstellen
         P2Log.sysLog("Start createFileHash");
-        backupInfo.runnerDto.setRunnerMax(foundFileList.size());
+        if (countRunner) {
+            backupInfo.runnerDto.setRunnerMax(foundFileList.size());
+        }
         for (File file : foundFileList) {
             if (backupInfo.runnerDto.isStop()) {
                 break;
@@ -129,9 +135,13 @@ public class DirCreateHash {
                 fileDataList.add(fileData);
             }
 
-            backupInfo.runnerDto.setRunnerFileName(file.getName());
-            backupInfo.runnerDto.addRunnerAlreadyDone();
+            if (countRunner) {
+                backupInfo.runnerDto.setRunnerFileName(file.getName());
+                backupInfo.runnerDto.addRunnerAlreadyDone();
+            }
         }
-        backupInfo.runnerDto.setRunnerMax(0);
+        if (countRunner) {
+            backupInfo.runnerDto.setRunnerMax(0);
+        }
     }
 }

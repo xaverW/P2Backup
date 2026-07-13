@@ -99,7 +99,7 @@ public class ToolCheckBackupQuick {
                     null, fileDbList,
                     "", // zum Eintragen in FileDate, brauchmer aber nicht
                     true, false,
-                    a).create();
+                    a).create(false);
             while (a.get()) {
                 P2Wait.pause(500);
             }

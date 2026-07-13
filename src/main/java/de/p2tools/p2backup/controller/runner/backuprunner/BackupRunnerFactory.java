@@ -263,18 +263,15 @@ public class BackupRunnerFactory {
 
         if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts keinen Vorgänger -> alles kopieren
-            backupInfo.runnerDto.setRunnerText("Alle Dateien kopieren");
             ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
             return ret;
         }
 
         switch (backupInfo.getHow()) {
             case ProgConst.BACKUP_DIFF, ProgConst.BACKUP_INTELLIGENT -> {
-                backupInfo.runnerDto.setRunnerText("Geänderte Dateien kopieren");
                 ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
             }
             default -> {
-                backupInfo.runnerDto.setRunnerText("Alle Dateien kopieren");
                 ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
             }
         }
