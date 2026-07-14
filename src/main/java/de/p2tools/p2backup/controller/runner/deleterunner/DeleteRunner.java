@@ -92,7 +92,7 @@ public class DeleteRunner {
             P2Log.sysLog("=======================================");
             P2Log.sysLog("   Delete Start");
             P2Log.sysLog("=======================================");
-            this.backupInfo.runnerDto.setRunnerText("Start Delete");
+            this.backupInfo.runnerDto.setRunnerText("Alte Backups löschen");
 
             // zuerst die Dateien löschen
             if (!DeleteRunnerFactory.deleteBackup(backupInfo, backupData)) {

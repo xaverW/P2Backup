@@ -2,6 +2,7 @@ package de.p2tools.p2backup.gui.guibig;
 
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
@@ -14,6 +15,7 @@ public class PProgressBar extends StackPane {
     private final ProgressBar progressBar = new ProgressBar();
     private final Label lblText = new Label();
     private final Label lblName = new Label();
+    private final Label lblToDo = new Label();
     private final boolean text;
     private final boolean name;
     private boolean indeterminate = false;
@@ -48,8 +50,11 @@ public class PProgressBar extends StackPane {
         lblName.setTextAlignment(TextAlignment.LEFT);
         lblName.setMaxWidth(Double.MAX_VALUE);
 
+        lblToDo.getStyleClass().add("lblProgress");
+        lblToDo.setTextAlignment(TextAlignment.RIGHT);
+
         HBox hBoxName = new HBox(10);
-        hBoxName.getChildren().addAll(lblText, lblName);
+        hBoxName.getChildren().addAll(lblText, lblName, P2GuiTools.getHBoxGrower(), lblToDo);
 
         progressBar.setMinWidth(250);
         progressBar.setMaxWidth(Double.MAX_VALUE);
@@ -72,6 +77,7 @@ public class PProgressBar extends StackPane {
         progressBar.progressProperty().unbind();
         lblText.textProperty().unbind();
         lblName.textProperty().unbind();
+        lblToDo.textProperty().unbind();
 
         BackupInfo baInfo = backupInfo == null ? ProgData.getInstance().backupInfoProperty.get() : backupInfo;
         setVisible(baInfo != null);
@@ -86,10 +92,13 @@ public class PProgressBar extends StackPane {
             }
             lblText.textProperty().bind(baInfo.runnerDto.guiTextProperty());
             lblName.textProperty().bind(baInfo.runnerDto.guiFileNameProperty());
+            lblToDo.textProperty().bind(baInfo.runnerDto.guiToDoProperty().asString());
+            lblToDo.visibleProperty().bind(baInfo.runnerDto.guiToDoProperty().isNotEqualTo(0).and(lblName.visibleProperty()));
             lblText.setVisible(text);
             lblText.setManaged(text);
             lblName.setVisible(name);
             lblName.setManaged(name);
+            lblToDo.setManaged(name);
         }
     }
 

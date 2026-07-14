@@ -216,7 +216,7 @@ public class BackupRunnerFactory {
     }
 
 
-    public static boolean searchFromDate(BackupInfo backupInfo) {
+    public static boolean searchFromData(BackupInfo backupInfo) {
         // Daten einlesen und ins DTO schreiben
         try {
             AtomicBoolean atomicBoolean = new AtomicBoolean(true);
@@ -253,27 +253,25 @@ public class BackupRunnerFactory {
     public static boolean copyFilesToBackup(BackupInfo backupInfo) {
         boolean ret;
         // wieder neu auf Anfang setzen
-        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
+//        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
+
         // ====================
         // BackupPfad nochmal prüfen, ist doppelt, schadet aber nicht
-
         if (!CopyFactory.checkToPath(FileFactory.getToPath(backupInfo))) {
             return false;
         }
 
         if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts keinen Vorgänger -> alles kopieren
+            backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
             ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
             return ret;
         }
 
         switch (backupInfo.getHow()) {
-            case ProgConst.BACKUP_DIFF, ProgConst.BACKUP_INTELLIGENT -> {
-                ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
-            }
-            default -> {
-                ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
-            }
+            case ProgConst.BACKUP_DIFF, ProgConst.BACKUP_INTELLIGENT ->
+                    ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
+            default -> ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
         }
 
         return ret;
@@ -283,8 +281,7 @@ public class BackupRunnerFactory {
     public static boolean deleteBackupData(BackupInfo backupInfo) {
         boolean ret = true;
         BackupDataList backupDataList = backupInfo.getBackupDataList();
-        int sum = backupInfo.getSumDay();
-        while (backupDataList.size() > 1 && backupDataList.size() >= sum) {
+        while (backupDataList.size() > 1 && backupDataList.size() > backupInfo.getSumDay()) {
             // dann die überzähligen löschen, das aktuelle ist ja noch nicht drin
             BackupData backupData = backupDataList.get(0);
             if (!new DeleteRunner(backupInfo, backupData).deleteBackupDoNotAsk()) {

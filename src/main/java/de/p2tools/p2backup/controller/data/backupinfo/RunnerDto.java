@@ -21,13 +21,15 @@ public class RunnerDto {
     // Infos im GUI
     private final BooleanProperty guiRunning = new SimpleBooleanProperty(false); // wird im GUI ausgewertet
     private final IntegerProperty guiMax = new SimpleIntegerProperty(0);
-    private final IntegerProperty guiDone = new SimpleIntegerProperty(0);
+    private final IntegerProperty guiDone = new SimpleIntegerProperty(0); // sind die erledigten
+    private final IntegerProperty guiToDo = new SimpleIntegerProperty(0); // noch zu erledigen
     private final DoubleProperty guiProgress = new SimpleDoubleProperty(0);
     private final StringProperty guiText = new SimpleStringProperty(""); // ist der RunnerText im GUI
     private final StringProperty guiFileName = new SimpleStringProperty(""); // ist der Name der im Progress-Info angezeigt wird
 
     // Infos die angezeigt werden beim Lauf
     private final IntegerProperty runnerMax = new SimpleIntegerProperty(0); // Anzahl Dateien
+    private final BooleanProperty runnerDouble = new SimpleBooleanProperty(false); // dann wird die doppelte Menge gemeldet
     private final IntegerProperty runnerAlreadyDone = new SimpleIntegerProperty(0); // schon fertig
     private final StringProperty runnerText = new SimpleStringProperty(""); // Text, was Runner macht
     private final StringProperty runnerFileName = new SimpleStringProperty(""); // aktuelle Datei (zum Erstellen des Hash)
@@ -50,12 +52,20 @@ public class RunnerDto {
             @Override
             public void pingGui(P2Event event) {
                 if (runnerMax.get() != getGuiMax()) {
-                    guiMax.set(runnerMax.get());
+                    if (runnerDouble.get()) {
+                        guiMax.set(runnerMax.get() / 2);
+                    } else {
+                        guiMax.set(runnerMax.get());
+                    }
                     System.out.println("===> max " + guiMax.get());
                 }
 
                 if (runnerAlreadyDone.get() != getGuiDone()) {
-                    guiDone.set(runnerAlreadyDone.get());
+                    if (runnerDouble.get()) {
+                        guiDone.set(runnerAlreadyDone.get() / 2);
+                    } else {
+                        guiDone.set(runnerAlreadyDone.get());
+                    }
                     System.out.println("===> done " + guiDone.get());
                     System.out.println("     max " + guiMax.get());
                     System.out.println("     progress " + guiProgress.get());
@@ -63,8 +73,14 @@ public class RunnerDto {
 
                 if (guiMax.get() > 0) {
                     guiProgress.set(1.0 * guiDone.get() / guiMax.get());
+                    if (runnerDouble.get()) {
+                        guiToDo.set(guiMax.get() / 2 - guiDone.get() / 2);
+                    } else {
+                        guiToDo.set(guiMax.get() - guiDone.get());
+                    }
                 } else {
                     guiProgress.set(0);
+                    guiToDo.set(0);
                 }
 
                 if (!runnerText.get().equals(getGuiText())) {
@@ -129,6 +145,7 @@ public class RunnerDto {
     public void startRunner(String name) {
         stop.set(false);
         runnerMax.set(0);
+        runnerDouble.set(false);
         runnerAlreadyDone.set(0);
         runnerText.set(name);
         runnerFileName.set("");
@@ -144,6 +161,7 @@ public class RunnerDto {
 
     public void stopRunner() {
         runnerMax.set(0);
+        runnerDouble.set(false);
         runnerAlreadyDone.set(0);
         runnerText.set("");
         runnerFileName.set("");
@@ -212,6 +230,14 @@ public class RunnerDto {
         return guiDone;
     }
 
+    public int getGuiToDo() {
+        return guiToDo.get();
+    }
+
+    public IntegerProperty guiToDoProperty() {
+        return guiToDo;
+    }
+
     public double getGuiProgress() {
         return guiProgress.get();
     }
@@ -240,6 +266,7 @@ public class RunnerDto {
     // runner
     public void resetRunner() {
         this.runnerMax.set(0);
+        this.runnerDouble.set(false);
         this.runnerAlreadyDone.set(0);
         this.runnerFileName.set("");
         this.runnerText.set("");
@@ -249,6 +276,14 @@ public class RunnerDto {
         this.runnerMax.set(runnerMax);
         this.runnerAlreadyDone.set(0);
         this.runnerFileName.set("");
+    }
+
+    public boolean isRunnerDouble() {
+        return runnerDouble.get();
+    }
+
+    public BooleanProperty runnerDoubleProperty() {
+        return runnerDouble;
     }
 
     public void setRunnerAlreadyDone(int runnerAlreadyDone) {

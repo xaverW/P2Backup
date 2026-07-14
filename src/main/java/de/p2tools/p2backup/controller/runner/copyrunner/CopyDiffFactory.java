@@ -57,9 +57,6 @@ public class CopyDiffFactory {
             P2Wait.pause(500);
         }
 
-        // wieder neu auf Anfang setzen
-//        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
-
         if (foundError.get()) {
             P2AlertAppThread.showErrorAlert(stage, "Backup erstellen",
                     """
@@ -87,9 +84,12 @@ public class CopyDiffFactory {
 
         // ===============
         // suchen was kopiert werden muss
+        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().size() * 2); // läuft 2x durch
+        backupInfo.runnerDto.runnerDoubleProperty().set(true); // läuft 2x durch
+
         for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
             backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
-//            backupInfo.runnerDto.addRunnerAlreadyDone();
+            backupInfo.runnerDto.addRunnerAlreadyDone();
             FileHashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (backupInfo.runnerDto.isStop()) {
@@ -116,10 +116,7 @@ public class CopyDiffFactory {
             }
         }
 
-
         // ======================
-        // wieder neu auf Anfang setzen
-//        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
         // und jetzt kopieren/linken/moven
         if (!CopyFactory.copyFiles(backupInfo, copyList)) {
             return false;
@@ -132,8 +129,6 @@ public class CopyDiffFactory {
             oldFileList.setAll(oldBackupFileMap.values()); // ist der Rest bei DIFF
             FileDataList resetList = new FileDataList();
 
-//            backupInfo.runnerDto.setRunnerText("Unveränderte Dateien kopieren");
-//            backupInfo.runnerDto.setRunnerMax(moveList.size());
             boolean ret = CopyFactory.moveFiles(backupInfo, oldToPathStr, moveList, resetList);
 
             if (backupInfo.runnerDto.isStop() && !resetList.isEmpty()) {

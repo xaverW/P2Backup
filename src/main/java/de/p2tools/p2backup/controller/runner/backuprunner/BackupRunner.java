@@ -97,7 +97,7 @@ public class BackupRunner {
             // fromHash erstellen und toPath eintragen
             // ===============================
             this.backupInfo.runnerDto.setRunnerText("Dateien lesen");
-            if (!BackupRunnerFactory.searchFromDate(this.backupInfo)) {
+            if (!BackupRunnerFactory.searchFromData(this.backupInfo)) {
                 quitt(false);
                 return;
             }
