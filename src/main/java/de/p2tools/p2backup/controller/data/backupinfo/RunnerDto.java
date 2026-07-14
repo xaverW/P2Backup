@@ -20,8 +20,6 @@ public class RunnerDto {
 
     // Infos im GUI
     private final BooleanProperty guiRunning = new SimpleBooleanProperty(false); // wird im GUI ausgewertet
-    private final IntegerProperty guiMax = new SimpleIntegerProperty(0);
-    private final IntegerProperty guiDone = new SimpleIntegerProperty(0); // sind die erledigten
     private final IntegerProperty guiToDo = new SimpleIntegerProperty(0); // noch zu erledigen
     private final DoubleProperty guiProgress = new SimpleDoubleProperty(0);
     private final StringProperty guiText = new SimpleStringProperty(""); // ist der RunnerText im GUI
@@ -51,46 +49,32 @@ public class RunnerDto {
         ProgData.getInstance().pEventHandler.addListener(new P2Listener(PEvents.EVENT_TIMER_HALF_SECOND) {
             @Override
             public void pingGui(P2Event event) {
-                if (runnerMax.get() != getGuiMax()) {
+                guiProgress.set(1.0 * runnerAlreadyDone.get() / runnerMax.get());
+                if (runnerMax.get() > 0) {
+                    int toDo = runnerMax.get() - runnerAlreadyDone.get();
                     if (runnerDouble.get()) {
-                        guiMax.set(runnerMax.get() / 2);
+                        guiToDo.set(toDo / 2);
                     } else {
-                        guiMax.set(runnerMax.get());
+                        guiToDo.set(toDo);
                     }
-                    System.out.println("===> max " + guiMax.get());
-                }
+                    if (!runnerFileName.get().equals(getGuiFileName())) {
+                        guiFileName.set(runnerFileName.get());
+                    }
 
-                if (runnerAlreadyDone.get() != getGuiDone()) {
-                    if (runnerDouble.get()) {
-                        guiDone.set(runnerAlreadyDone.get() / 2);
-                    } else {
-                        guiDone.set(runnerAlreadyDone.get());
-                    }
-                    System.out.println("===> done " + guiDone.get());
-                    System.out.println("     max " + guiMax.get());
+                    System.out.println("     max " + runnerMax.get());
+                    System.out.println("     double " + runnerDouble.get());
                     System.out.println("     progress " + guiProgress.get());
-                }
+                    System.out.println("===> text " + guiText.get());
+                    System.out.println("===> fileName " + guiFileName.get());
 
-                if (guiMax.get() > 0) {
-                    guiProgress.set(1.0 * guiDone.get() / guiMax.get());
-                    if (runnerDouble.get()) {
-                        guiToDo.set(guiMax.get() / 2 - guiDone.get() / 2);
-                    } else {
-                        guiToDo.set(guiMax.get() - guiDone.get());
-                    }
                 } else {
                     guiProgress.set(0);
                     guiToDo.set(0);
+                    guiFileName.set("");
                 }
 
                 if (!runnerText.get().equals(getGuiText())) {
                     guiText.set(runnerText.get());
-                    System.out.println("===> text " + guiText.get());
-                }
-
-                if (!runnerFileName.get().equals(getGuiFileName())) {
-                    guiFileName.set(runnerFileName.get());
-                    System.out.println("===> fileName " + guiFileName.get());
                 }
             }
         });
@@ -151,8 +135,6 @@ public class RunnerDto {
         runnerFileName.set("");
 
         Platform.runLater(() -> {
-            guiMax.set(0);
-            guiDone.set(0);
             guiProgress.set(0);
             guiRunning.set(true);
             guiFileName.set("");
@@ -211,23 +193,6 @@ public class RunnerDto {
 
     public BooleanProperty doneFirstRunProperty() {
         return doneFirstRun;
-    }
-
-    // ============================
-    public int getGuiMax() {
-        return guiMax.get();
-    }
-
-    public IntegerProperty guiMaxProperty() {
-        return guiMax;
-    }
-
-    public int getGuiDone() {
-        return guiDone.get();
-    }
-
-    public IntegerProperty guiDoneProperty() {
-        return guiDone;
     }
 
     public int getGuiToDo() {
