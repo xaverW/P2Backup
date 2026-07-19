@@ -21,7 +21,6 @@ import de.p2tools.p2backup.controller.data.BackupPathList;
 import de.p2tools.p2backup.controller.data.MTShortcut;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoList;
-import de.p2tools.p2backup.controller.data.dbdata.DbDataList;
 import de.p2tools.p2backup.controller.worker.ColorWorker;
 import de.p2tools.p2backup.controller.worker.Worker;
 import de.p2tools.p2backup.gui.dialog.QuitDialogController;
@@ -64,7 +63,7 @@ public class ProgData {
     public QuitDialogController quitDialogController = null;
 
     // data
-    public DbDataList dbDataList;
+//    public DbDataList dbDataList;
     public BackupInfoList backupInfoList;
     public BackupPathList usedToPathList; // ist die Liste der bereits verwendeten ToPaths, zur Auswahl
     public IntegerProperty programState = new SimpleIntegerProperty(ProgConst.PROGRAM_STATE_BACKUP);
@@ -77,7 +76,7 @@ public class ProgData {
     private ProgData() {
         pEventHandler = new P2EventHandler(false);
         mtShortcut = new MTShortcut();
-        dbDataList = new DbDataList();
+//        dbDataList = new DbDataList();
         backupInfoList = new BackupInfoList();
         usedToPathList = new BackupPathList();
         worker = new Worker(this);

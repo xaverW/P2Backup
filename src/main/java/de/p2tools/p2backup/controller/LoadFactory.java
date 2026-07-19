@@ -18,13 +18,13 @@ public class LoadFactory {
     public static void loadAllBackupInfo() {
         BackupInfoList tmp = new BackupInfoList();
 
-        ProgData.getInstance().dbDataList.forEach(dbData -> {
-            if (!dbData.getPath().isEmpty() &&
-                    Path.of(dbData.getPath()).toFile().exists() &&
-                    Path.of(FileFactory.getBackupDbPath(dbData.getPath())).toFile().exists()) {
+        ProgData.getInstance().backupInfoList.forEach(baInfo -> {
+            if (!baInfo.getBackupPath().isEmpty() &&
+                    Path.of(baInfo.getBackupPath()).toFile().exists() &&
+                    Path.of(FileFactory.getBackupDbPath(baInfo.getBackupPath())).toFile().exists()) {
                 // sonst ists noch nicht gelaufen
-                SqlBackupInfo.checkDb(dbData.getPath());
-                BackupInfo backupInfo = SqlBackupInfo.readBackupInfo(dbData.getPath());
+                SqlBackupInfo.checkDb(baInfo.getBackupPath());
+                BackupInfo backupInfo = SqlBackupInfo.readBackupInfo(baInfo.getBackupPath());
                 if (backupInfo != null) {
                     tmp.add(backupInfo);
 
@@ -32,7 +32,7 @@ public class LoadFactory {
                     P2Alert.showErrorAlert(ProgData.getInstance().primaryStage, "Backup laden",
                             "Konnte die Backup-Einstellungen für:" +
                                     "\n\n" +
-                                    dbData.getName() +
+                                    baInfo.getName() +
                                     "\n\n" +
                                     "nicht laden.");
                 }
@@ -40,9 +40,9 @@ public class LoadFactory {
             } else {
                 // dann ist es noch nicht gelaufen
                 BackupInfo backupInfo = new BackupInfo();
-                backupInfo.setName(dbData.getName());
-                backupInfo.setBackupPath(dbData.getPath());
-                backupInfo.setLastStartDate(dbData.getLastStartDate());
+                backupInfo.setName(baInfo.getName());
+                backupInfo.setBackupPath(baInfo.getBackupPath());
+                backupInfo.setLastStartDate(baInfo.getLastStartDate());
                 tmp.add(backupInfo);
             }
         });

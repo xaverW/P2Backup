@@ -19,6 +19,8 @@ package de.p2tools.p2backup.controller.data.backupinfo;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.data.backupdata.BackupDataList;
 import de.p2tools.p2backup.controller.data.pathdata.PathDataList;
+import de.p2tools.p2lib.configfile.config.*;
+import de.p2tools.p2lib.configfile.pdata.P2DataSample;
 import de.p2tools.p2lib.tools.P2Index;
 import de.p2tools.p2lib.tools.date.P2LDateProperty;
 import de.p2tools.p2lib.tools.date.P2LDateTimeProperty;
@@ -26,9 +28,12 @@ import javafx.beans.property.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 
-public class BackupInfoProps implements Comparable<BackupInfo> {
+public class BackupInfoProps extends P2DataSample<BackupInfo> implements Comparable<BackupInfo> {
+
+    public static final String TAG = "BackupInfo";
 
     private LongProperty id = new SimpleLongProperty(P2Index.getIndex());
     private LongProperty version = new SimpleLongProperty(ProgConst.BACUP_VERSION); // ist immer die aktuelle Version
@@ -38,16 +43,13 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
     private StringProperty backupPath = new SimpleStringProperty("");
     private LongProperty lastBackupId = new SimpleLongProperty(0);
     private P2LDateTimeProperty lastStartDate = new P2LDateTimeProperty(LocalDateTime.MIN); // letztes Backup
+    private P2LDateProperty genDate = new P2LDateProperty(LocalDate.now()); // Erstelldatum
 
     private IntegerProperty how = new SimpleIntegerProperty(ProgConst.BACKUP_DIFF);
-
     private BooleanProperty fileFilterNot = new SimpleBooleanProperty(true);
-
     private IntegerProperty sumDay = new SimpleIntegerProperty(5);
     private IntegerProperty sumWeek = new SimpleIntegerProperty(5);
     private IntegerProperty sumMonth = new SimpleIntegerProperty(5);
-
-    private P2LDateProperty genDate = new P2LDateProperty(LocalDate.now()); // Erstelldatum
 
     private PathDataList pathListFrom = new PathDataList("pathListFrom");
     private PathDataList pathListExcludeDir = new PathDataList("pathListExcludeDir");
@@ -61,8 +63,28 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
     private LongProperty size = new SimpleLongProperty(0); // Größe aller Dateien
 
     public final Property[] properties = {id, version, name, color, description, backupPath, lastBackupId, lastStartDate,
-            how, fileFilterNot,
-            sumDay, sumWeek, sumMonth, genDate};
+            genDate, how, fileFilterNot, sumDay, sumWeek, sumMonth};
+
+
+    @Override
+    public Config[] getConfigsArr() {
+        ArrayList<Config> configList = new ArrayList<>();
+        configList.add(new Config_longProp("id", id));
+        configList.add(new Config_longProp("version", version));
+        configList.add(new Config_stringProp("name", name));
+        configList.add(new Config_stringProp("color", color));
+        configList.add(new Config_stringProp("description", description));
+        configList.add(new Config_stringProp("backupPath", backupPath));
+        configList.add(new Config_longProp("lastBackupId", lastBackupId));
+        configList.add(new Config_lDateTimeProp("lastStartDate", lastStartDate));
+        configList.add(new Config_lDateProp("genDate", genDate));
+        return configList.toArray(new Config[]{});
+    }
+
+    @Override
+    public String getTag() {
+        return TAG;
+    }
 
 
     public long getId() {
@@ -161,6 +183,18 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
         this.lastStartDate.set(lastStartDate);
     }
 
+    public LocalDate getGenDate() {
+        return genDate.get();
+    }
+
+    public P2LDateProperty genDateProperty() {
+        return genDate;
+    }
+
+    public void setGenDate(LocalDate genDate) {
+        this.genDate.set(genDate);
+    }
+
     public int getHow() {
         return how.get();
     }
@@ -219,18 +253,6 @@ public class BackupInfoProps implements Comparable<BackupInfo> {
 
     public void setSumMonth(int sumMonth) {
         this.sumMonth.set(sumMonth);
-    }
-
-    public LocalDate getGenDate() {
-        return genDate.get();
-    }
-
-    public P2LDateProperty genDateProperty() {
-        return genDate;
-    }
-
-    public void setGenDate(LocalDate genDate) {
-        this.genDate.set(genDate);
     }
 
     public PathDataList getPathListFrom() {

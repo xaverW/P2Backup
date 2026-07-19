@@ -19,7 +19,6 @@ package de.p2tools.p2backup.controller;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoFactory;
-import de.p2tools.p2backup.controller.data.dbdata.DbData;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.sqlite.SqlBackupInfo;
 import de.p2tools.p2backup.controller.sqlite.SqlTable;
@@ -71,12 +70,12 @@ public class ProgQuit {
     }
 
     private static void saveDb() {
-        ProgData.getInstance().dbDataList.clear();
+//        ProgData.getInstance().dbDataList.clear();
         ProgData.getInstance().backupInfoList.forEach(backupInfo -> {
-            DbData dbData = new DbData(backupInfo);
-            ProgData.getInstance().dbDataList.add(dbData);
-            if (!dbData.getPath().isEmpty() &&
-                    Path.of(dbData.getPath()).toFile().exists()) {
+//            DbData dbData = new DbData(backupInfo);
+//            ProgData.getInstance().dbDataList.add(dbData);
+            if (!backupInfo.getBackupPath().isEmpty() &&
+                    Path.of(backupInfo.getBackupPath()).toFile().exists()) {
 
                 if (!Path.of(FileFactory.getBackupDbPath(backupInfo)).toFile().exists()) {
                     // dann ist das Backup noch nicht gelaufen, DB existiert noch nicht -> anlegen

@@ -43,7 +43,7 @@ public class ProgConfig extends P2DataProgConfig {
         ProgConfig.SYSTEM_PROG_BUILD_DATE.set(P2InfoFactory.getBuildDateR());
 
         configFile.addConfigs(ProgConfig.getInstance());
-        configFile.addConfigs(progData.dbDataList);
+        configFile.addConfigs(progData.backupInfoList);
         configFile.addConfigs(progData.usedToPathList);
     }
 
