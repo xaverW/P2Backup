@@ -23,10 +23,23 @@ public class BackupInfo extends BackupInfoProps {
     // Sind die Daten eines angelegten Backups: Anzahl der Backups (BackupData), Daten zum Sichern, ...
 
     public RunnerDto runnerDto = new RunnerDto();
+    public BooleanProperty sqlLoaded = new SimpleBooleanProperty(false);
     public BooleanProperty notReady = new SimpleBooleanProperty(false);
 
     public BackupInfo() {
         notReady.bind(backupPathProperty().isEmpty().or(getPathListFrom().sizeProperty().isEqualTo(0)));
+    }
+
+    public boolean isSqlLoaded() {
+        return sqlLoaded.get();
+    }
+
+    public BooleanProperty sqlLoadedProperty() {
+        return sqlLoaded;
+    }
+
+    public void setSqlLoaded(boolean sqlLoaded) {
+        this.sqlLoaded.set(sqlLoaded);
     }
 
     public boolean isNotReady() {
@@ -35,6 +48,10 @@ public class BackupInfo extends BackupInfoProps {
 
     public BooleanProperty notReadyProperty() {
         return notReady;
+    }
+
+    public void setNotReady(boolean notReady) {
+        this.notReady.set(notReady);
     }
 
     public void clear() {

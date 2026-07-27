@@ -82,8 +82,12 @@ public class PaneGenerateBackupList extends VBox {
         Button btnSearch = new Button("Das gespeicherte\nBackup suchen");
         btnSearch.setWrapText(true);
         btnSearch.setGraphic(PIconFactory.PICON.BTN_LOAD_REFRESH_BIG.getFontIcon());
-        btnSearch.visibleProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
-        btnSearch.managedProperty().bind(backupInfo.notReadyProperty().and(backupInfo.backupPathProperty().isEmpty().not()));
+        // nur wenn Pfad nicht verfügbar!
+        btnSearch.visibleProperty().bind(backupInfo.notReadyProperty()
+                .and(backupInfo.backupPathProperty().isEmpty().not()
+                        .and(backupInfo.sqlLoadedProperty().not())));
+        btnSearch.managedProperty().bind(btnSearch.visibleProperty());
+
         btnSearch.setTooltip(new Tooltip("Gespeichertes suchen"));
         btnSearch.setOnAction(a -> LoadFactory.reLoadBackupInfo(backupInfo));
 

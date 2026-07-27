@@ -103,6 +103,7 @@ public class SqlBackupInfo {
                 conn.rollback();
             }
 
+            backupInfo.setSqlLoaded(true);
             return backupInfo;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
