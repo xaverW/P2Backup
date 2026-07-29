@@ -196,13 +196,13 @@ public class PaneGenerateBackupList extends VBox {
             gridPane.add(lblToPath, 2, row);
         }
 
-        if (backupInfo.isNotReady() && !backupInfo.getBackupPath().isEmpty()) {
+        if (backupInfo.isNotReady() && backupInfo.getBackupPath().isEmpty()) {
             lblToPath.getStyleClass().add("emptyBackupPath");
         } else {
             lblToPath.getStyleClass().remove("emptyBackupPath");
         }
         backupInfo.backupPathProperty().addListener((u, o, n) -> {
-            if (backupInfo.isNotReady() && !backupInfo.getBackupPath().isEmpty()) {
+            if (backupInfo.isNotReady() && backupInfo.getBackupPath().isEmpty()) {
                 lblToPath.getStyleClass().add("emptyBackupPath");
             } else {
                 lblToPath.getStyleClass().remove("emptyBackupPath");

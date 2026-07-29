@@ -33,7 +33,6 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -209,7 +208,7 @@ public class CheckBackupDialogController extends P2DialogExtra {
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
+//        hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
         hBoxProgress.getChildren().addAll(pProgressBar, btnStop);
         hBoxProgress.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(pProgressBar, Priority.ALWAYS);
