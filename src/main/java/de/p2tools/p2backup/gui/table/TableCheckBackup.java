@@ -19,16 +19,20 @@ package de.p2tools.p2backup.gui.table;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2lib.guitools.ptable.P2CellCheckBox;
 import de.p2tools.p2lib.guitools.ptable.P2TableFactory;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class TableCheckBackup extends PTable<FileData> {
+    private final ObjectProperty<Stage> stageProp;
 
-    public TableCheckBackup(Table.TABLE_ENUM table_enum) {
+    public TableCheckBackup(Table.TABLE_ENUM table_enum, ObjectProperty stageProp) {
         super(table_enum);
         this.table_enum = table_enum;
+        this.stageProp = stageProp;
 
         initFileRunnerColumn();
     }
@@ -58,21 +62,25 @@ public class TableCheckBackup extends PTable<FileData> {
         final TableColumn<FileData, String> pathFileColumn = new TableColumn<>("Pfad");
         pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("filePathStr"));
 
+        final TableColumn<FileData, String> btnColumn = new TableColumn<>("Öffnen");
+        btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
+        btnColumn.setCellFactory(new CellCheckBackupOpenFileButton<>(stageProp).cellFactory);
+
         final TableColumn<FileData, Boolean> diffColumn = new TableColumn<>("Verändert");
         diffColumn.setCellValueFactory(new PropertyValueFactory<>("diff"));
         diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
         final TableColumn<FileData, Boolean> fromColumn = new TableColumn<>("Soll");
-        fromColumn.setCellValueFactory(new PropertyValueFactory<>("existData"));
+        fromColumn.setCellValueFactory(new PropertyValueFactory<>("existInData"));
         fromColumn.setCellFactory(new P2CellCheckBox().cellFactory);
         final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Ist");
-        toColumn.setCellValueFactory(new PropertyValueFactory<>("existBackup"));
+        toColumn.setCellValueFactory(new PropertyValueFactory<>("existInBackup"));
         toColumn.setCellFactory(new P2CellCheckBox().cellFactory);
         final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Lesefehler");
         errorColumn.setCellValueFactory(new PropertyValueFactory<>("error"));
         TableFactory.columnFactoryBoolean(errorColumn);
 
         pathFileColumn.setPrefWidth(500);
-        getColumns().addAll(pathFileColumn, diffColumn, fromColumn, toColumn, errorColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, diffColumn, fromColumn, toColumn, errorColumn);
 
     }
 }

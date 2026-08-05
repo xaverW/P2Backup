@@ -8,6 +8,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
+import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.gui.dialog.BackupErrorListDialogController;
@@ -81,7 +82,7 @@ public class CopyDiffFactory {
                     return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
                 }
                 case REPAIR -> {
-                    if (!SqlFileData.deleteBackupFileList(backupInfo, errorList)) {
+                    if (!RepairFactory.repairBackup(backupInfo, errorList)) {
                         return false;
                     }
                 }

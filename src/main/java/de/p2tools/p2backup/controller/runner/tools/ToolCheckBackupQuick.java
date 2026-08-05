@@ -82,7 +82,6 @@ public class ToolCheckBackupQuick {
 
         } else {
             // ==============
-            // und jetzt den Hash vergleichen
             CompareFactory.compareQuick(fileListDb, fileListBackup, errorList);
         }
         atomicBoolean.set(false);

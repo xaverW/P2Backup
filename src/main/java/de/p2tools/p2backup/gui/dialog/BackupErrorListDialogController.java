@@ -77,11 +77,9 @@ public class BackupErrorListDialogController extends P2DialogExtra {
     public void make() {
         Button btnHelp;
         btnHelp = PIconFactory.getHelpButton(getStage(), "Datei kopieren",
-                "Die Datei\n\n" +
-                        errorList + "\n\n kann nicht kopiert werden. Es kann das ganze Backup " +
-                        "abgebrochen werden oder die Datei wird übersprungen. Hier ist möglich auszuwählen " +
-                        "ob nur die eine Datei übersprungen wird oder auch alle " +
-                        "noch folgenden Dateien.");
+                "Dateien im Backup sind verändert oder fehlen. Das Backup kann " +
+                        "abgebrochen werden oder die Dateien können aus dem Backup gelöscht werden. " +
+                        "Ansonsten kann mit einem komplett neuen Backup wieder begonnen werden.");
         Text text;
         text = P2Text.getTextBold("Dateien im Backup fehlen oder sind verändert");
         HBox hBoxText = new HBox();
@@ -101,7 +99,7 @@ public class BackupErrorListDialogController extends P2DialogExtra {
         hBoxCenter.getChildren().addAll(errorNode, vBoxTable);
         HBox.setHgrow(vBoxTable, Priority.ALWAYS);
         VBox.setVgrow(hBoxCenter, Priority.ALWAYS);
-        
+
         Label lblRepair = P2Text.getLblTextBold("Backup reparieren, Fehler aus dem Backup löschen");
         Label lblCancel = P2Text.getLblTextBold("Backup abbrechen");
         Label lblIgnore = P2Text.getLblTextBold("Fehler ignorieren und ein Vollbackup machen");

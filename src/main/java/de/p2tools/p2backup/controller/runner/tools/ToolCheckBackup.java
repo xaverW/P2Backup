@@ -80,7 +80,10 @@ public class ToolCheckBackup {
         String toPath = FileFactory.getToPathStr(backupInfo, backupData);
         FileDataList fileListBackup = getFileListBackup(toPath);
         FileFactory.cleanFileData(fileListBackup, toPath); // Pfade anpassen
+        // /mnt/lager/p2BackupTest/ba1/2026-08-05__16-20-03/__mnt/lager/p2BackupTest/testDaten/1980er/1989/1989_011.jpg
+        // -> /__mnt/lager/p2BackupTest/testDaten/1980er/1989/1989_011.jpg
         FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
+        // -> /mnt/lager/p2BackupTest/testDaten/1980er/1989/1989_011.jpg
 
 
         FileDataList resultList = new FileDataList();
@@ -101,14 +104,14 @@ public class ToolCheckBackup {
     }
 
     private FileDataList getFileListBackup(String toPath) {
-        FileDataList fileDbList = new FileDataList();
+        FileDataList fileBackupList = new FileDataList();
         // dann ist ein Backup-Pfad
         if (toPath != null) {
             AtomicBoolean a = new AtomicBoolean(true);
             new DirCreateHash(backupInfo,
                     Path.of(toPath).toFile(),
-                    null, fileDbList,
-                    "", // zum Eintragen in FileDate, brauchmer aber nicht
+                    null, fileBackupList,
+                    toPath, // zum Eintragen in FileDate, brauch mer für Dateien die nur im Backup sind!
                     false, false,
                     a).create();
             while (a.get()) {
@@ -116,7 +119,7 @@ public class ToolCheckBackup {
             }
         }
 
-        return fileDbList;
+        return fileBackupList;
     }
 }
 

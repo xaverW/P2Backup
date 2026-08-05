@@ -139,8 +139,8 @@ public class FileData extends FileDataProps {
         fileData.setHash(getHash());
         fileData.setDiff(isDiff());
         fileData.setError(isError());
-        fileData.setExistData(isExistData());
-        fileData.setExistBackup(isExistBackup());
+        fileData.setExistInData(isExistInData());
+        fileData.setExistInBackup(isExistInBackup());
 
         return fileData;
     }

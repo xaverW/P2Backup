@@ -33,13 +33,15 @@ public class FileDataProps implements Comparable<FileData> {
     private long date;
     private long size = 0;
     private boolean link = false; // Datei ist ein Link
+
+    // Hash
     private String hash = "";
     private boolean error = false; // Hash kann nicht erstellt werden, nicht zugreifbar
 
     // ist nur für den Vergleich Backup/Data
     private boolean diff = false; // Dateien sind unterschiedlich
-    private boolean existData = false; // fehlt in den Daten
-    private boolean existBackup = false; // fehlt im Backup
+    private boolean existInData = false; // ist in den Daten
+    private boolean existInBackup = false; // ist im Backup
 
     public long getId() {
         return id;
@@ -135,20 +137,20 @@ public class FileDataProps implements Comparable<FileData> {
         this.diff = diff;
     }
 
-    public boolean isExistBackup() {
-        return existBackup;
+    public boolean isExistInBackup() {
+        return existInBackup;
     }
 
-    public void setExistBackup(boolean existBackup) {
-        this.existBackup = existBackup;
+    public void setExistInBackup(boolean existInBackup) {
+        this.existInBackup = existInBackup;
     }
 
-    public boolean isExistData() {
-        return existData;
+    public boolean isExistInData() {
+        return existInData;
     }
 
-    public void setExistData(boolean existData) {
-        this.existData = existData;
+    public void setExistInData(boolean existInData) {
+        this.existInData = existInData;
     }
 
     @Override

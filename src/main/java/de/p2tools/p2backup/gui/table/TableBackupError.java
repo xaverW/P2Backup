@@ -60,7 +60,7 @@ public class TableBackupError extends PTable<FileData> {
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        final TableColumn<FileData, String> pathFileColumn = new TableColumn<>("Dateien in den Daten");
+        final TableColumn<FileData, String> pathFileColumn = new TableColumn<>("Ordner");
         pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("filePathStr"));
 
         final TableColumn<FileData, String> btnColumn = new TableColumn<>("Öffnen");

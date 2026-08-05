@@ -55,9 +55,9 @@ public class CheckBackupDialogController extends P2DialogExtra {
 
     private final RadioButton rbAll = new RadioButton("Alles");
     private final RadioButton rbNotOk = new RadioButton("Fehler");
-    private final RadioButton rbDiff = new RadioButton("Datei verändert");
-    private final RadioButton rbOnlyData = new RadioButton("Nur in der Datenbank, \"Soll\"");
-    private final RadioButton rbOnlyBackup = new RadioButton("Nur in den Dateien, \"Ist\"");
+    private final RadioButton rbDiff = new RadioButton("Datei ist verändert");
+    private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
+    private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
     private final RadioButton rbReadError = new RadioButton("Kann nicht gelesen werden");
 
     public CheckBackupDialogController(BackupInfo backupInfo) {
@@ -66,7 +66,7 @@ public class CheckBackupDialogController extends P2DialogExtra {
 
         this.progData = ProgData.getInstance();
         this.backupInfo = backupInfo;
-        tableView = new TableCheckBackup(Table.TABLE_ENUM.CHECK_BACKUP);
+        tableView = new TableCheckBackup(Table.TABLE_ENUM.CHECK_BACKUP, getStageProp());
         init(false);
     }
 
@@ -93,6 +93,16 @@ public class CheckBackupDialogController extends P2DialogExtra {
     public void setResult(FileDataList fileDataList) {
         Platform.runLater(() -> {
                     this.fileDataList.setAll(fileDataList);
+                    boolean found = false;
+                    for (FileData fileData : this.fileDataList) {
+                        if (fileData.isError() || fileData.isDiff() || !fileData.isExistInBackup() || !fileData.isExistInData()) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        rbNotOk.setSelected(true);
+                    }
                     this.setPredicate();
                 }
         );
@@ -150,26 +160,27 @@ public class CheckBackupDialogController extends P2DialogExtra {
     private void setPredicate() {
         Predicate<FileData> predicate = fileData -> true;
         if (rbNotOk.isSelected()) {
+            Predicate<FileData> prError = FileDataProps::isError;
             Predicate<FileData> prDiff = FileDataProps::isDiff;
 
-            Predicate<FileData> prData = FileDataProps::isExistData;
-            prData = prData.and(fileData -> !fileData.isExistBackup());
+            Predicate<FileData> prData = FileDataProps::isExistInData;
+            prData = prData.and(fileData -> !fileData.isExistInBackup());
 
-            Predicate<FileData> prBackup = FileDataProps::isExistBackup;
-            prBackup = prBackup.and(fileData -> !fileData.isExistData());
+            Predicate<FileData> prBackup = FileDataProps::isExistInBackup;
+            prBackup = prBackup.and(fileData -> !fileData.isExistInData());
 
-            predicate = predicate.and(prDiff.or(prData).or(prBackup));
+            predicate = predicate.and(prError.or(prDiff.or(prData).or(prBackup)));
 
         } else if (rbDiff.isSelected()) {
             predicate = predicate.and(FileDataProps::isDiff);
 
         } else if (rbOnlyData.isSelected()) {
-            predicate = predicate.and(FileDataProps::isExistData);
-            predicate = predicate.and(fileData -> !fileData.isExistBackup());
+            predicate = predicate.and(FileDataProps::isExistInData);
+            predicate = predicate.and(fileData -> !fileData.isExistInBackup());
 
         } else if (rbOnlyBackup.isSelected()) {
-            predicate = predicate.and(fileData -> !fileData.isExistData());
-            predicate = predicate.and(FileDataProps::isExistBackup);
+            predicate = predicate.and(fileData -> !fileData.isExistInData());
+            predicate = predicate.and(FileDataProps::isExistInBackup);
 
         } else if (rbReadError.isSelected()) {
             predicate = predicate.and(FileDataProps::isError);
