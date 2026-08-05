@@ -268,7 +268,7 @@ public class PaneGenerateBackupList extends VBox {
     }
 
     private void setStyle(BackupInfo backupInfo, VBox vBoxAll) {
-        if (progData.backupInfoProperty.get() != null && progData.backupInfoProperty.get().equals(backupInfo)) {
+        if (progData.backupInfoProperty.get() != null && progData.backupInfoProperty.get().getId() == backupInfo.getId()) {
             // dann ists ausgewählt
             if (backupInfo.runnerDto.getGuiRunning()) {
                 vBoxAll.setStyle("-fx-border-color: red; -fx-border-width: 4px;");

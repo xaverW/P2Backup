@@ -296,6 +296,37 @@ public class SqlFileData {
         return true;
     }
 
+    public static boolean deleteBackupFileList(BackupInfo backupInfo, List<FileData> list) {
+        String url = SqlFactory.getUrl(backupInfo);
+        if (url.isEmpty()) {
+            return false;
+        }
+        try (var conn = DriverManager.getConnection(url)) {
+            // Disable auto-commit mode
+            conn.setAutoCommit(false);
+
+            String sql = "DELETE FROM backupFiles WHERE id=?";
+            try (var pstmt = conn.prepareStatement(sql)) {
+                for (FileData fileData : list) {
+                    pstmt.setLong(1, fileData.getId());
+                    pstmt.executeUpdate();
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+                conn.rollback();
+                return false;
+            }
+
+            // ========================
+            // commit work
+            conn.commit();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
     public static boolean deleteBackupFileList(BackupInfo backupInfo, long backupId) {
         String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {

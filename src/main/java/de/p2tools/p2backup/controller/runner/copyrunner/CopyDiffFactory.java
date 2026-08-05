@@ -10,10 +10,12 @@ import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
+import de.p2tools.p2backup.gui.dialog.BackupErrorListDialogController;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.tools.P2Wait;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 
@@ -50,22 +52,40 @@ public class CopyDiffFactory {
         // =====================================
         // erst mal das alte Backup überprüfen
         // =====================================
-        BooleanProperty foundError = new SimpleBooleanProperty(false);
         AtomicBoolean a = new AtomicBoolean(true);
-        new ToolCheckBackupQuick(backupInfo, oldBackup, a).compare(foundError);
+        FileDataList errorList = new FileDataList();
+        new ToolCheckBackupQuick(backupInfo, oldBackup, a).compare(errorList);
         while (a.get()) {
             P2Wait.pause(500);
         }
 
-        if (foundError.get()) {
-            P2AlertAppThread.showErrorAlert(stage, "Backup erstellen",
-                    """
-                            Das vorherige Backup ist beschädigt. Es kann dann kein neues Backup mit
-                            "nur geänderten Dateien"
-                            angelegt werden.
-                            
-                            Es werden stattdessen wieder alle Dateien gesichert.""");
-            return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+        if ((!errorList.isEmpty())) {
+            ObjectProperty<BackupErrorListDialogController.ERROR> repairProp = new SimpleObjectProperty<>(null);
+            AtomicBoolean atomicBoolean = new AtomicBoolean(true);
+            Platform.runLater(() -> {
+                // wird im GUI angezeigt
+                new BackupErrorListDialogController(backupInfo, errorList, repairProp);
+                atomicBoolean.set(false);
+            });
+            while (atomicBoolean.get()) {
+                P2Wait.pause(500);
+            }
+            switch (repairProp.get()) {
+                case null -> {
+                    return false;
+                }
+                case CANCEL -> {
+                    return false;
+                }
+                case IGNORE -> {
+                    return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+                }
+                case REPAIR -> {
+                    if (!SqlFileData.deleteBackupFileList(backupInfo, errorList)) {
+                        return false;
+                    }
+                }
+            }
         }
 
 

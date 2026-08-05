@@ -54,7 +54,7 @@ public class CheckBackupDialogController extends P2DialogExtra {
     private final Label lblSum = new Label();
 
     private final RadioButton rbAll = new RadioButton("Alles");
-    private final RadioButton rbNotOk = new RadioButton("Soll/Ist unterschiedlich");
+    private final RadioButton rbNotOk = new RadioButton("Fehler");
     private final RadioButton rbDiff = new RadioButton("Datei verändert");
     private final RadioButton rbOnlyData = new RadioButton("Nur in der Datenbank, \"Soll\"");
     private final RadioButton rbOnlyBackup = new RadioButton("Nur in den Dateien, \"Ist\"");
@@ -133,10 +133,12 @@ public class CheckBackupDialogController extends P2DialogExtra {
         rbReadError.setToggleGroup(tg);
         rbAll.setSelected(true);
 
-        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(rbAll, rbNotOk, rbDiff, rbOnlyData, rbOnlyBackup, rbReadError,
-                P2GuiTools.getHBoxGrower(), lblSum);
-        getVBoxCont().getChildren().add(hBox);
+        HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
+        hBox1.getChildren().addAll(rbAll, rbNotOk, P2GuiTools.getHBoxGrower(), lblSum);
+        HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
+        hBox2.getChildren().addAll(rbDiff, rbOnlyData, rbOnlyBackup, rbReadError);
+        getVBoxCont().getChildren().addAll(hBox1, hBox2);
+
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
@@ -208,7 +210,6 @@ public class CheckBackupDialogController extends P2DialogExtra {
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
-//        hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
         hBoxProgress.getChildren().addAll(pProgressBar, btnStop);
         hBoxProgress.setAlignment(Pos.CENTER_RIGHT);
         HBox.setHgrow(pProgressBar, Priority.ALWAYS);

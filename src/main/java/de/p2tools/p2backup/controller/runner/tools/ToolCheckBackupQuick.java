@@ -28,7 +28,6 @@ import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
-import javafx.beans.property.BooleanProperty;
 
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,7 +48,7 @@ public class ToolCheckBackupQuick {
         this.atomicBoolean = atomicBoolean;
     }
 
-    public void compare(BooleanProperty foundError) {
+    public void compare(FileDataList errorList) {
         progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         new Thread(() -> {
             P2Log.sysLog("Start CheckBackup QUICK: " + backupInfo.getName());
@@ -57,13 +56,13 @@ public class ToolCheckBackupQuick {
             P2Log.sysLog("   Backup-Prüfen Start");
             P2Log.sysLog("=======================================");
 
-            compareDir(foundError);
+            compareDir(errorList);
 
             progData.pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         }).start();
     }
 
-    private void compareDir(BooleanProperty foundError) {
+    private void compareDir(FileDataList errorList) {
         // Daten laden
         FileDataList fileListDb = new FileDataList();
         if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileListDb)) {
@@ -84,7 +83,7 @@ public class ToolCheckBackupQuick {
         } else {
             // ==============
             // und jetzt den Hash vergleichen
-            CompareFactory.compareQuick(fileListDb, fileListBackup, foundError);
+            CompareFactory.compareQuick(fileListDb, fileListBackup, errorList);
         }
         atomicBoolean.set(false);
     }

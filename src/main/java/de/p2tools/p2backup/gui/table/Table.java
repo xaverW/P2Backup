@@ -27,7 +27,7 @@ import javafx.scene.control.TableView;
 public class Table {
     public enum TABLE_ENUM {
         DIR_COMPARE, BLOCKED_FILE, BACKUP_INFO, SHOW_BACKUP_FILES,
-        CHECK_BACKUP, FILE_HISTORY
+        CHECK_BACKUP, FILE_HISTORY, BACKUP_ERROR
     }
 
     private static final String SORT_ASCENDING = "ASCENDING";
@@ -187,6 +187,13 @@ public class Table {
                 confUpDown = ProgConfig.FILE_HISTORY_TABLE_UP_DOWN;
                 confVis = ProgConfig.FILE_HISTORY_TABLE_VIS;
                 confOrder = ProgConfig.FILE_HISTORY_TABLE_ORDER;
+                break;
+            case BACKUP_ERROR:
+                confWidth = ProgConfig.BACKUP_ERROR_TABLE_WIDTH;
+                confSort = ProgConfig.BACKUP_ERROR_TABLE_SORT;
+                confUpDown = ProgConfig.BACKUP_ERROR_TABLE_UP_DOWN;
+                confVis = ProgConfig.BACKUP_ERROR_TABLE_VIS;
+                confOrder = ProgConfig.BACKUP_ERROR_TABLE_ORDER;
                 break;
         }
     }

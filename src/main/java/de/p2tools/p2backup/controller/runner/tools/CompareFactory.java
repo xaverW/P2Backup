@@ -4,7 +4,6 @@ import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
-import javafx.beans.property.BooleanProperty;
 import javafx.stage.Stage;
 
 import java.util.Comparator;
@@ -89,27 +88,39 @@ public class CompareFactory {
         }
     }
 
-    public static void compareQuick(FileDataList fileListData, FileDataList fileListBackup,
-                                    BooleanProperty foundError) {
-        foundError.set(false);
+    public static void compareQuick(FileDataList fileListDataDb, FileDataList fileListBackup,
+                                    FileDataList errorList) {
+//        if (fileListDataDb.size() != fileListBackup.size()) {
+//            // dann stimmt schon was nicht
+//            foundError.set(true);
+//            return;
+//        }
 
-        if (fileListData.size() != fileListBackup.size()) {
-            // dann stimmt schon was nicht
-            foundError.set(true);
-            return;
-        }
-
-        final HashMap<String, FileData> dataMap = new HashMap<>();
-        fileListData.forEach(file -> {
-            dataMap.put(file.getFilePathStr(), file);
+        final HashMap<String, FileData> isDataMap = new HashMap<>();
+        fileListBackup.forEach(file -> {
+            isDataMap.put(file.getFilePathStr(), file);
         });
 
-        for (FileData f : fileListBackup) {
+        for (FileData f : fileListDataDb) {
             String path = f.getFilePathStr();
-            FileData data = dataMap.get(path);
-            if (data == null) {
-                foundError.set(true);
-                break;
+            f.setDiff(false);
+            f.setError(false);
+
+            FileData dataBackup = isDataMap.get(path);
+            if (dataBackup == null) {
+                f.setError(true);
+                errorList.add(f);
+                continue;
+            }
+
+            if (f.getDate() != dataBackup.getDate()) {
+                f.setDiff(true);
+                errorList.add(f);
+                continue;
+            }
+            if (f.getSize() != dataBackup.getSize()) {
+                f.setDiff(true);
+                errorList.add(f);
             }
         }
     }

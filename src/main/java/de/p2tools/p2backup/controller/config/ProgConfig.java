@@ -201,6 +201,15 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty FILE_HISTORY_TABLE_VIS = addStrProp("file-histoy-table-vis");
     public static StringProperty FILE_HISTORY_TABLE_ORDER = addStrProp("file-histoy-table-order");
 
+    // BackupError
+    public static StringProperty BACKUP_ERROR_DIALOG_SIZE = addStrProp("backup-error-dialog-size", "800:500");
+    public static DoubleProperty BACKUP_ERROR_SPLIT_DIVIDER = addDoubleProp("backup-error-split-divider", 0.3);
+    public static StringProperty BACKUP_ERROR_TABLE_WIDTH = addStrProp("backup-error-table-width");
+    public static StringProperty BACKUP_ERROR_TABLE_SORT = addStrProp("backup-error-table-sort");
+    public static StringProperty BACKUP_ERROR_TABLE_UP_DOWN = addStrProp("backup-error-table-up-down");
+    public static StringProperty BACKUP_ERROR_TABLE_VIS = addStrProp("backup-error-table-vis");
+    public static StringProperty BACKUP_ERROR_TABLE_ORDER = addStrProp("backup-error-table-order");
+
     // BackupInfo
     public static StringProperty BACKUP_INFO_TABLE_WIDTH = addStrProp("backup-info-table-width");
     public static StringProperty BACKUP_INFO_TABLE_SORT = addStrProp("backup-info-table-sort");
