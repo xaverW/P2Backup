@@ -25,6 +25,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
+import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackup;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
@@ -33,6 +34,8 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -49,7 +52,6 @@ public class CheckBackupDialogController extends P2DialogExtra {
     private final FileDataList fileDataList = new FileDataList();
     private final ProgData progData;
     private final ComboBox<BackupData> cboBackup = new ComboBox<>();
-    private final Button btnStart = new Button("Dateien laden");
     private final TableCheckBackup tableView;
     private final Label lblSum = new Label();
 
@@ -59,6 +61,9 @@ public class CheckBackupDialogController extends P2DialogExtra {
     private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
     private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
     private final RadioButton rbReadError = new RadioButton("Kann nicht gelesen werden");
+    private final Button btnStart = new Button("Dateien laden");
+    private final Button btnRepair = new Button("Reparieren");
+    private final ObservableList<FileData> errorList = FXCollections.observableArrayList();
 
     public CheckBackupDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.CHECK_BACKUP_DIALOG_SIZE, "Backup prüfen",
@@ -75,9 +80,11 @@ public class CheckBackupDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+        btnRepair.setOnAction(a -> RepairFactory.repairBackup(backupInfo, errorList));
+        btnRepair.setDisable(true);
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
-        getHboxLeft().getChildren().add(hBox);
+        getHboxLeft().getChildren().addAll(hBox, btnRepair);
 
         init();
         addTable();
@@ -97,10 +104,11 @@ public class CheckBackupDialogController extends P2DialogExtra {
                     for (FileData fileData : this.fileDataList) {
                         if (fileData.isError() || fileData.isDiff() || !fileData.isExistInBackup() || !fileData.isExistInData()) {
                             found = true;
-                            break;
+                            errorList.add(fileData);
                         }
                     }
                     if (found) {
+                        btnRepair.setDisable(false);
                         rbNotOk.setSelected(true);
                     }
                     this.setPredicate();
@@ -113,6 +121,8 @@ public class CheckBackupDialogController extends P2DialogExtra {
         cboBackup.getSelectionModel().selectLast();
 
         btnStart.setOnAction(a -> {
+            errorList.clear();
+            btnRepair.setDisable(true);
             BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
             if (backupData == null) {
                 return;
