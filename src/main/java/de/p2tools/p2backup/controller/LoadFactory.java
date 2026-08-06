@@ -39,15 +39,12 @@ public class LoadFactory {
 
             } else {
                 // dann ist es noch nicht gelaufen
-//                BackupInfo backupInfo = new BackupInfo();
-//                backupInfo.setName(baInfo.getName());
-//                backupInfo.setBackupPath(baInfo.getBackupPath());
-//                backupInfo.setLastStartDate(baInfo.getLastStartDate());
-//                tmp.add(backupInfo);
                 tmp.add(baInfo);
             }
         });
 
+        // da haben sich die backupInfos geändert!!
+        ProgData.getInstance().backupInfoProperty.set(null);
         ProgData.getInstance().backupInfoList.setAll(tmp);
     }
 

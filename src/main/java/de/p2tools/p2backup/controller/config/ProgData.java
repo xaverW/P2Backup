@@ -82,6 +82,12 @@ public class ProgData {
         worker = new Worker(this);
         WINDOWS = SystemUtils.IS_OS_WINDOWS;
         colorWorker = new ColorWorker(this);
+        backupInfoProperty.addListener((u, o, n) -> {
+            System.out.println("BA-INFO");
+        });
+        backupInfoList.addListener((u, o, n) -> {
+            System.out.println("BA_INFO_LIST");
+        });
     }
 
     public synchronized static ProgData getInstance(String dir) {
