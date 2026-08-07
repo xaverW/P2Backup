@@ -12,6 +12,7 @@ import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.gui.dialog.BackupErrorListDialogController;
+import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.tools.P2Wait;
 import javafx.application.Platform;
@@ -83,6 +84,10 @@ public class CopyDiffFactory {
                 }
                 case REPAIR -> {
                     if (!RepairFactory.repairBackup(backupInfo, errorList)) {
+                        P2Alert.showErrorAlert("Dateien aus dem Backup löschen",
+                                "Es konnten nicht alle fehlerhaften Dateien aus dem " +
+                                        "Backup gelöscht werden");
+
                         return false;
                     }
                 }
@@ -97,7 +102,7 @@ public class CopyDiffFactory {
         oldFileList.forEach(fileData -> {
             if (!fileData.getFilePathStr().isEmpty() &&
                     !fileData.getToPathStr().isEmpty() &&
-                    !fileData.isError()) {
+                    !fileData.isErrorHash()) {
                 oldBackupFileMap.put(fileData.getFilePathStr(), fileData);
             }
         });
@@ -112,11 +117,11 @@ public class CopyDiffFactory {
             backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
             backupInfo.runnerDto.addRunnerAlreadyDone();
             FileHashFactory.setFileDataHash(backupInfo, fileData);
-            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (backupInfo.runnerDto.isStop()) {
                 return false;
             }
-            if (fileData.isError()) {
+            if (fileData.isErrorHash()) {
                 continue;
             }
 

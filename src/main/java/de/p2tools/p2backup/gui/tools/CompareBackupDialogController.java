@@ -166,29 +166,23 @@ public class CompareBackupDialogController extends P2DialogExtra {
     private void setPredicate() {
         Predicate<FileData> predicate = fileData -> true;
         if (rbNotOk.isSelected()) {
-            Predicate<FileData> prDiff = FileDataProps::isDiff;
-
-            Predicate<FileData> prData = FileDataProps::isExistInData;
-            prData = prData.and(fileData -> !fileData.isExistInBackup());
-
-            Predicate<FileData> prBackup = FileDataProps::isExistInBackup;
-            prBackup = prBackup.and(fileData -> !fileData.isExistInData());
-
-            predicate = predicate.and(prDiff.or(prData).or(prBackup));
+            Predicate<FileData> prDiff = FileDataProps::isErrorDiff;
+            Predicate<FileData> prData = FileDataProps::isOnlyInData;
+            Predicate<FileData> prBackup = FileDataProps::isOnlyInBackup;
+            Predicate<FileData> prHash = FileDataProps::isErrorHash;
+            predicate = predicate.and(prDiff.or(prData).or(prBackup).or(prHash));
 
         } else if (rbDiff.isSelected()) {
-            predicate = predicate.and(FileDataProps::isDiff);
+            predicate = predicate.and(FileDataProps::isErrorDiff);
 
         } else if (rbOnlyData.isSelected()) {
-            predicate = predicate.and(FileDataProps::isExistInData);
-            predicate = predicate.and(fileData -> !fileData.isExistInBackup());
+            predicate = predicate.and(FileDataProps::isOnlyInData);
 
         } else if (rbOnlyBackup.isSelected()) {
-            predicate = predicate.and(fileData -> !fileData.isExistInData());
-            predicate = predicate.and(FileDataProps::isExistInBackup);
+            predicate = predicate.and(FileDataProps::isOnlyInBackup);
 
         } else if (rbReadError.isSelected()) {
-            predicate = predicate.and(FileDataProps::isError);
+            predicate = predicate.and(FileDataProps::isErrorHash);
         }
 
         fileDataList.getFilteredList().setPredicate(predicate);

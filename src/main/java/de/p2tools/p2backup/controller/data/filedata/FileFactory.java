@@ -64,6 +64,7 @@ public class FileFactory {
         if (path.endsWith(File.separator)) {
             path = path.substring(0, path.length() - 1);
         }
+        fileData.setToPathStr(toPath);
 
         return path;
     }

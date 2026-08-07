@@ -36,12 +36,21 @@ public class FileDataProps implements Comparable<FileData> {
 
     // Hash
     private String hash = "";
-    private boolean error = false; // Hash kann nicht erstellt werden, nicht zugreifbar
+    private boolean error = false;
 
     // ist nur für den Vergleich Backup/Data
-    private boolean diff = false; // Dateien sind unterschiedlich
-    private boolean existInData = false; // ist in den Daten
-    private boolean existInBackup = false; // ist im Backup
+    private boolean errorDiff = false; // Dateien sind unterschiedlich
+    private boolean errorHash = false; // Hash kann nicht erstellt werden, nicht zugreifbar
+    private boolean onlyInData = false; // nur in den Daten
+    private boolean onlyInBackup = false; // nur im Backup
+
+    public void resetError() {
+        setError(false);
+        setErrorDiff(false);
+        setErrorHash(false);
+        setOnlyInData(false);
+        setOnlyInBackup(false);
+    }
 
     public long getId() {
         return id;
@@ -129,28 +138,36 @@ public class FileDataProps implements Comparable<FileData> {
         this.error = error;
     }
 
-    public boolean isDiff() {
-        return diff;
+    public boolean isErrorHash() {
+        return errorHash;
     }
 
-    public void setDiff(boolean diff) {
-        this.diff = diff;
+    public void setErrorHash(boolean errorHash) {
+        this.errorHash = errorHash;
     }
 
-    public boolean isExistInBackup() {
-        return existInBackup;
+    public boolean isErrorDiff() {
+        return errorDiff;
     }
 
-    public void setExistInBackup(boolean existInBackup) {
-        this.existInBackup = existInBackup;
+    public void setErrorDiff(boolean errorDiff) {
+        this.errorDiff = errorDiff;
     }
 
-    public boolean isExistInData() {
-        return existInData;
+    public boolean isOnlyInData() {
+        return onlyInData;
     }
 
-    public void setExistInData(boolean existInData) {
-        this.existInData = existInData;
+    public void setOnlyInData(boolean onlyInData) {
+        this.onlyInData = onlyInData;
+    }
+
+    public boolean isOnlyInBackup() {
+        return onlyInBackup;
+    }
+
+    public void setOnlyInBackup(boolean onlyInBackup) {
+        this.onlyInBackup = onlyInBackup;
     }
 
     @Override

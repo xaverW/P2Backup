@@ -131,7 +131,7 @@ public class DirCreateHash {
             FileData fileData = FileHashFactory.getFileDataHash(backupInfo,
                     toPath, quick, file, followLink);
             if (fileData != null) {
-                fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
+                fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
                 fileDataList.add(fileData);
             }
 

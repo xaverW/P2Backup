@@ -137,10 +137,11 @@ public class FileData extends FileDataProps {
         fileData.setSize(getSize());
         fileData.setLink(isLink());
         fileData.setHash(getHash());
-        fileData.setDiff(isDiff());
         fileData.setError(isError());
-        fileData.setExistInData(isExistInData());
-        fileData.setExistInBackup(isExistInBackup());
+        fileData.setErrorDiff(isErrorDiff());
+        fileData.setErrorHash(isErrorHash());
+        fileData.setOnlyInData(isOnlyInData());
+        fileData.setOnlyInBackup(isOnlyInBackup());
 
         return fileData;
     }

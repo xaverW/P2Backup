@@ -68,14 +68,22 @@ public class TableBackupError extends PTable<FileData> {
         btnColumn.setCellFactory(new CellBackuErrorOpenFileButton<>(stageProp).cellFactory);
 
         final TableColumn<FileData, Boolean> diffColumn = new TableColumn<>("Verändert");
-        diffColumn.setCellValueFactory(new PropertyValueFactory<>("diff"));
+        diffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
         diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
-        final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Fehlt");
-        toColumn.setCellValueFactory(new PropertyValueFactory<>("error"));
-        toColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+//        final TableColumn<FileData, Boolean> hashColumn = new TableColumn<>("Hash");
+//        hashColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
+//        hashColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+//
+        final TableColumn<FileData, Boolean> onlyDataColumn = new TableColumn<>("Fehlt");
+        onlyDataColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
+        onlyDataColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zu viel");
+        onlyBackupColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
+        onlyBackupColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
         pathFileColumn.setPrefWidth(500);
-        getColumns().addAll(pathFileColumn, btnColumn, diffColumn, toColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, diffColumn/*, hashColumn*/, onlyDataColumn, onlyBackupColumn);
     }
 }

@@ -31,6 +31,7 @@ import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableCheckBackup;
 import de.p2tools.p2lib.P2LibConst;
+import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.application.Platform;
@@ -57,10 +58,10 @@ public class CheckBackupDialogController extends P2DialogExtra {
 
     private final RadioButton rbAll = new RadioButton("Alles");
     private final RadioButton rbNotOk = new RadioButton("Fehler");
-    private final RadioButton rbDiff = new RadioButton("Datei ist verändert");
+    private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
     private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
     private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
-    private final RadioButton rbReadError = new RadioButton("Kann nicht gelesen werden");
+    private final RadioButton rbErrorHash = new RadioButton("Kann nicht gelesen werden");
     private final Button btnStart = new Button("Dateien laden");
     private final Button btnRepair = new Button("Reparieren");
     private final ObservableList<FileData> errorList = FXCollections.observableArrayList();
@@ -80,7 +81,13 @@ public class CheckBackupDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
-        btnRepair.setOnAction(a -> RepairFactory.repairBackup(backupInfo, errorList));
+        btnRepair.setOnAction(a -> {
+            if (!RepairFactory.repairBackup(backupInfo, errorList)) {
+                P2Alert.showErrorAlert(getStage(), "Dateien aus dem Backup löschen",
+                        "Es konnten nicht alle fehlerhaften Dateien aus dem " +
+                                "Backup gelöscht werden");
+            }
+        });
         btnRepair.setDisable(true);
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
@@ -102,7 +109,8 @@ public class CheckBackupDialogController extends P2DialogExtra {
                     this.fileDataList.setAll(fileDataList);
                     boolean found = false;
                     for (FileData fileData : this.fileDataList) {
-                        if (fileData.isError() || fileData.isDiff() || !fileData.isExistInBackup() || !fileData.isExistInData()) {
+                        if (fileData.isErrorDiff() || fileData.isOnlyInData() || fileData.isOnlyInBackup() ||
+                                fileData.isErrorHash()) {
                             found = true;
                             errorList.add(fileData);
                         }
@@ -147,53 +155,46 @@ public class CheckBackupDialogController extends P2DialogExtra {
         ToggleGroup tg = new ToggleGroup();
         rbAll.setToggleGroup(tg);
         rbNotOk.setToggleGroup(tg);
-        rbDiff.setToggleGroup(tg);
+        rbErrorDiff.setToggleGroup(tg);
         rbOnlyData.setToggleGroup(tg);
         rbOnlyBackup.setToggleGroup(tg);
-        rbReadError.setToggleGroup(tg);
+        rbErrorHash.setToggleGroup(tg);
         rbAll.setSelected(true);
 
         HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
         hBox1.getChildren().addAll(rbAll, rbNotOk, P2GuiTools.getHBoxGrower(), lblSum);
         HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
-        hBox2.getChildren().addAll(rbDiff, rbOnlyData, rbOnlyBackup, rbReadError);
+        hBox2.getChildren().addAll(rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash);
         getVBoxCont().getChildren().addAll(hBox1, hBox2);
 
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
-        rbDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
+        rbErrorDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOnlyData.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOnlyBackup.selectedProperty().addListener((u, o, n) -> setPredicate());
-        rbReadError.selectedProperty().addListener((u, o, n) -> setPredicate());
+        rbErrorHash.selectedProperty().addListener((u, o, n) -> setPredicate());
     }
 
     private void setPredicate() {
         Predicate<FileData> predicate = fileData -> true;
+        Predicate<FileData> prErrorDiff = FileDataProps::isErrorDiff;
+        Predicate<FileData> prOnlyData = FileDataProps::isOnlyInData;
+        Predicate<FileData> prOnlyBackup = FileDataProps::isOnlyInBackup;
+        Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
         if (rbNotOk.isSelected()) {
-            Predicate<FileData> prError = FileDataProps::isError;
-            Predicate<FileData> prDiff = FileDataProps::isDiff;
+            predicate = predicate.and(prErrorHash.or(prErrorDiff.or(prOnlyData).or(prOnlyBackup)));
 
-            Predicate<FileData> prData = FileDataProps::isExistInData;
-            prData = prData.and(fileData -> !fileData.isExistInBackup());
-
-            Predicate<FileData> prBackup = FileDataProps::isExistInBackup;
-            prBackup = prBackup.and(fileData -> !fileData.isExistInData());
-
-            predicate = predicate.and(prError.or(prDiff.or(prData).or(prBackup)));
-
-        } else if (rbDiff.isSelected()) {
-            predicate = predicate.and(FileDataProps::isDiff);
+        } else if (rbErrorDiff.isSelected()) {
+            predicate = predicate.and(prErrorDiff);
 
         } else if (rbOnlyData.isSelected()) {
-            predicate = predicate.and(FileDataProps::isExistInData);
-            predicate = predicate.and(fileData -> !fileData.isExistInBackup());
+            predicate = predicate.and(prOnlyData);
 
         } else if (rbOnlyBackup.isSelected()) {
-            predicate = predicate.and(fileData -> !fileData.isExistInData());
-            predicate = predicate.and(FileDataProps::isExistInBackup);
+            predicate = predicate.and(prOnlyBackup);
 
-        } else if (rbReadError.isSelected()) {
-            predicate = predicate.and(FileDataProps::isError);
+        } else if (rbErrorHash.isSelected()) {
+            predicate = predicate.and(prErrorHash);
         }
 
         fileDataList.getFilteredList().setPredicate(predicate);

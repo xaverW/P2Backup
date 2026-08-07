@@ -65,23 +65,27 @@ public class CopyFileErrorDialogController extends P2DialogExtra {
     public void make() {
         Button btnHelp;
         if (isFile) {
-            btnHelp = PIconFactory.getHelpButton(getStage(), "Datei kopieren",
-                    "Die Datei\n\n" +
-                            file + "\n\n kann nicht kopiert werden. Es kann das ganze Backup " +
-                            "abgebrochen werden oder die Datei wird übersprungen. Hier ist möglich auszuwählen " +
-                            "ob nur die eine Datei übersprungen wird oder auch alle " +
+            btnHelp = PIconFactory.getHelpButton(getStage(), "Datei Lesen",
+                    "Auf die Datei\n\n" +
+                            file + "\n\n kann nicht zugegriffen werden. Soll alles abgebrochen " +
+                            "werden oder soll die Datei übersprungen werden?" +
+                            "\n\n" +
+                            "Es kann auch ausgewählt " +
+                            "ob nur diese eine Datei übersprungen wird oder auch alle " +
                             "noch folgenden Dateien.");
         } else {
             btnHelp = PIconFactory.getHelpButton(getStage(), "Pfad lesen",
                     "Der Pfad\n\n" +
                             file + "\n\n kann nicht gelesen werden. Es kann das " +
-                            "abgebrochen werden oder der Pfad wird übersprungen. Hier ist möglich auszuwählen " +
-                            "ob nur die ein Pfad übersprungen wird oder auch alle " +
+                            "abgebrochen werden oder der Pfad wird übersprungen." +
+                            "\n\n" +
+                            "Es kann auch ausgewählt werden, " +
+                            "ob nur dieser Pfad übersprungen wird oder auch alle " +
                             "noch folgenden Pfade.");
         }
         Text text;
         if (isFile) {
-            text = P2Text.getTextBold("Datei kann nicht kopiert werden:");
+            text = P2Text.getTextBold("Datei kann nicht gelesen werden:");
         } else {
             text = P2Text.getTextBold("Pfad kann nicht gelesen werden:");
         }

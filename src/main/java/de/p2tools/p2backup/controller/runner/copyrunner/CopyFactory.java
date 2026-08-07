@@ -55,8 +55,8 @@ public class CopyFactory {
             }
 
             FileHashFactory.setFileDataHash(backupInfo, fileData);
-            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
-            if (fileData.isError()) {
+            fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            if (fileData.isErrorHash()) {
                 continue;
             }
 
@@ -96,8 +96,8 @@ public class CopyFactory {
             }
 
             FileHashFactory.setFileDataHash(backupInfo, fileData);
-            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
-            if (fileData.isError()) {
+            fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            if (fileData.isErrorHash()) {
                 continue;
             }
 
@@ -131,8 +131,8 @@ public class CopyFactory {
             }
 
             FileHashFactory.setFileDataHash(backupInfo, fileData);
-            fileData.setError(fileData.getHash().equals(FileFactory.HASH_ERROR));
-            if (fileData.isError()) {
+            fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
+            if (fileData.isErrorHash()) {
                 continue;
             }
 

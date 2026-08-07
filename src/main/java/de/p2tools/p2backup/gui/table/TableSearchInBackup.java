@@ -71,7 +71,7 @@ public class TableSearchInBackup extends PTable<FileData> {
         pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("fileNameStr"));
 
         final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Fehler");
-        errorColumn.setCellValueFactory(new PropertyValueFactory<>("error"));
+        errorColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
         TableFactory.columnFactoryBoolean(errorColumn);
 
         final TableColumn<FileData, String> btnColumn = new TableColumn<>("Öffnen");

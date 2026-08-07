@@ -82,7 +82,7 @@ public class ToolCheckBackupQuick {
 
         } else {
             // ==============
-            CompareFactory.compareQuick(fileListDb, fileListBackup, errorList);
+            CompareFactory.compareQuick(backupInfo, fileListDb, fileListBackup, errorList);
         }
         atomicBoolean.set(false);
     }

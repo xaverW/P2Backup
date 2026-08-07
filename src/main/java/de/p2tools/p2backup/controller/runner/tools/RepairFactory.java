@@ -21,17 +21,17 @@ public class RepairFactory {
 
     private static boolean deleteErrorFiles(List<FileData> errorList) {
         FileData fileData = null;
+        boolean ret = true;
         try {
             for (FileData f : errorList) {
                 fileData = f;
-                if (fileData.isDiff()) {
-                    // nur dann existiert die Datei
+                if (fileData.isErrorDiff() || fileData.isOnlyInBackup() || fileData.isErrorHash()) {
                     Path baPath = fileData.getBackupFilePath();
                     if (baPath.toFile().exists()) {
                         if (!baPath.toFile().delete()) {
                             P2Log.errorLog(956234780, "Fehlerhafte Dateien aus dem Backup löschen");
                             P2Log.errorLog(956234780, baPath.toString());
-                            return false;
+                            ret = false;
                         }
                     }
                 }
@@ -42,9 +42,9 @@ public class RepairFactory {
             if (fileData != null) {
                 P2Log.errorLog(959562354, fileData.getBackupFilePathStr());
             }
-            return false;
+            ret = false;
         }
 
-        return true;
+        return ret;
     }
 }

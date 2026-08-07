@@ -59,17 +59,17 @@ public class TableCompareDir extends PTable<FileData> {
         pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("filePathStr"));
 
         final TableColumn<FileData, Boolean> diffColumn = new TableColumn<>("Verändert");
-        diffColumn.setCellValueFactory(new PropertyValueFactory<>("diff"));
+        diffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
         diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
         final TableColumn<FileData, Boolean> fromColumn = new TableColumn<>("In den Daten");
-        fromColumn.setCellValueFactory(new PropertyValueFactory<>("existInData"));
+        fromColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
         fromColumn.setCellFactory(new P2CellCheckBox().cellFactory);
         final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Im Backup");
-        toColumn.setCellValueFactory(new PropertyValueFactory<>("existInBackup"));
+        toColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
         toColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
         final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Fehler");
-        errorColumn.setCellValueFactory(new PropertyValueFactory<>("error"));
+        errorColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
         TableFactory.columnFactoryBoolean(errorColumn);
 
         pathFileColumn.setPrefWidth(500);

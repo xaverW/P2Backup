@@ -66,21 +66,24 @@ public class TableCheckBackup extends PTable<FileData> {
         btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
         btnColumn.setCellFactory(new CellCheckBackupOpenFileButton<>(stageProp).cellFactory);
 
-        final TableColumn<FileData, Boolean> diffColumn = new TableColumn<>("Verändert");
-        diffColumn.setCellValueFactory(new PropertyValueFactory<>("diff"));
-        diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> fromColumn = new TableColumn<>("Soll");
-        fromColumn.setCellValueFactory(new PropertyValueFactory<>("existInData"));
-        fromColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Ist");
-        toColumn.setCellValueFactory(new PropertyValueFactory<>("existInBackup"));
-        toColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Lesefehler");
-        errorColumn.setCellValueFactory(new PropertyValueFactory<>("error"));
-        TableFactory.columnFactoryBoolean(errorColumn);
+        final TableColumn<FileData, Boolean> errorDiffColumn = new TableColumn<>("Verändert");
+        errorDiffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
+        errorDiffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> onlyDataColumn = new TableColumn<>("Fehlt");
+        onlyDataColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
+        onlyDataColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zu viel");
+        onlyBackupColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
+        onlyBackupColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> errorHashColumn = new TableColumn<>("Lesefehler");
+        errorHashColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
+        TableFactory.columnFactoryBoolean(errorHashColumn);
 
         pathFileColumn.setPrefWidth(500);
-        getColumns().addAll(pathFileColumn, btnColumn, diffColumn, fromColumn, toColumn, errorColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, errorDiffColumn, onlyDataColumn, onlyBackupColumn, errorHashColumn);
 
     }
 }

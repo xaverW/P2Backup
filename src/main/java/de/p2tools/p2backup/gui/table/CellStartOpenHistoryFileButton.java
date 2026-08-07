@@ -67,7 +67,7 @@ public class CellStartOpenHistoryFileButton<S, T> extends TableCell<S, T> {
                 btnStart.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnStart.setTooltip(new Tooltip("Gespeicherte Datei öffnen"));
                 btnStart.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
-                btnStart.setDisable(fileData.isError());
+                btnStart.setDisable(fileData.isErrorHash());
 
                 btnStart.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();

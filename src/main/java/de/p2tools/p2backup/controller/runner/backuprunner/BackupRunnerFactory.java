@@ -311,7 +311,7 @@ public class BackupRunnerFactory {
         // noch die fehlerhaften löschen
         ArrayList<FileData> removeList = new ArrayList<>();
         for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
-            if (fileData.isError()) {
+            if (fileData.isErrorHash()) { // todo
                 removeList.add(fileData);
             }
         }
