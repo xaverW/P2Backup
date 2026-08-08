@@ -18,8 +18,9 @@
 package de.p2tools.p2backup.gui.table;
 
 import de.p2tools.p2backup.controller.data.filedata.FileData;
+import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
-import de.p2tools.p2lib.guitools.P2Open;
+import de.p2tools.p2backup.gui.dialog.CopyDialogController;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -32,17 +33,15 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.nio.file.Path;
-
-public class CellStartOpenFileButton<S, T> extends TableCell<S, T> {
+public class CellCopyFileButton<S, T> extends TableCell<S, T> {
 
     private final ObjectProperty<Stage> stage;
 
-    public CellStartOpenFileButton(ObjectProperty<Stage> stage) {
+    public CellCopyFileButton(ObjectProperty<Stage> stage) {
         this.stage = stage;
     }
 
-    public final Callback<TableColumn<FileData, String>, TableCell<FileData, String>> cellFactory
+    public final Callback<TableColumn<FileData, String>, TableCell<FileData, String>> cellFileFactory
             = (final TableColumn<FileData, String> param) -> {
 
         final TableCell<FileData, String> cell = new TableCell<>() {
@@ -64,44 +63,68 @@ public class CellStartOpenFileButton<S, T> extends TableCell<S, T> {
 
                 FileData fileData = getTableView().getItems().get(getIndex());
 
-                final Button btnStart = new Button("");
-                btnStart.getStyleClass().addAll("btnFunction", "btnFuncTable");
-                btnStart.setTooltip(new Tooltip("Gespeicherte Datei öffnen"));
-                btnStart.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
-                btnStart.setDisable(fileData.isErrorHash());
+                final Button btnCopy = new Button("");
+                btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
+                btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
+                btnCopy.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
+                btnCopy.setDisable(fileData.isErrorHash());
 
-                btnStart.setOnAction((ActionEvent event) -> {
+                btnCopy.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
-                    P2Open.openFile(stage.get(), fileData.getBackupFilePathStr());
+                    new CopyDialogController(stage.get(), fileData.getBackupFilePathStr());
                     getTableView().refresh();
                     getTableView().requestFocus();
                 });
 
+                btnCopy.setMinHeight(18);
+                btnCopy.setMaxHeight(18);
+                hbox.getChildren().addAll(btnCopy);
+                setGraphic(hbox);
+            }
+        };
+        return cell;
+    };
 
-                final Button btnOpenDirectory;
-                btnOpenDirectory = new Button();
-                btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
-                btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
-                btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+    public final Callback<TableColumn<HistoryFileData, String>, TableCell<HistoryFileData, String>> cellHistoryFactory
+            = (final TableColumn<HistoryFileData, String> param) -> {
 
-                btnOpenDirectory.setOnAction((ActionEvent event) -> {
+        final TableCell<HistoryFileData, String> cell = new TableCell<>() {
+
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
+                }
+
+                final HBox hbox = new HBox();
+                hbox.setSpacing(5);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setPadding(new Insets(0, 2, 0, 2));
+
+                HistoryFileData fileData = getTableView().getItems().get(getIndex());
+
+                final Button btnCopy = new Button("");
+                btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
+                btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
+                btnCopy.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
+                btnCopy.setDisable(fileData.isErrorHash());
+
+                btnCopy.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
-                    Path path = fileData.getParentBackupFilePath();
-                    if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
-                        P2Open.openDir(stage.get(), path.toFile().toString());
-                    }
-
+                    new CopyDialogController(stage.get(), fileData.getBackupFilePathStr());
                     getTableView().refresh();
                     getTableView().requestFocus();
                 });
 
-                btnStart.setMinHeight(18);
-                btnStart.setMaxHeight(18);
-                btnOpenDirectory.setMinHeight(18);
-                btnOpenDirectory.setMaxHeight(18);
-                hbox.getChildren().addAll(btnStart, btnOpenDirectory);
+                btnCopy.setMinHeight(18);
+                btnCopy.setMaxHeight(18);
+                hbox.getChildren().addAll(btnCopy);
                 setGraphic(hbox);
             }
         };

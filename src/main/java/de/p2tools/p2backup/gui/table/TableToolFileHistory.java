@@ -18,6 +18,7 @@ package de.p2tools.p2backup.gui.table;
 
 import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
 import de.p2tools.p2lib.guitools.ptable.P2TableFactory;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -27,9 +28,9 @@ import javafx.stage.Stage;
 import java.time.LocalDateTime;
 
 public class TableToolFileHistory extends PTable<HistoryFileData> {
-    private final Stage stage;
+    private final ObjectProperty<Stage> stage;
 
-    public TableToolFileHistory(Table.TABLE_ENUM table_enum, Stage stage) {
+    public TableToolFileHistory(Table.TABLE_ENUM table_enum, ObjectProperty<Stage> stage) {
         super(table_enum);
         this.table_enum = table_enum;
         this.stage = stage;
@@ -58,20 +59,19 @@ public class TableToolFileHistory extends PTable<HistoryFileData> {
         startDateColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         startDateColumn.setCellFactory(new CellBackupInfoStartDate().cellFactory);
 
-//        final TableColumn<HistoryFileData, String> nameColumn = new TableColumn<>("Dateiname");
-//        nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileNameStr"));
-//
-//        final TableColumn<HistoryFileData, String> pathColumn = new TableColumn<>("Pfad");
-//        pathColumn.setCellValueFactory(new PropertyValueFactory<>("corrParentFilePathStr"));
-
         final TableColumn<HistoryFileData, String> btnColumn = new TableColumn<>("Öffnen");
         btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
         btnColumn.setCellFactory(new CellStartOpenHistoryFileButton<>(stage).cellFactory);
+
+        final TableColumn<HistoryFileData, String> copyColumn = new TableColumn<>("Kopieren");
+        copyColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
+        copyColumn.setCellFactory(new CellCopyFileButton<>(stage).cellHistoryFactory);
+
 
         startDateColumn.setPrefWidth(200);
 //        nameColumn.setPrefWidth(200);
 //        pathColumn.setPrefWidth(500);
         btnColumn.setPrefWidth(150);
-        getColumns().addAll(startDateColumn, /*nameColumn, pathColumn,*/ btnColumn);
+        getColumns().addAll(startDateColumn, btnColumn, copyColumn);
     }
 }

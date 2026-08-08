@@ -21,10 +21,13 @@ public class PIconFactory {
         BTN_MINUS("mdi-minus-circle-outline", 18),
         BTN_NEXT("mdi-chevron-double-right", 18),
         BTN_PREV("mdi-chevron-double-left", 18),
+        BTN_COPY("mdal-file_copy", 18),
         BTN_QUITT("gmi-power-settings-new", 18),
         BTN_CLEAR("gmi-clear", 18),
+        BTN_RANDOM("mdi-rotate-3d", 18),
         BTN_RESET_1("gmi-radio-button-on", 25),
         BTN_RESET_2("gmi-rotate-right", 30),
+
 
         BTN_LOAD_BACKUP("mdoal-backup", 20),
         BTN_LOAD_BACKUP_BIG_30("mdoal-backup", 30),
@@ -36,6 +39,7 @@ public class PIconFactory {
 
         BTN_ATTENTION_DIALOG("gmi-error-outline", 100),
         BTN_ERROR_DIALOG("mdoal-error", 100),
+        BTN_ERROR_DIALOG_SMALL("mdoal-error", 50),
 
 
         BTN_START_BACKUP("gmi-double-arrow", 14),
@@ -45,6 +49,7 @@ public class PIconFactory {
         TABLE_FILE_DEL("gmi-clear", 15),
         TABLE_DIR_OPEN("mdi2f-folder-open-outline", 16),
         TABLE_START("mdomz-play_arrow", 20),
+        TABLE_COPY("mdal-file_copy", 20),
 
         TOOLBAR_BTN_FORWARD("gmi-navigate-next", 25),
         TOOLBAR_BTN_BACKWARD("gmi-navigate-before", 25),
@@ -101,6 +106,14 @@ public class PIconFactory {
     public static FontIcon getAttentionIcon(String literal) {
         FontIcon fontIcon = new FontIcon();
         fontIcon.setIconSize(100);
+        fontIcon.setIconColor(Paint.valueOf(Color.RED.toString()));
+        fontIcon.setIconLiteral(literal);
+        return fontIcon;
+    }
+
+    public static FontIcon getAttentionIconSmall(String literal) {
+        FontIcon fontIcon = new FontIcon();
+        fontIcon.setIconSize(50);
         fontIcon.setIconColor(Paint.valueOf(Color.RED.toString()));
         fontIcon.setIconLiteral(literal);
         return fontIcon;

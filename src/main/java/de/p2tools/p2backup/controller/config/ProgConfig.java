@@ -22,6 +22,7 @@ import de.p2tools.p2lib.configfile.pdata.P2DataProgConfig;
 import de.p2tools.p2lib.mediathek.download.GetProgramStandardPath;
 import de.p2tools.p2lib.tools.P2InfoFactory;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 
 public class ProgConfig extends P2DataProgConfig {
     private static ProgConfig instance;
@@ -144,6 +145,11 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty SYSTEM_FROM_PATH = addStrProp("system-from-path", ""); // gemerkter Pfad
     public static StringProperty SYSTEM_TO_PATH = addStrProp("system-to-path", ""); // gemerkter Pfad
 
+    // CopyDialog
+    // Finanzreport
+    public static ObservableList<String> CBO_COPY_DIALOG_DEST_DIR = addListProp("cbo-copy-dialog-dest-dir");
+    public static StringProperty COPY_DIALOG_DEST_DIR = addStrProp("copy-dialog-dest-dir");
+    public static StringProperty COPY_DIALOG_DEST_FILE_NAME = addStrProp("copy-dialog-dest-file-name");
 
     // DialogHowHelp
     public static StringProperty DIALOG_HOW_HELP_SIZE = addStrProp("dialog-how-help-size", "900:700");

@@ -60,7 +60,7 @@ public class ToolSearchInBackupDialogController extends P2DialogExtra {
 
         this.progData = ProgData.getInstance();
         this.backupInfoProp.set(backupInfo);
-        this.paneSearchInBackup = new PaneSearchInBackup(getStage(), backupInfoProp.get(), backupDataProp);
+        this.paneSearchInBackup = new PaneSearchInBackup(getStageProp(), backupInfoProp.get(), backupDataProp);
         VBox.setVgrow(paneSearchInBackup, Priority.ALWAYS);
         init(false);
     }

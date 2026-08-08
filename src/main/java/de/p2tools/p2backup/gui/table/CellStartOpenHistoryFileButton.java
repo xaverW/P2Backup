@@ -20,6 +20,7 @@ package de.p2tools.p2backup.gui.table;
 import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.guitools.P2Open;
+import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -35,9 +36,9 @@ import java.nio.file.Path;
 
 public class CellStartOpenHistoryFileButton<S, T> extends TableCell<S, T> {
 
-    private final Stage stage;
+    private final ObjectProperty<Stage> stage;
 
-    public CellStartOpenHistoryFileButton(Stage stage) {
+    public CellStartOpenHistoryFileButton(ObjectProperty<Stage> stage) {
         this.stage = stage;
     }
 
@@ -72,7 +73,7 @@ public class CellStartOpenHistoryFileButton<S, T> extends TableCell<S, T> {
                 btnStart.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
-                    P2Open.openFile(stage, fileData.getBackupFilePathStr());
+                    P2Open.openFile(stage.get(), fileData.getBackupFilePathStr());
                     getTableView().refresh();
                     getTableView().requestFocus();
                 });
@@ -89,7 +90,7 @@ public class CellStartOpenHistoryFileButton<S, T> extends TableCell<S, T> {
                     getTableView().getSelectionModel().select(getIndex());
                     Path path = fileData.getParentBackupFilePath();
                     if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
-                        P2Open.openDir(stage, path.toFile().toString());
+                        P2Open.openDir(stage.get(), path.toFile().toString());
                     }
 
                     getTableView().refresh();

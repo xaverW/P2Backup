@@ -67,15 +67,12 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
     private final Label lblFilePath = new Label();
     private final Label lblFileName = new Label();
 
-    private final ProgData progData;
-
-    public ToolFileHistoryDialogController(BackupInfo backupInfo) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.FILE_HISTORY_DIALOG_SIZE, "Dateien im Backup suchen",
+    public ToolFileHistoryDialogController(ProgData progData) {
+        super(progData.primaryStage, ProgConfig.FILE_HISTORY_DIALOG_SIZE, "Dateien im Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 
-        this.progData = ProgData.getInstance();
-        this.backupInfoProp.set(backupInfo);
-        this.tableView = new TableToolFileHistory(Table.TABLE_ENUM.FILE_HISTORY, getStage());
+        this.backupInfoProp.set(progData.backupInfoProperty.get());
+        this.tableView = new TableToolFileHistory(Table.TABLE_ENUM.FILE_HISTORY, getStageProp());
         init(false);
     }
 

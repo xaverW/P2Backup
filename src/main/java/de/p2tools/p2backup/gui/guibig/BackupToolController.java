@@ -76,7 +76,7 @@ public class BackupToolController extends VBox {
                 new ToolBackupInfoDialogController(progData.backupInfoProperty.get());
             }
         });
-        Label lblInfo = new Label("Damit werden Infos über die " +
+        Label lblInfo = new Label("Hier werden Infos über die " +
                 "Backups angezeigt.");
         lblInfo.setWrapText(true);
         lblInfo.getStyleClass().add("lblToolInfo");
@@ -90,7 +90,8 @@ public class BackupToolController extends VBox {
                 new ToolSearchInBackupDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
-        Label lblBackup = new Label("Damit kann man Dateien in einem Backup suchen.");
+        Label lblBackup = new Label("Damit kann man Dateien in einem Backup suchen. Dateien können auch aus dem " +
+                "Backup kopiert werden.");
         lblBackup.setWrapText(true);
         lblBackup.getStyleClass().add("lblToolInfo");
 
@@ -100,11 +101,10 @@ public class BackupToolController extends VBox {
         btnHistory.setMaxWidth(Double.MAX_VALUE);
         btnHistory.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new ToolFileHistoryDialogController(progData.backupInfoProperty.get()).showDialog();
+                new ToolFileHistoryDialogController(progData).showDialog();
             }
         });
-        Label lblHistory = new Label("Hier ist der Verlauf der Änderungen einer " +
-                "Datei, zu sehen.");
+        Label lblHistory = new Label("Hier sieht man den Änderungs-Verlauf von Dateien.");
         lblHistory.setWrapText(true);
         lblHistory.getStyleClass().add("lblToolInfo");
 
@@ -117,8 +117,8 @@ public class BackupToolController extends VBox {
                 new ToolCompareBackupDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
-        Label lblCompare = new Label("Damit kann man den Ordner mit den Daten mit " +
-                "einem Backup vergleichen. So kann geprüft werden, was sich geändert hat.");
+        Label lblCompare = new Label("Damit können die Daten mit " +
+                "einem Backup vergleichen werden. So kann geprüft werden, was sich geändert hat.");
         lblCompare.setWrapText(true);
         lblCompare.getStyleClass().add("lblToolInfo");
 
@@ -131,7 +131,7 @@ public class BackupToolController extends VBox {
                 new ToolCheckBackupDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
-        Label lblCheck = new Label("Hiermit kann überprüft werden, ob sich ein Backup geändert hat. Es wird " +
+        Label lblCheck = new Label("Hiermit kann überprüft werden, ob sich ein Backup verändert hat. Es wird " +
                 "angezeigt, ob im Backup Dateien geändert oder entfernt wurden.");
         lblCheck.setWrapText(true);
         lblCheck.getStyleClass().add("lblToolInfo");

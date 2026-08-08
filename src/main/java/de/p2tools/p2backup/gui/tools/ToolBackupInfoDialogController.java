@@ -71,6 +71,10 @@ public class ToolBackupInfoDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+
+        HBox hBox = addProgress();
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+        getHboxLeft().getChildren().addAll(hBox);
         add();
     }
 
@@ -173,8 +177,7 @@ public class ToolBackupInfoDialogController extends P2DialogExtra {
         btnSearch.setOnAction(a -> search());
 
         HBox hBoxBtn = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfo.getName()), P2GuiTools.getHBoxGrower(),
-                new PProgressBar(backupInfo, true, false, true), btnSearch);
+        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfo.getName()), P2GuiTools.getHBoxGrower(), btnSearch);
         hBoxBtn.setAlignment(Pos.CENTER_RIGHT);
         hBoxBtn.getStyleClass().add("infoDialogTop");
         getVBoxCont().getChildren().addAll(hBoxBtn);
@@ -182,5 +185,20 @@ public class ToolBackupInfoDialogController extends P2DialogExtra {
         vBoxGrid.setMaxHeight(Double.MAX_VALUE);
         VBox.setVgrow(vBoxGrid, Priority.ALWAYS);
         getVBoxCont().getChildren().add(vBoxGrid);
+    }
+
+    private HBox addProgress() {
+        PProgressBar pProgressBar = new PProgressBar(true, true);
+        Button btnStop = new Button();
+        btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
+        btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
+
+        HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
+        hBoxProgress.getChildren().addAll(pProgressBar, btnStop);
+        hBoxProgress.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(pProgressBar, Priority.ALWAYS);
+
+        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
+        return hBoxProgress;
     }
 }

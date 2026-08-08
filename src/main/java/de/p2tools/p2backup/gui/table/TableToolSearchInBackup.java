@@ -29,11 +29,11 @@ import javafx.stage.Stage;
 
 public class TableToolSearchInBackup extends PTable<FileData> {
 
-    private final Stage stage;
+    private final ObjectProperty<Stage> stage;
     private final ObjectProperty<BackupInfo> backupInfoProp;
     private final ObjectProperty<BackupData> backupDataProp;
 
-    public TableToolSearchInBackup(Table.TABLE_ENUM table_enum, Stage stage,
+    public TableToolSearchInBackup(Table.TABLE_ENUM table_enum, ObjectProperty<Stage> stage,
                                    ObjectProperty<BackupInfo> backupInfoProp,
                                    ObjectProperty<BackupData> backupDataProp) {
         super(table_enum);
@@ -70,7 +70,7 @@ public class TableToolSearchInBackup extends PTable<FileData> {
         final TableColumn<FileData, String> pathFileColumn = new TableColumn<>("Dateiname");
         pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("fileNameStr"));
 
-        final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Fehler");
+        final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Lesefehler");
         errorColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
         TableFactory.columnFactoryBoolean(errorColumn);
 
@@ -78,8 +78,12 @@ public class TableToolSearchInBackup extends PTable<FileData> {
         btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
         btnColumn.setCellFactory(new CellStartOpenFileButton<>(stage).cellFactory);
 
+        final TableColumn<FileData, String> copyColumn = new TableColumn<>("Kopieren");
+        copyColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
+        copyColumn.setCellFactory(new CellCopyFileButton<>(stage).cellFileFactory);
+
         pathFileColumn.setPrefWidth(500);
         btnColumn.setPrefWidth(150);
-        getColumns().addAll(pathFileColumn, errorColumn, btnColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, copyColumn, errorColumn);
     }
 }

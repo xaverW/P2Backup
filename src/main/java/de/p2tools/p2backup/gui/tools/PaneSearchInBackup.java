@@ -68,16 +68,16 @@ public class PaneSearchInBackup extends HBox {
     private final Label lblFilePath = new Label("");
     private final Button btnOpenDirectory = new Button();
     private final ProgData progData;
-    private final Stage stage;
+    private final ObjectProperty<Stage> stage;
 
-    public PaneSearchInBackup(Stage stage, BackupInfo backupInfo, ObjectProperty<BackupData> backupDataProp) {
-        this.stage = stage;
+    public PaneSearchInBackup(ObjectProperty<Stage> stage, BackupInfo backupInfo, ObjectProperty<BackupData> backupDataProp) {
         this.progData = ProgData.getInstance();
         this.backupInfoProp.set(backupInfo);
         this.backupDataProp = backupDataProp;
+        this.stage = stage;
 
         this.tableViewFile = new TableToolSearchInBackup(Table.TABLE_ENUM.SHOW_BACKUP_FILES,
-                progData.primaryStage,
+                stage,
                 backupInfoProp, backupDataProp);
         make();
     }
@@ -189,8 +189,8 @@ public class PaneSearchInBackup extends HBox {
             }
         });
 
-        lblPath.getStyleClass().add("p2FileLabel");
-        lblFilePath.getStyleClass().add("p2FileLabel");
+//        lblPath.getStyleClass().add("p2FileLabel");
+//        lblFilePath.getStyleClass().add("p2FileLabel");
 
         btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
@@ -202,7 +202,7 @@ public class PaneSearchInBackup extends HBox {
             }
             Path path = fileData.getParentBackupFilePath();
             if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
-                P2Open.openDir(stage, path.toFile().toString());
+                P2Open.openDir(stage.get(), path.toFile().toString());
             }
         });
         btnOpenDirectory.visibleProperty().bind(lblFilePath.textProperty().isEmpty().not());
