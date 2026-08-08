@@ -67,8 +67,9 @@ public class CopyDialogController extends P2DialogExtra {
     @Override
     public void make() {
         cboDest.init(ProgConfig.CBO_COPY_DIALOG_DEST_DIR, ProgConfig.COPY_DIALOG_DEST_DIR);
+        cboDest.setMaxWidth(Double.MAX_VALUE);
         btnSearch.setTooltip(new Tooltip("Verzeichnis auswählen"));
-        btnSearch.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
+        btnSearch.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
         btnSearch.setOnAction(a -> {
             ProgConfig.COPY_DIALOG_DEST_DIR.set(
                     P2DialogFileChooser.showFileChooser(getStage(), "Datei kopieren", "Ziel auswählen",
@@ -138,8 +139,9 @@ public class CopyDialogController extends P2DialogExtra {
         addOkCancelButtons(btnOk, btnCancel);
         btnOk.disableProperty().bind(ProgConfig.COPY_DIALOG_DEST_DIR.isEmpty().or(txtName.textProperty().isEmpty()));
         btnOk.setOnAction(a -> {
-            copyFile();
-            close();
+            if (copyFile()) {
+                close();
+            }
         });
         btnCancel.setOnAction(a -> close());
     }
@@ -149,8 +151,8 @@ public class CopyDialogController extends P2DialogExtra {
         hBoxErrorMsg.setVisible(destFile.toFile().exists());
     }
 
-    private void copyFile() {
-        P2FileUtils.copyFileToDir(getStage(), Path.of(srcFile), Path.of(ProgConfig.COPY_DIALOG_DEST_DIR.getValueSafe()),
+    private boolean copyFile() {
+        return P2FileUtils.copyFileToDir(getStage(), Path.of(srcFile), Path.of(ProgConfig.COPY_DIALOG_DEST_DIR.getValueSafe()),
                 txtName.getText(), true);
     }
 }

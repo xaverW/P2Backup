@@ -21,7 +21,7 @@ public class PIconFactory {
         BTN_MINUS("mdi-minus-circle-outline", 18),
         BTN_NEXT("mdi-chevron-double-right", 18),
         BTN_PREV("mdi-chevron-double-left", 18),
-        BTN_COPY("mdal-file_copy", 18),
+        BTN_COPY("mdoal-file_copy", 18),
         BTN_QUITT("gmi-power-settings-new", 18),
         BTN_CLEAR("gmi-clear", 18),
         BTN_RANDOM("mdi-rotate-3d", 18),
@@ -49,7 +49,7 @@ public class PIconFactory {
         TABLE_FILE_DEL("gmi-clear", 15),
         TABLE_DIR_OPEN("mdi2f-folder-open-outline", 16),
         TABLE_START("mdomz-play_arrow", 20),
-        TABLE_COPY("mdal-file_copy", 20),
+        TABLE_COPY("mdoal-file_copy", 15),
 
         TOOLBAR_BTN_FORWARD("gmi-navigate-next", 25),
         TOOLBAR_BTN_BACKWARD("gmi-navigate-before", 25),
