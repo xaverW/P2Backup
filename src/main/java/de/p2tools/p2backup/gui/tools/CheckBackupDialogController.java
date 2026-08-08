@@ -87,6 +87,7 @@ public class CheckBackupDialogController extends P2DialogExtra {
                         "Es konnten nicht alle fehlerhaften Dateien aus dem " +
                                 "Backup gelöscht werden");
             }
+            this.fileDataList.clear();
         });
         btnRepair.setDisable(true);
         HBox hBox = addProgress();
@@ -178,20 +179,21 @@ public class CheckBackupDialogController extends P2DialogExtra {
     private void setPredicate() {
         Predicate<FileData> predicate = fileData -> true;
         Predicate<FileData> prErrorDiff = FileDataProps::isErrorDiff;
-        Predicate<FileData> prOnlyData = FileDataProps::isOnlyInData;
-        Predicate<FileData> prOnlyBackup = FileDataProps::isOnlyInBackup;
+        Predicate<FileData> prNotInData = data -> !data.isExistInData();
+        Predicate<FileData> prNotInBackup = data -> !data.isExistInBackup();
         Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
         if (rbNotOk.isSelected()) {
-            predicate = predicate.and(prErrorHash.or(prErrorDiff.or(prOnlyData).or(prOnlyBackup)));
+            predicate = predicate.and(prErrorHash
+                    .or(prErrorDiff).or(prNotInData).or(prNotInBackup).or(prErrorHash));
 
         } else if (rbErrorDiff.isSelected()) {
             predicate = predicate.and(prErrorDiff);
 
         } else if (rbOnlyData.isSelected()) {
-            predicate = predicate.and(prOnlyData);
+            predicate = predicate.and(prNotInBackup);
 
         } else if (rbOnlyBackup.isSelected()) {
-            predicate = predicate.and(prOnlyBackup);
+            predicate = predicate.and(prNotInData);
 
         } else if (rbErrorHash.isSelected()) {
             predicate = predicate.and(prErrorHash);

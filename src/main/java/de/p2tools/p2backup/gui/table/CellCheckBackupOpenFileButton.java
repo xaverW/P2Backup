@@ -68,7 +68,7 @@ public class CellCheckBackupOpenFileButton<S, T> extends TableCell<S, T> {
                 btnStart.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnStart.setTooltip(new Tooltip("Gespeicherte Datei öffnen"));
                 btnStart.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
-                btnStart.setDisable(fileData.isOnlyInData() || fileData.isErrorHash());
+                btnStart.setDisable(!fileData.isExistInBackup() || fileData.isErrorHash());
 
                 btnStart.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();

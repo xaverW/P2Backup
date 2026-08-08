@@ -16,7 +16,9 @@ public class RepairFactory {
         if (!SqlFileData.deleteBackupFileList(backupInfo, errorList)) {
             return false;
         }
-        return deleteErrorFiles(errorList);
+        return true;
+        // zur Sicherheit bleiben die drin!
+        // return deleteErrorFiles(errorList);
     }
 
     private static boolean deleteErrorFiles(List<FileData> errorList) {

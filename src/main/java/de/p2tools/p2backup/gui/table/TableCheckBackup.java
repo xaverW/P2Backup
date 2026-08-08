@@ -74,7 +74,7 @@ public class TableCheckBackup extends PTable<FileData> {
         onlyDataColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
         onlyDataColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
-        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zu viel");
+        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zuviel");
         onlyBackupColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
         onlyBackupColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 

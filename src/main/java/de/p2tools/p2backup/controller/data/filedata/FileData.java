@@ -140,8 +140,8 @@ public class FileData extends FileDataProps {
         fileData.setError(isError());
         fileData.setErrorDiff(isErrorDiff());
         fileData.setErrorHash(isErrorHash());
-        fileData.setOnlyInData(isOnlyInData());
-        fileData.setOnlyInBackup(isOnlyInBackup());
+        fileData.setExistInData(isExistInData());
+        fileData.setExistInBackup(isExistInBackup());
 
         return fileData;
     }

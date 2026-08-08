@@ -71,19 +71,19 @@ public class TableBackupError extends PTable<FileData> {
         diffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
         diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
-//        final TableColumn<FileData, Boolean> hashColumn = new TableColumn<>("Hash");
-//        hashColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
-//        hashColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-//
+        final TableColumn<FileData, Boolean> hashColumn = new TableColumn<>("Hash");
+        hashColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
+        hashColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
         final TableColumn<FileData, Boolean> onlyDataColumn = new TableColumn<>("Fehlt");
         onlyDataColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
         onlyDataColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
-        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zu viel");
+        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zuviel");
         onlyBackupColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
         onlyBackupColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
         pathFileColumn.setPrefWidth(500);
-        getColumns().addAll(pathFileColumn, btnColumn, diffColumn/*, hashColumn*/, onlyDataColumn, onlyBackupColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, diffColumn, onlyDataColumn, onlyBackupColumn, hashColumn);
     }
 }

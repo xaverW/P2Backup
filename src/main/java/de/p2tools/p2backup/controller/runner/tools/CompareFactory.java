@@ -23,20 +23,23 @@ public class CompareFactory {
                                FileDataList fileListData, FileDataList fileListBackup,
                                FileDataList resultList, boolean compare) {
         // beim Backup prüfen ist fileListData die aus der DB, fileListBackup die aus dem Backup-Ordner
-        fileListData.forEach(FileDataProps::resetError);
-        fileListBackup.forEach(FileDataProps::resetError);
-
-        // vergleichen
         final HashMap<String, FileData> dataMap = new HashMap<>();
-        fileListData.forEach(file -> {
-            dataMap.put(file.getFilePathStr(), file);
-            resultList.add(file);
-
-            if (file.getHash().equals(FileFactory.HASH_ERROR)) {
-                file.setErrorHash(true);
+        fileListData.forEach(fileData -> {
+            fileData.resetError();
+            fileData.setExistInData(true);
+            dataMap.put(fileData.getFilePathStr(), fileData);
+            resultList.add(fileData);
+            if (fileData.getHash().equals(FileFactory.HASH_ERROR)) {
+                fileData.setErrorHash(true);
             }
         });
 
+        fileListBackup.forEach(fileBackup -> {
+            fileBackup.resetError();
+            fileBackup.setExistInBackup(true);
+        });
+
+        // vergleichen
         fileListBackup.forEach(fileBackup -> {
             String path = fileBackup.getFilePathStr();
             FileData fileDb = dataMap.remove(path);
@@ -44,13 +47,13 @@ public class CompareFactory {
             if (fileDb == null) {
                 // dann nur im Backup
                 resultList.add(fileBackup);
-                fileBackup.setOnlyInBackup(true);
                 if (fileBackup.getHash().equals(FileFactory.HASH_ERROR)) {
                     fileBackup.setErrorHash(true);
                 }
 
             } else {
                 // dann in beiden
+                fileDb.setExistInBackup(true);
                 if (fileBackup.getHash().equals(FileFactory.HASH_ERROR)) {
                     fileDb.setErrorHash(true);
 
@@ -60,17 +63,18 @@ public class CompareFactory {
             }
         });
 
-        List<FileData> list = new ArrayList<>(dataMap.values());
-        for (FileData fileDb : list) {
-            fileDb.setOnlyInData(true);
-        }
+//        List<FileData> list = new ArrayList<>(dataMap.values());
+//        // nur in den Daten
+//        for (FileData fileDb : list) {
+//            fileDb.setExistInData(true);
+//        }
 
         resultList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
 
         boolean found = false;
         System.out.println("====NOT====");
         for (FileData f : resultList) {
-            if (f.isErrorDiff() || !f.isOnlyInData() || !f.isOnlyInBackup() || f.isErrorHash()) {
+            if (f.isErrorDiff() || f.isOnlyInData() || f.isOnlyInBackup() || f.isErrorHash()) {
                 found = true;
             }
         }
@@ -104,19 +108,27 @@ public class CompareFactory {
     public static void compareQuick(BackupInfo backupInfo,
                                     FileDataList fileListDataDb, FileDataList fileListBackup,
                                     FileDataList errorList) {
-        final HashMap<String, FileData> isDataMap = new HashMap<>();
+        final HashMap<String, FileData> baFileMap = new HashMap<>();
         for (FileData baFile : fileListBackup) {
             baFile.resetError();
-            isDataMap.put(baFile.getFilePathStr(), baFile);
+            baFile.setExistInBackup(true);
+            baFileMap.put(baFile.getFilePathStr(), baFile);
         }
 
         for (FileData dbFile : fileListDataDb) {
             String path = dbFile.getFilePathStr();
             dbFile.resetError();
+            dbFile.setExistInData(true);
 
-            FileData baFile = isDataMap.remove(path);
+            FileData baFile = baFileMap.remove(path);
             if (baFile == null) {
-                dbFile.setOnlyInData(true);
+                errorList.add(dbFile);
+                continue;
+            }
+
+            dbFile.setExistInBackup(true);
+            if (dbFile.getSize() != baFile.getSize()) {
+                dbFile.setErrorDiff(true);
                 errorList.add(dbFile);
                 continue;
             }
@@ -125,23 +137,19 @@ public class CompareFactory {
                 // wenn sich nur das Datum unterscheidet, können die Dateien doch gleich sein
                 FileData baHash = FileHashFactory.getFileDataHash(backupInfo, "", false,
                         baFile.getBackupFilePath().toFile(), true);
+
                 if (baHash == null || !dbFile.getHash().equals(baHash.getHash())) {
                     dbFile.setErrorDiff(true);
+                    if (baHash != null && baHash.getHash().equals(FileFactory.HASH_ERROR)) {
+                        dbFile.setErrorHash(true);
+                    }
                     errorList.add(dbFile);
                 }
-                continue;
             }
 
-            if (dbFile.getSize() != baFile.getSize()) {
-                dbFile.setErrorDiff(true);
-                errorList.add(dbFile);
-            }
         }
         // und jetzt noch die baFiles die zuviel sind
-        List<FileData> list = new ArrayList<>(isDataMap.values());
-        for (FileData fileData : list) {
-            fileData.setOnlyInBackup(true);
-            errorList.add(fileData);
-        }
+        List<FileData> list = new ArrayList<>(baFileMap.values());
+        errorList.addAll(list);
     }
 }

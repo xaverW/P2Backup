@@ -62,10 +62,10 @@ public class TableCompareDir extends PTable<FileData> {
         diffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
         diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
         final TableColumn<FileData, Boolean> fromColumn = new TableColumn<>("In den Daten");
-        fromColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
+        fromColumn.setCellValueFactory(new PropertyValueFactory<>("existInData"));
         fromColumn.setCellFactory(new P2CellCheckBox().cellFactory);
         final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Im Backup");
-        toColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
+        toColumn.setCellValueFactory(new PropertyValueFactory<>("existInBackup"));
         toColumn.setCellFactory(new P2CellCheckBox().cellFactory);
 
         final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Fehler");

@@ -57,10 +57,10 @@ public class CompareBackupDialogController extends P2DialogExtra {
 
     private final RadioButton rbAll = new RadioButton("Alle");
     private final RadioButton rbNotOk = new RadioButton("Daten/Backup unterschiedlich");
-    private final RadioButton rbDiff = new RadioButton("Verändert");
+    private final RadioButton rbErrorDiff = new RadioButton("Verändert");
     private final RadioButton rbOnlyData = new RadioButton("Nur in den Daten");
     private final RadioButton rbOnlyBackup = new RadioButton("Nur im Backup");
-    private final RadioButton rbReadError = new RadioButton("Kann nicht gelesen werden");
+    private final RadioButton rbErrorHash = new RadioButton("Kann nicht gelesen werden");
     private final CheckBox chkLong = new CheckBox("Neu einlesen");
     private final Label lblSum = new Label();
 
@@ -145,44 +145,44 @@ public class CompareBackupDialogController extends P2DialogExtra {
         ToggleGroup tg = new ToggleGroup();
         rbAll.setToggleGroup(tg);
         rbNotOk.setToggleGroup(tg);
-        rbDiff.setToggleGroup(tg);
+        rbErrorDiff.setToggleGroup(tg);
         rbOnlyData.setToggleGroup(tg);
         rbOnlyBackup.setToggleGroup(tg);
-        rbReadError.setToggleGroup(tg);
+        rbErrorHash.setToggleGroup(tg);
         rbAll.setSelected(true);
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(rbAll, rbNotOk, rbDiff, rbOnlyData, rbOnlyBackup, rbReadError,
+        hBox.getChildren().addAll(rbAll, rbNotOk, rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash,
                 P2GuiTools.getHBoxGrower(), lblSum);
         getVBoxCont().getChildren().add(hBox);
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
-        rbDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
+        rbErrorDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOnlyData.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOnlyBackup.selectedProperty().addListener((u, o, n) -> setPredicate());
-        rbReadError.selectedProperty().addListener((u, o, n) -> setPredicate());
+        rbErrorHash.selectedProperty().addListener((u, o, n) -> setPredicate());
     }
 
     private void setPredicate() {
         Predicate<FileData> predicate = fileData -> true;
+        Predicate<FileData> prErrorDiff = FileDataProps::isErrorDiff;
+        Predicate<FileData> prExistNotInData = data -> !data.isExistInData();
+        Predicate<FileData> prExistNotInBackup = data -> !data.isExistInBackup();
+        Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
         if (rbNotOk.isSelected()) {
-            Predicate<FileData> prDiff = FileDataProps::isErrorDiff;
-            Predicate<FileData> prData = FileDataProps::isOnlyInData;
-            Predicate<FileData> prBackup = FileDataProps::isOnlyInBackup;
-            Predicate<FileData> prHash = FileDataProps::isErrorHash;
-            predicate = predicate.and(prDiff.or(prData).or(prBackup).or(prHash));
+            predicate = predicate.and(prErrorDiff.or(prExistNotInData).or(prExistNotInBackup).or(prErrorHash));
 
-        } else if (rbDiff.isSelected()) {
-            predicate = predicate.and(FileDataProps::isErrorDiff);
+        } else if (rbErrorDiff.isSelected()) {
+            predicate = predicate.and(prErrorDiff);
 
         } else if (rbOnlyData.isSelected()) {
-            predicate = predicate.and(FileDataProps::isOnlyInData);
+            predicate = predicate.and(prExistNotInBackup);
 
         } else if (rbOnlyBackup.isSelected()) {
-            predicate = predicate.and(FileDataProps::isOnlyInBackup);
+            predicate = predicate.and(prExistNotInData);
 
-        } else if (rbReadError.isSelected()) {
-            predicate = predicate.and(FileDataProps::isErrorHash);
+        } else if (rbErrorHash.isSelected()) {
+            predicate = predicate.and(prErrorHash);
         }
 
         fileDataList.getFilteredList().setPredicate(predicate);

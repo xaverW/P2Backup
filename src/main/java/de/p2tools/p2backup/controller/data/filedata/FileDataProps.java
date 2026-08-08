@@ -41,15 +41,17 @@ public class FileDataProps implements Comparable<FileData> {
     // ist nur für den Vergleich Backup/Data
     private boolean errorDiff = false; // Dateien sind unterschiedlich
     private boolean errorHash = false; // Hash kann nicht erstellt werden, nicht zugreifbar
-    private boolean onlyInData = false; // nur in den Daten
-    private boolean onlyInBackup = false; // nur im Backup
+    private boolean existInData = false; // in den Daten vorhanden
+    private boolean existInBackup = false; // im Backup vorhanden
+//    private boolean onlyInData = false; // nur in den Daten
+//    private boolean onlyInBackup = false; // nur im Backup
 
     public void resetError() {
         setError(false);
         setErrorDiff(false);
         setErrorHash(false);
-        setOnlyInData(false);
-        setOnlyInBackup(false);
+        setExistInData(false);
+        setExistInBackup(false);
     }
 
     public long getId() {
@@ -154,20 +156,28 @@ public class FileDataProps implements Comparable<FileData> {
         this.errorDiff = errorDiff;
     }
 
-    public boolean isOnlyInData() {
-        return onlyInData;
+    public boolean isExistInData() {
+        return existInData;
     }
 
-    public void setOnlyInData(boolean onlyInData) {
-        this.onlyInData = onlyInData;
+    public void setExistInData(boolean existInData) {
+        this.existInData = existInData;
+    }
+
+    public boolean isExistInBackup() {
+        return existInBackup;
+    }
+
+    public void setExistInBackup(boolean existInBackup) {
+        this.existInBackup = existInBackup;
+    }
+
+    public boolean isOnlyInData() {
+        return existInData && !existInBackup;
     }
 
     public boolean isOnlyInBackup() {
-        return onlyInBackup;
-    }
-
-    public void setOnlyInBackup(boolean onlyInBackup) {
-        this.onlyInBackup = onlyInBackup;
+        return existInBackup && !existInData;
     }
 
     @Override
