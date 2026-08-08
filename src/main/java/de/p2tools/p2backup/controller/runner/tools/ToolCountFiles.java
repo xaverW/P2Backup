@@ -24,7 +24,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
 import de.p2tools.p2backup.controller.runner.FileRunner;
 import de.p2tools.p2backup.controller.runner.hashrunner.FileListFactory;
-import de.p2tools.p2backup.gui.tools.BackupInfoDialogController;
+import de.p2tools.p2backup.gui.tools.ToolBackupInfoDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.application.Platform;
@@ -41,9 +41,9 @@ public class ToolCountFiles {
     private final BackupInfo backupInfo;
     private final boolean noBlocked;
 
-    private final BackupInfoDialogController backupInfoDialogController;
+    private final ToolBackupInfoDialogController backupInfoDialogController;
 
-    public ToolCountFiles(ProgData progData, BackupInfoDialogController backupInfoDialogController,
+    public ToolCountFiles(ProgData progData, ToolBackupInfoDialogController backupInfoDialogController,
                           BackupInfo backupInfo, boolean noBlocked, boolean recursive) {
         this.progData = progData;
         this.backupInfoDialogController = backupInfoDialogController;

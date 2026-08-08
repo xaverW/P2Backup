@@ -24,9 +24,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class TableCompareDir extends PTable<FileData> {
+public class TableToolCompareDir extends PTable<FileData> {
 
-    public TableCompareDir(Table.TABLE_ENUM table_enum) {
+    public TableToolCompareDir(Table.TABLE_ENUM table_enum) {
         super(table_enum);
         this.table_enum = table_enum;
 

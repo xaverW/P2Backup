@@ -6,7 +6,7 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.tools.SearchInBackupDialogController;
+import de.p2tools.p2backup.gui.tools.ToolSearchInBackupDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.beans.property.BooleanProperty;
@@ -21,13 +21,13 @@ public class ToolSearchInBackup {
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
     private BooleanProperty stop = new SimpleBooleanProperty(false);
-    private final SearchInBackupDialogController searchInBackupDialogController;
+    private final ToolSearchInBackupDialogController toolSearchInBackupDialogController;
 
 
-    public ToolSearchInBackup(SearchInBackupDialogController searchInBackupDialogController,
+    public ToolSearchInBackup(ToolSearchInBackupDialogController toolSearchInBackupDialogController,
                               BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.searchInBackupDialogController = searchInBackupDialogController;
+        this.toolSearchInBackupDialogController = toolSearchInBackupDialogController;
         this.backupInfo = backupInfo;
         this.backupData = backupData;
         this.atomicBoolean = atomicBoolean;
@@ -58,7 +58,7 @@ public class ToolSearchInBackup {
         if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileDataList)) {
             backupInfo.runnerDto.setStop();
         }
-        searchInBackupDialogController.setResult(fileDataList);
+        toolSearchInBackupDialogController.setResult(fileDataList);
         atomicBoolean.set(false);
     }
 }

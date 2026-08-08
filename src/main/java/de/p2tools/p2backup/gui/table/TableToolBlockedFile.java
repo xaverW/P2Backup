@@ -16,7 +16,6 @@
 
 package de.p2tools.p2backup.gui.table;
 
-import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
 import de.p2tools.p2lib.guitools.ptable.P2TableFactory;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -24,21 +23,27 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.time.LocalDateTime;
+import java.io.File;
 
-public class TableFileHistory extends PTable<HistoryFileData> {
+public class TableToolBlockedFile extends PTable<File> {
+
     private final Stage stage;
 
-    public TableFileHistory(Table.TABLE_ENUM table_enum, Stage stage) {
+    public TableToolBlockedFile(Table.TABLE_ENUM table_enum, Stage stage) {
         super(table_enum);
         this.table_enum = table_enum;
         this.stage = stage;
 
-        initFileRunnerColumn();
+        initColumn();
+    }
+
+    @Override
+    public Table.TABLE_ENUM getTable() {
+        return table_enum;
     }
 
     public void resetTable() {
-        initFileRunnerColumn();
+        initColumn();
         Table.resetTable(this);
     }
 
@@ -46,7 +51,7 @@ public class TableFileHistory extends PTable<HistoryFileData> {
         P2TableFactory.refreshTable(this);
     }
 
-    private void initFileRunnerColumn() {
+    private void initColumn() {
         getColumns().clear();
 
         setTableMenuButtonVisible(true);
@@ -54,24 +59,13 @@ public class TableFileHistory extends PTable<HistoryFileData> {
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        final TableColumn<HistoryFileData, LocalDateTime> startDateColumn = new TableColumn<>("Datum");
-        startDateColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-        startDateColumn.setCellFactory(new CellBackupInfoStartDate().cellFactory);
+        final TableColumn<File, String> pathColumn = new TableColumn<>("Pfad");
+        pathColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
 
-//        final TableColumn<HistoryFileData, String> nameColumn = new TableColumn<>("Dateiname");
-//        nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileNameStr"));
-//
-//        final TableColumn<HistoryFileData, String> pathColumn = new TableColumn<>("Pfad");
-//        pathColumn.setCellValueFactory(new PropertyValueFactory<>("corrParentFilePathStr"));
+        final TableColumn<File, String> btnColumn = new TableColumn<>("Öffnen");
+        btnColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
+        btnColumn.setCellFactory(new CellOpenFileButton<>(stage).cellFactory);
 
-        final TableColumn<HistoryFileData, String> btnColumn = new TableColumn<>("Öffnen");
-        btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
-        btnColumn.setCellFactory(new CellStartOpenHistoryFileButton<>(stage).cellFactory);
-
-        startDateColumn.setPrefWidth(200);
-//        nameColumn.setPrefWidth(200);
-//        pathColumn.setPrefWidth(500);
-        btnColumn.setPrefWidth(150);
-        getColumns().addAll(startDateColumn, /*nameColumn, pathColumn,*/ btnColumn);
+        getColumns().addAll(pathColumn, btnColumn);
     }
 }

@@ -26,7 +26,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.table.Table;
-import de.p2tools.p2backup.gui.table.TableSearchInBackup;
+import de.p2tools.p2backup.gui.table.TableToolSearchInBackup;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.guitools.P2Text;
@@ -59,7 +59,7 @@ public class PaneSearchInBackup extends HBox {
     private final IntegerProperty sizeProp = new SimpleIntegerProperty(0); // Anzahl der Trees
     private final ArrayList<String> backupInfoFromPathList = new ArrayList<>(); // Liste der FROM-Paths
 
-    private final TableSearchInBackup tableViewFile;
+    private final TableToolSearchInBackup tableViewFile;
     private final TreeView<String> treeView = new TreeView<>();
 
     private final ObjectProperty<BackupInfo> backupInfoProp = new SimpleObjectProperty<>(null);
@@ -76,7 +76,7 @@ public class PaneSearchInBackup extends HBox {
         this.backupInfoProp.set(backupInfo);
         this.backupDataProp = backupDataProp;
 
-        this.tableViewFile = new TableSearchInBackup(Table.TABLE_ENUM.SHOW_BACKUP_FILES,
+        this.tableViewFile = new TableToolSearchInBackup(Table.TABLE_ENUM.SHOW_BACKUP_FILES,
                 progData.primaryStage,
                 backupInfoProp, backupDataProp);
         make();

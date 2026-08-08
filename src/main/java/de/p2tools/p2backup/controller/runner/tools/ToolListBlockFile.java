@@ -4,7 +4,7 @@ import de.p2tools.p2backup.controller.config.PEvents;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.runner.hashrunner.FileListFactory;
-import de.p2tools.p2backup.gui.tools.BlockedFilesDialogController;
+import de.p2tools.p2backup.gui.tools.ToolBlockedFilesDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.beans.property.BooleanProperty;
@@ -20,16 +20,16 @@ public class ToolListBlockFile {
     private final BackupInfo backupInfo;
     private final AtomicBoolean atomicBoolean;
     private BooleanProperty stop = new SimpleBooleanProperty(false);
-    private final BlockedFilesDialogController blockedFilesDialogController;
+    private final ToolBlockedFilesDialogController toolBlockedFilesDialogController;
     private final Set<File> foundFileList;
     private final Set<File> blockedFileList;
 
 
-    public ToolListBlockFile(BlockedFilesDialogController blockedFilesDialogController,
+    public ToolListBlockFile(ToolBlockedFilesDialogController toolBlockedFilesDialogController,
                              BackupInfo backupInfo,
                              Set<File> foundFileList, Set<File> blockedFileList, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.blockedFilesDialogController = blockedFilesDialogController;
+        this.toolBlockedFilesDialogController = toolBlockedFilesDialogController;
         this.backupInfo = backupInfo;
         this.foundFileList = foundFileList;
         this.blockedFileList = blockedFileList;
@@ -64,7 +64,7 @@ public class ToolListBlockFile {
             blockedFileList.clear();
         }
 
-        blockedFilesDialogController.setResult();
+        toolBlockedFilesDialogController.setResult();
         atomicBoolean.set(false);
     }
 }

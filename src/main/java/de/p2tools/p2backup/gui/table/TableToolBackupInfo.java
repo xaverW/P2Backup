@@ -29,12 +29,12 @@ import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
 
-public class TableBackupInfo extends PTable<BackupData> {
+public class TableToolBackupInfo extends PTable<BackupData> {
 
     private final Stage stage;
     private final ObjectProperty<BackupInfo> backupInfoProp;
 
-    public TableBackupInfo(Table.TABLE_ENUM table_enum, Stage stage, ObjectProperty<BackupInfo> backupInfoProp) {
+    public TableToolBackupInfo(Table.TABLE_ENUM table_enum, Stage stage, ObjectProperty<BackupInfo> backupInfoProp) {
         super(table_enum);
         this.table_enum = table_enum;
         this.stage = stage;

@@ -45,13 +45,13 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.nio.file.Path;
 
-public class BackupInfoDialogController extends P2DialogExtra {
+public class ToolBackupInfoDialogController extends P2DialogExtra {
 
     private final BackupInfo backupInfo;
     private final ProgData progData;
     private final VBox vBoxGrid = new VBox();
 
-    public BackupInfoDialogController(BackupInfo backupInfo) {
+    public ToolBackupInfoDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BACKUP_INFO_DIALOG_SIZE, "Infos über die Daten",
                 true, true, false, DECO.NO_BORDER);
 

@@ -5,7 +5,7 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.tools.FileHistoryDialogController;
+import de.p2tools.p2backup.gui.tools.ToolFileHistoryDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.beans.property.BooleanProperty;
@@ -19,13 +19,13 @@ public class ToolFileHistoryInBackup {
     private final BackupInfo backupInfo;
     private final AtomicBoolean atomicBoolean;
     private BooleanProperty stop = new SimpleBooleanProperty(false);
-    private final FileHistoryDialogController fileHistoryDialogController;
+    private final ToolFileHistoryDialogController toolFileHistoryDialogController;
 
 
-    public ToolFileHistoryInBackup(FileHistoryDialogController fileHistoryDialogController,
+    public ToolFileHistoryInBackup(ToolFileHistoryDialogController toolFileHistoryDialogController,
                                    BackupInfo backupInfo, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.fileHistoryDialogController = fileHistoryDialogController;
+        this.toolFileHistoryDialogController = toolFileHistoryDialogController;
         this.backupInfo = backupInfo;
         this.atomicBoolean = atomicBoolean;
     }
@@ -56,7 +56,7 @@ public class ToolFileHistoryInBackup {
         if (!SqlFileData.readDataFileList(backupInfo, fileListData)) {
             backupInfo.runnerDto.setStop();
         }
-        fileHistoryDialogController.setResult(fileListData);
+        toolFileHistoryDialogController.setResult(fileListData);
         atomicBoolean.set(false);
     }
 }

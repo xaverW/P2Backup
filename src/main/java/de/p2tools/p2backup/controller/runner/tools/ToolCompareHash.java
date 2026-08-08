@@ -25,7 +25,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.CreateDataHash;
 import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
-import de.p2tools.p2backup.gui.tools.CompareBackupDialogController;
+import de.p2tools.p2backup.gui.tools.ToolCompareBackupDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
@@ -39,14 +39,14 @@ public class ToolCompareHash {
     private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
-    private final CompareBackupDialogController compareBackupDialogController;
+    private final ToolCompareBackupDialogController toolCompareBackupDialogController;
     private final String toPath;
 
 
-    public ToolCompareHash(CompareBackupDialogController compareBackupDialogController,
+    public ToolCompareHash(ToolCompareBackupDialogController toolCompareBackupDialogController,
                            BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.compareBackupDialogController = compareBackupDialogController;
+        this.toolCompareBackupDialogController = toolCompareBackupDialogController;
         this.backupData = backupData;
         this.toPath = FileFactory.getToPathStr(backupInfo, backupData);
         this.backupInfo = backupInfo;
@@ -86,11 +86,11 @@ public class ToolCompareHash {
         } else {
             // ==============
             // und jetzt mit dem Hash vergleichen
-            CompareFactory.compare(compareBackupDialogController.getStage(),
+            CompareFactory.compare(toolCompareBackupDialogController.getStage(),
                     fileListData, fileListBackup, resultList, true);
         }
 
-        compareBackupDialogController.setResult(resultList);
+        toolCompareBackupDialogController.setResult(resultList);
         atomicBoolean.set(false);
     }
 

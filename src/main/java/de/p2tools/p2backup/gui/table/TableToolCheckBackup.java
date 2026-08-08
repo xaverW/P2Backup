@@ -16,9 +16,8 @@
 
 package de.p2tools.p2backup.gui.table;
 
-import de.p2tools.p2backup.controller.data.backupdata.BackupData;
-import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
+import de.p2tools.p2lib.guitools.ptable.P2CellCheckBox;
 import de.p2tools.p2lib.guitools.ptable.P2TableFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.SelectionMode;
@@ -27,20 +26,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-public class TableSearchInBackup extends PTable<FileData> {
+public class TableToolCheckBackup extends PTable<FileData> {
+    private final ObjectProperty<Stage> stageProp;
 
-    private final Stage stage;
-    private final ObjectProperty<BackupInfo> backupInfoProp;
-    private final ObjectProperty<BackupData> backupDataProp;
-
-    public TableSearchInBackup(Table.TABLE_ENUM table_enum, Stage stage,
-                               ObjectProperty<BackupInfo> backupInfoProp,
-                               ObjectProperty<BackupData> backupDataProp) {
+    public TableToolCheckBackup(Table.TABLE_ENUM table_enum, ObjectProperty stageProp) {
         super(table_enum);
         this.table_enum = table_enum;
-        this.stage = stage;
-        this.backupInfoProp = backupInfoProp;
-        this.backupDataProp = backupDataProp;
+        this.stageProp = stageProp;
 
         initFileRunnerColumn();
     }
@@ -67,19 +59,31 @@ public class TableSearchInBackup extends PTable<FileData> {
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        final TableColumn<FileData, String> pathFileColumn = new TableColumn<>("Dateiname");
-        pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("fileNameStr"));
-
-        final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Fehler");
-        errorColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
-        TableFactory.columnFactoryBoolean(errorColumn);
+        final TableColumn<FileData, String> pathFileColumn = new TableColumn<>("Pfad");
+        pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("filePathStr"));
 
         final TableColumn<FileData, String> btnColumn = new TableColumn<>("Öffnen");
         btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
-        btnColumn.setCellFactory(new CellStartOpenFileButton<>(stage).cellFactory);
+        btnColumn.setCellFactory(new CellCheckBackupOpenFileButton<>(stageProp).cellFactory);
+
+        final TableColumn<FileData, Boolean> errorDiffColumn = new TableColumn<>("Verändert");
+        errorDiffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
+        errorDiffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> onlyDataColumn = new TableColumn<>("Fehlt");
+        onlyDataColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
+        onlyDataColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zuviel");
+        onlyBackupColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
+        onlyBackupColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> errorHashColumn = new TableColumn<>("Lesefehler");
+        errorHashColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
+        TableFactory.columnFactoryBoolean(errorHashColumn);
 
         pathFileColumn.setPrefWidth(500);
-        btnColumn.setPrefWidth(150);
-        getColumns().addAll(pathFileColumn, errorColumn, btnColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, errorDiffColumn, onlyDataColumn, onlyBackupColumn, errorHashColumn);
+
     }
 }

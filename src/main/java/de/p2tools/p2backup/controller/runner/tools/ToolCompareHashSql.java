@@ -23,7 +23,7 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.tools.CompareBackupDialogController;
+import de.p2tools.p2backup.gui.tools.ToolCompareBackupDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
 
@@ -35,13 +35,13 @@ public class ToolCompareHashSql {
     private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
-    private final CompareBackupDialogController compareBackupDialogController;
+    private final ToolCompareBackupDialogController toolCompareBackupDialogController;
     private final String subPathBackup;
 
-    public ToolCompareHashSql(CompareBackupDialogController compareBackupDialogController,
+    public ToolCompareHashSql(ToolCompareBackupDialogController toolCompareBackupDialogController,
                               BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.compareBackupDialogController = compareBackupDialogController;
+        this.toolCompareBackupDialogController = toolCompareBackupDialogController;
         this.backupInfo = backupInfo;
         this.backupData = backupData;
         this.subPathBackup = backupData.getSubPath();
@@ -86,11 +86,11 @@ public class ToolCompareHashSql {
         } else {
             // ==============
             // und jetzt mit dem Hash vergleichen
-            CompareFactory.compare(compareBackupDialogController.getStage(),
+            CompareFactory.compare(toolCompareBackupDialogController.getStage(),
                     fileListData, fileListBackup, resultList, true);
         }
 
-        compareBackupDialogController.setResult(resultList);
+        toolCompareBackupDialogController.setResult(resultList);
         atomicBoolean.set(false);
     }
 }

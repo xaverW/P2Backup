@@ -25,7 +25,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.tools.CheckBackupDialogController;
+import de.p2tools.p2backup.gui.tools.ToolCheckBackupDialogController;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
@@ -39,13 +39,13 @@ public class ToolCheckBackup {
     private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
-    private final CheckBackupDialogController checkBackupDialogController;
+    private final ToolCheckBackupDialogController toolCheckBackupDialogController;
 
 
-    public ToolCheckBackup(CheckBackupDialogController checkBackupDialogController,
+    public ToolCheckBackup(ToolCheckBackupDialogController toolCheckBackupDialogController,
                            BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.checkBackupDialogController = checkBackupDialogController;
+        this.toolCheckBackupDialogController = toolCheckBackupDialogController;
         this.backupInfo = backupInfo;
         this.backupData = backupData;
         this.atomicBoolean = atomicBoolean;
@@ -96,10 +96,10 @@ public class ToolCheckBackup {
             // ==============
             // und jetzt den Hash vergleichen
             backupInfo.runnerDto.setRunnerText("Vergleichen");
-            CompareFactory.compare(checkBackupDialogController.getStage(),
+            CompareFactory.compare(toolCheckBackupDialogController.getStage(),
                     fileListDb, fileListBackup, resultList, false);
         }
-        checkBackupDialogController.setResult(resultList);
+        toolCheckBackupDialogController.setResult(resultList);
         atomicBoolean.set(false);
     }
 

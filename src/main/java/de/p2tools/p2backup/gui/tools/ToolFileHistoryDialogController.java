@@ -29,7 +29,7 @@ import de.p2tools.p2backup.controller.runner.tools.ToolFileHistoryInBackup;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
-import de.p2tools.p2backup.gui.table.TableFileHistory;
+import de.p2tools.p2backup.gui.table.TableToolFileHistory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -51,7 +51,7 @@ import javafx.scene.layout.VBox;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
-public class FileHistoryDialogController extends P2DialogExtra {
+public class ToolFileHistoryDialogController extends P2DialogExtra {
 
     private final Label lblSum = new Label();
     private final Button btnLoad = new Button("Dateien laden");
@@ -60,7 +60,7 @@ public class FileHistoryDialogController extends P2DialogExtra {
     private ObjectProperty<BackupData> backupDataProp = new SimpleObjectProperty<>(null);
 
     private final ListView<FileData> listViewFile = new ListView<>();
-    private final TableFileHistory tableView;
+    private final TableToolFileHistory tableView;
     private final TextField txtSearch = new TextField();
     private final FileDataList fileDataList = new FileDataList();
     private final Label lblToPath = new Label();
@@ -69,13 +69,13 @@ public class FileHistoryDialogController extends P2DialogExtra {
 
     private final ProgData progData;
 
-    public FileHistoryDialogController(BackupInfo backupInfo) {
+    public ToolFileHistoryDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.FILE_HISTORY_DIALOG_SIZE, "Dateien im Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
         this.backupInfoProp.set(backupInfo);
-        this.tableView = new TableFileHistory(Table.TABLE_ENUM.FILE_HISTORY, getStage());
+        this.tableView = new TableToolFileHistory(Table.TABLE_ENUM.FILE_HISTORY, getStage());
         init(false);
     }
 

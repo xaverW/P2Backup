@@ -24,7 +24,7 @@ import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolListBlockFile;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
-import de.p2tools.p2backup.gui.table.TableBlockedFile;
+import de.p2tools.p2backup.gui.table.TableToolBlockedFile;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -47,7 +47,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
-public class BlockedFilesDialogController extends P2DialogExtra {
+public class ToolBlockedFilesDialogController extends P2DialogExtra {
 
     private final BackupInfo backupInfo;
     private final Set<File> foundFileList = new HashSet<>();
@@ -60,18 +60,18 @@ public class BlockedFilesDialogController extends P2DialogExtra {
     private final TextField txtSearch = new TextField();
     private final Button btnStart = new Button("Dateien laden");
     private final Button btnClear = new Button();
-    private final TableBlockedFile tableView;
+    private final TableToolBlockedFile tableView;
     private final RadioButton rbAll = new RadioButton("Alle");
     private final RadioButton rbFound = new RadioButton("Sichern");
     private final RadioButton rbBlock = new RadioButton("Geblockt");
 
-    public BlockedFilesDialogController(BackupInfo backupInfo) {
+    public ToolBlockedFilesDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BLOCKED_FILE_DIALOG_SIZE, "In den Daten/Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
         this.backupInfo = backupInfo;
-        tableView = new TableBlockedFile(Table.TABLE_ENUM.BLOCKED_FILE, getStage());
+        tableView = new TableToolBlockedFile(Table.TABLE_ENUM.BLOCKED_FILE, getStage());
 
         filteredFileList = new FilteredList<>(fileList, p -> true);
         sortedFileList = new SortedList<>(filteredFileList);

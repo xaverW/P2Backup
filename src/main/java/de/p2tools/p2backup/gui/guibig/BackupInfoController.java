@@ -20,7 +20,7 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.gui.table.Table;
-import de.p2tools.p2backup.gui.table.TableBackupInfo;
+import de.p2tools.p2backup.gui.table.TableToolBackupInfo;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
@@ -43,7 +43,7 @@ public class BackupInfoController extends VBox {
     private final TextField txtName = new TextField();
     private final ColorPicker colorPicker = new ColorPicker();
     private final TextArea taDescription = new TextArea();
-    private final TableBackupInfo tableView;
+    private final TableToolBackupInfo tableView;
     private final Label lblInfoListSize = new Label();
 
     private BackupInfo backupInfo = null;
@@ -62,7 +62,7 @@ public class BackupInfoController extends VBox {
 
     public BackupInfoController() {
         progData = ProgData.getInstance();
-        tableView = new TableBackupInfo(Table.TABLE_ENUM.BACKUP_INFO, progData.primaryStage, progData.backupInfoProperty);
+        tableView = new TableToolBackupInfo(Table.TABLE_ENUM.BACKUP_INFO, progData.primaryStage, progData.backupInfoProperty);
 
         setPadding(new Insets(P2LibConst.PADDING_VBOX));
         setSpacing(P2LibConst.SPACING_VBOX);

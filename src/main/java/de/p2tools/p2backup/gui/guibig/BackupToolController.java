@@ -73,7 +73,7 @@ public class BackupToolController extends VBox {
         btnInfo.setMaxWidth(Double.MAX_VALUE);
         btnInfo.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new BackupInfoDialogController(progData.backupInfoProperty.get());
+                new ToolBackupInfoDialogController(progData.backupInfoProperty.get());
             }
         });
         Label lblInfo = new Label("Damit werden Infos über die " +
@@ -87,7 +87,7 @@ public class BackupToolController extends VBox {
         btnBackup.setMaxWidth(Double.MAX_VALUE);
         btnBackup.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new SearchInBackupDialogController(progData.backupInfoProperty.get()).showDialog();
+                new ToolSearchInBackupDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
         Label lblBackup = new Label("Damit kann man Dateien in einem Backup suchen.");
@@ -100,7 +100,7 @@ public class BackupToolController extends VBox {
         btnHistory.setMaxWidth(Double.MAX_VALUE);
         btnHistory.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new FileHistoryDialogController(progData.backupInfoProperty.get()).showDialog();
+                new ToolFileHistoryDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
         Label lblHistory = new Label("Hier ist der Verlauf der Änderungen einer " +
@@ -114,7 +114,7 @@ public class BackupToolController extends VBox {
         btnCompare.setMaxWidth(Double.MAX_VALUE);
         btnCompare.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new CompareBackupDialogController(progData.backupInfoProperty.get()).showDialog();
+                new ToolCompareBackupDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
         Label lblCompare = new Label("Damit kann man den Ordner mit den Daten mit " +
@@ -128,7 +128,7 @@ public class BackupToolController extends VBox {
         btnCheck.setMaxWidth(Double.MAX_VALUE);
         btnCheck.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new CheckBackupDialogController(progData.backupInfoProperty.get()).showDialog();
+                new ToolCheckBackupDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
         Label lblCheck = new Label("Hiermit kann überprüft werden, ob sich ein Backup geändert hat. Es wird " +
@@ -141,7 +141,7 @@ public class BackupToolController extends VBox {
         btnBlocked.setMaxWidth(Double.MAX_VALUE);
         btnBlocked.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new BlockedFilesDialogController(progData.backupInfoProperty.get()).showDialog();
+                new ToolBlockedFilesDialogController(progData.backupInfoProperty.get()).showDialog();
             }
         });
         lblBlocked.setWrapText(true);

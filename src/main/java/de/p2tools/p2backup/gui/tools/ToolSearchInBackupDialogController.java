@@ -42,7 +42,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SearchInBackupDialogController extends P2DialogExtra {
+public class ToolSearchInBackupDialogController extends P2DialogExtra {
 
     private final Label lblSum = new Label();
     private final Button btnLoad = new Button("Dateien laden");
@@ -54,7 +54,7 @@ public class SearchInBackupDialogController extends P2DialogExtra {
     private final ProgData progData;
     private final PaneSearchInBackup paneSearchInBackup;
 
-    public SearchInBackupDialogController(BackupInfo backupInfo) {
+    public ToolSearchInBackupDialogController(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.SEARCH_DIALOG_SIZE, "Dateien im Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 
