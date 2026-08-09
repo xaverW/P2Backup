@@ -16,10 +16,10 @@
 
 package de.p2tools.p2backup.gui.guibig;
 
-import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
+import de.p2tools.p2backup.controller.data.pathdata.PathDataFactory;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.table.CellPathButton;
 import de.p2tools.p2lib.P2LibConst;
@@ -95,11 +95,12 @@ public class BackupFromController extends VBox {
         btnPath.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
         btnPath.setTooltip(new Tooltip("Den Ordner zum Sichern auswählen"));
         btnPath.setOnAction(event -> {
-            String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_FROM_PATH.get());
-            if (!path.isEmpty()) {
-                ProgConfig.SYSTEM_FROM_PATH.set(path);
-                backupInfo.getPathListFrom().add(new PathData(path));
-            }
+            PathDataFactory.addPath(backupInfo);
+//            String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_FROM_PATH.get());
+//            if (!path.isEmpty()) {
+//                ProgConfig.SYSTEM_FROM_PATH.set(path);
+//                backupInfo.getPathListFrom().add(new PathData(path));
+//            }
         });
         Button btnHelp = PIconFactory.getHelpButton("Sichern", "Hier können die Ordner die gesichert " +
                 "werden sollen, ausgewählt werden.");

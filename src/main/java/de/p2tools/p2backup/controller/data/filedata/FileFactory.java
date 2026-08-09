@@ -69,19 +69,19 @@ public class FileFactory {
         return path;
     }
 
-//    public static String cleanFileData(String path, String toPath) {
-//        if (!toPath.isEmpty() && path.startsWith(toPath)) {
-//            path = path.replaceFirst(toPath, "");
-//        }
-//        if (!path.startsWith(File.separator)) {
-//            path = File.separator + path;
-//        }
-//        if (path.endsWith(File.separator)) {
-//            path = path.substring(0, path.length() - 1);
-//        }
-//
-//        return path;
-//    }
+    public static String cleanFileData(String path, String toPath) {
+        if (!toPath.isEmpty() && path.startsWith(toPath)) {
+            path = path.replaceFirst(toPath, "");
+        }
+        if (!path.startsWith(File.separator)) {
+            path = File.separator + path;
+        }
+        if (path.endsWith(File.separator)) {
+            path = path.substring(0, path.length() - 1);
+        }
+
+        return path;
+    }
 
     public static void setCorrPath(List<FileData> fileList) {
         fileList.forEach(f -> f.setFilePathStr(setCorrPath(f.getToPathStr())));
