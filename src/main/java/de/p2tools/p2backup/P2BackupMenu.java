@@ -29,7 +29,6 @@ import de.p2tools.p2backup.gui.configdialog.ConfigDialogController;
 import de.p2tools.p2backup.gui.dialog.AboutDialogController;
 import de.p2tools.p2backup.gui.dialog.ResetDialogController;
 import de.p2tools.p2lib.alert.P2Alert;
-import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.tools.log.P2Logger;
 import de.p2tools.p2lib.tools.shortcut.P2ShortcutWorker;
 import javafx.beans.property.BooleanProperty;
@@ -111,25 +110,22 @@ public class P2BackupMenu extends MenuButton {
         setText("");
         setGraphic(PIconFactory.PICON.MENU.getFontIcon());
 
-        getItems().addAll(miConfig, chkEnhanced, miDarkMode, miColorMode);
+        getItems().addAll(miConfig, miDarkMode, miColorMode);
         getItems().addAll(addHelp(progData), new SeparatorMenuItem(), miQuit);
+        if (ProgData.debug) {
+            getItems().addAll(chkEnhanced);
+        }
     }
 
     private Menu addHelp(ProgData progData) {
-        final MenuItem miUrlHelp = new MenuItem("Anleitung im Web");
-        miUrlHelp.setOnAction(event -> {
-            P2Open.openURL(ProgConst.URL_WEBSITE_HELP,
-                    ProgConfig.SYSTEM_PROG_OPEN_URL, PIconFactory.PICON.BTN_FILE_OPEN.getFontIcon());
-        });
+//        final MenuItem miUrlHelp = new MenuItem("Anleitung im Web");
+//        miUrlHelp.setOnAction(event -> {
+//            P2Open.openURL(ProgConst.URL_WEBSITE_HELP,
+//                    ProgConfig.SYSTEM_PROG_OPEN_URL, PIconFactory.PICON.BTN_FILE_OPEN.getFontIcon());
+//        });
         final MenuItem miLog = new MenuItem("Logdatei öffnen");
         miLog.setOnAction(event -> {
             P2Logger.openLogFile();
-        });
-        final MenuItem miShortCut = new MenuItem("Tastaturbefehle festlegen");
-        miShortCut.setOnAction(event -> {
-            ProgConfig.SYSTEM_CONFIG_DIALOG_TAB.setValue(0);
-            ProgConfig.SYSTEM_CONFIG_DIALOG_CONFIG.setValue(5);
-            new ConfigDialogController(ProgData.getInstance());
         });
         final MenuItem miReset = new MenuItem("Einstellungen zurücksetzen");
         miReset.setOnAction(event -> new ResetDialogController(progData));
@@ -139,8 +135,8 @@ public class P2BackupMenu extends MenuButton {
         miAbout.setOnAction(event -> new AboutDialogController(progData).showDialog());
 
         final Menu mHelp = new Menu("Hilfe");
-        mHelp.getItems().addAll(miUrlHelp, miLog, miShortCut, miReset,
-                /*miToolTip,*/ new SeparatorMenuItem(), /*miWhatsNew,*/ miSearchUpdate, miAbout);
+        mHelp.getItems().addAll(miLog, miReset,
+                new SeparatorMenuItem(), miSearchUpdate, miAbout);
 
         return mHelp;
     }

@@ -19,6 +19,7 @@ package de.p2tools.p2backup.gui.dialog;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.config.ProgInfos;
 import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2lib.dialogs.AboutDialog;
 
@@ -29,8 +30,8 @@ public class AboutDialogController extends AboutDialog {
         super(progData.primaryStage, ProgConst.PROGRAM_NAME, ProgConst.URL_WEBSITE, ProgConst.URL_WEBSITE_HELP,
                 ProgConfig.SYSTEM_PROG_OPEN_URL,
                 ProgConfig.SYSTEM_DARK_THEME.getValue(),
-                new String[]{"Filmliste:", "Einstellungen:"},
-                new String[]{},
+                new String[]{"Einstellungen:"},
+                new String[]{ProgInfos.getSettingsFile().toAbsolutePath().toString()},
                 true);
 
         this.progData = progData;

@@ -86,7 +86,7 @@ public class BackupFromController extends VBox {
         makeVboxFile();
         initAccordion();
         setExtended();
-        ProgConfig.SYSTEM_ENHANCED.addListener((u, o, n) -> setExtended());
+//        ProgConfig.SYSTEM_ENHANCED.addListener((u, o, n) -> setExtended());
         VBox.setVgrow(vBoxTableAll, Priority.ALWAYS);
     }
 
@@ -231,25 +231,25 @@ public class BackupFromController extends VBox {
     }
 
     private void setExtended() {
-        if (ProgConfig.SYSTEM_ENHANCED.get()) {
-            vBoxTPaneFrom.getChildren().setAll(vBoxTableFrom);
-            vBoxTPaneDir.getChildren().setAll(vBoxTableDir);
-            vBoxTPaneFile.getChildren().setAll(vBoxTableFile);
-            vBoxTableAll.getChildren().setAll(accordion);
-            VBox.setVgrow(accordion, Priority.ALWAYS);
+//        if (ProgConfig.SYSTEM_ENHANCED.get()) {
+        vBoxTPaneFrom.getChildren().setAll(vBoxTableFrom);
+        vBoxTPaneDir.getChildren().setAll(vBoxTableDir);
+        vBoxTPaneFile.getChildren().setAll(vBoxTableFile);
+        vBoxTableAll.getChildren().setAll(accordion);
+        VBox.setVgrow(accordion, Priority.ALWAYS);
 
-            vBoxTableFrom.getStyleClass().remove("tableFrom");
-            vBoxTableFrom.getStyleClass().add("titledPaneFrom");
-            vBoxTableDir.getStyleClass().add("titledPaneFrom");
-            vBoxTableFile.getStyleClass().add("titledPaneFrom");
+        vBoxTableFrom.getStyleClass().remove("tableFrom");
+        vBoxTableFrom.getStyleClass().add("titledPaneFrom");
+        vBoxTableDir.getStyleClass().add("titledPaneFrom");
+        vBoxTableFile.getStyleClass().add("titledPaneFrom");
 
-        } else {
-            vBoxTableAll.getChildren().setAll(vBoxTableFrom);
-            vBoxTableFrom.getStyleClass().remove("titledPaneFrom");
-            vBoxTableFrom.getStyleClass().add("tableFrom");
-            VBox.setVgrow(vBoxTableFrom, Priority.ALWAYS);
-            vBoxTableFrom.setStyle("-fx-border-color: transparent;");
-        }
+//        } else {
+//            vBoxTableAll.getChildren().setAll(vBoxTableFrom);
+//            vBoxTableFrom.getStyleClass().remove("titledPaneFrom");
+//            vBoxTableFrom.getStyleClass().add("tableFrom");
+//            VBox.setVgrow(vBoxTableFrom, Priority.ALWAYS);
+//            vBoxTableFrom.setStyle("-fx-border-color: transparent;");
+//        }
     }
 
     private void setBackup() {

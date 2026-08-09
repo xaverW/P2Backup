@@ -2,7 +2,6 @@ package de.p2tools.p2backup.gui.guibig;
 
 import de.p2tools.p2backup.controller.LoadFactory;
 import de.p2tools.p2backup.controller.config.PEvents;
-import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
@@ -95,8 +94,8 @@ public class PaneGenerateBackupList extends VBox {
         // From
         boolean done = false;
         Button btnFrom = new Button("");
-        btnFrom.visibleProperty().bind(ProgConfig.SYSTEM_ENHANCED);
-        btnFrom.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
+//        btnFrom.visibleProperty().bind(ProgConfig.SYSTEM_ENHANCED);
+//        btnFrom.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
         btnFrom.setTooltip(new Tooltip("Ändern"));
         btnFrom.getStyleClass().add("btnAdjust");
         btnFrom.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
@@ -108,8 +107,8 @@ public class PaneGenerateBackupList extends VBox {
         // ===========
         // To
         Button btnTo = new Button("");
-        btnTo.visibleProperty().bind(ProgConfig.SYSTEM_ENHANCED);
-        btnTo.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
+//        btnTo.visibleProperty().bind(ProgConfig.SYSTEM_ENHANCED);
+//        btnTo.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
         btnTo.setTooltip(new Tooltip("Ändern"));
         btnTo.getStyleClass().add("btnAdjust");
         btnTo.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());

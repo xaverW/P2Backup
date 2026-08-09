@@ -65,9 +65,9 @@ public class BackupToController extends VBox {
                 vBoxContent.disableProperty().bind(progData.backupInfoProperty.get().runnerDto.guiRunningProperty());
             }
         });
-        ProgConfig.SYSTEM_ENHANCED.addListener((u, o, n) -> {
-            setBackup();
-        });
+//        ProgConfig.SYSTEM_ENHANCED.addListener((u, o, n) -> {
+//            setBackup();
+//        });
 
         vBoxContent.getChildren().addAll(BackupGuiFactory.getInfoPane("Wohin soll gesichert werden"));
         setBackup();

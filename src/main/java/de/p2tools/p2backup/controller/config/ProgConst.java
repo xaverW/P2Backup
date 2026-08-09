@@ -30,8 +30,8 @@ public class ProgConst {
 
     // Website
     public static final String URL_WEBSITE = "https://www.p2tools.de/";
-    public static final String URL_WEBSITE_DOWNLOAD = "https://www.p2tools.de/mtviewer/download/";
-    public static final String URL_WEBSITE_HELP = "https://www.p2tools.de/mtviewer/manual/";
+    public static final String URL_WEBSITE_DOWNLOAD = "https://www.p2tools.de/download/";
+    public static final String URL_WEBSITE_HELP = "https://www.p2tools.de/";
 
     // Dateien/Verzeichnisse
     public final static int MAX_COPY_OF_BACKUPFILE = 5; // Maximum number of backup files to be stored.
