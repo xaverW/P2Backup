@@ -98,7 +98,7 @@ public class PaneGenerateBackupList extends VBox {
 //        btnFrom.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
         btnFrom.setTooltip(new Tooltip("Ändern"));
         btnFrom.getStyleClass().add("btnAdjust");
-        btnFrom.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
+        btnFrom.setGraphic(PIconFactory.PICON.BTN_SHOW_FROM.getFontIcon());
         btnFrom.setOnAction(a -> {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_FROM);
@@ -111,7 +111,7 @@ public class PaneGenerateBackupList extends VBox {
 //        btnTo.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
         btnTo.setTooltip(new Tooltip("Ändern"));
         btnTo.getStyleClass().add("btnAdjust");
-        btnTo.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
+        btnTo.setGraphic(PIconFactory.PICON.BTN_SHOW_FROM.getFontIcon());
         btnTo.setOnAction(a -> {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_TO);

@@ -27,6 +27,7 @@ public class PIconFactory {
         BTN_RANDOM("mdi-rotate-3d", 18),
         BTN_RESET_1("gmi-radio-button-on", 25),
         BTN_RESET_2("gmi-rotate-right", 30),
+        BTN_SHOW_FROM("mdmz-play_arrow", 15),
 
 
         BTN_LOAD_BACKUP("mdoal-backup", 20),

@@ -38,42 +38,42 @@
 
 /* Button BackupList: anlegen */
 .btnAdjust {
-    -fx-padding: 1 2 1 2;
+    -fx-padding: 0 5 0 5;
     -fx-border-width: 1;
     -fx-background-color: transparent;
     -fx-font-size: 1em;
  }
 .btnAdjust:pressed{
-    -fx-padding: 1 2 1 2;
+    -fx-padding: 0 5 0 5;
     -fx-border-width: 1;
     -fx-border-color: grey;
     -fx-background-color: transparent;
     -fx-font-size: 1em;
 }
 .btnAdjust:focused{
-    -fx-padding: 1 2 1 2;
+    -fx-padding: 0 5 0 5;
     -fx-border-width: 1;
     -fx-border-color: grey;
     -fx-background-color: transparent;
     -fx-font-size: 1em;
 }
 .btnAdjust:hover{
-    -fx-padding: 1 2 1 2;
+    -fx-padding: 0 5 0 5;
     -fx-border-width: 1;
     -fx-border-color: #003151;
     -fx-background-color: transparent;
     -fx-font-size: 1em;
 }
 .btnAdjust:focused:hover{
-    -fx-padding: 1 2 1 2;
+    -fx-padding: 0 5 0 5;
     -fx-border-width: 1;
     -fx-border-color: #003151;
     -fx-background-color: transparent;
     -fx-font-size: 1em;
 }
 .btnAdjust:pressed:focused:hover{
-    -fx-padding: 0 1 0 1;
-    -fx-border-width: 2;
+    -fx-padding: 0 5 0 5;
+    -fx-border-width: 1;
     -fx-border-color: #003151;
     -fx-background-color: transparent;
     -fx-font-size: 1em;
