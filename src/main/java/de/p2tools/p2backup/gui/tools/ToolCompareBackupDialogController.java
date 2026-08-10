@@ -25,8 +25,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
-import de.p2tools.p2backup.controller.runner.tools.ToolCompareHash;
-import de.p2tools.p2backup.controller.runner.tools.ToolCompareHashSql;
+import de.p2tools.p2backup.controller.runner.tools.ToolCompareDataBackup;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolCompareDir;
@@ -56,12 +55,13 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
     private final TableToolCompareDir tableView;
 
     private final RadioButton rbAll = new RadioButton("Alle");
+    private final RadioButton rbOk = new RadioButton("OK");
     private final RadioButton rbNotOk = new RadioButton("Fehler");
     private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
     private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
     private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
     private final RadioButton rbErrorHash = new RadioButton("Kann nicht gelesen werden");
-    private final CheckBox chkLong = new CheckBox("Neu einlesen");
+    private final CheckBox chkQuick = new CheckBox("Schnell");
     private final Label lblSum = new Label();
 
     public ToolCompareBackupDialogController(BackupInfo backupInfo) {
@@ -79,6 +79,17 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+
+        Button btnHelp = P2Button.helpButton(getStage(), "Daten und Backup vergleichen",
+                "Hier kann man die Daten mit einem Backup vergleichen. Damit sieht man, " +
+                        "welche Dateien im Backup liegen und sich geändert haben." +
+                        "\n\n" +
+                        "Mit \"Schnell\" werden die Dateien (Daten und Backup) " +
+                        "nur mit Größe und Änderungsdatum verglichen. Das ist schneller. " +
+                        "Ansonsten wird der Hash der Dateien erstellt. Das ist sicherer, dauert aber " +
+                        "deutlich länger.");
+        addHlpButton(btnHelp);
+
         HBox hBox = getProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
         getHboxLeft().getChildren().add(hBox);
@@ -103,6 +114,7 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
     }
 
     private void init() {
+        chkQuick.setSelected(true);
         cboBackup.setItems(backupInfo.getBackupDataList());
         cboBackup.getSelectionModel().selectLast();
 
@@ -114,29 +126,19 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
             fileDataList.clear();
             backupInfo.runnerDto.initRunner();
 
-            if (chkLong.isSelected()) {
-                backupInfo.runnerDto.setRunnerText("Daten mit Backup vergleichen");
-                new ToolCompareHash(this, backupInfo,
-                        backupData, new AtomicBoolean(true)).compare();
-            } else {
-                new ToolCompareHashSql(this, backupInfo,
-                        backupData, new AtomicBoolean(true)).compare();
-            }
+            backupInfo.runnerDto.setRunnerText("Daten mit Backup vergleichen");
+            new ToolCompareDataBackup(this, backupInfo,
+                    backupData, chkQuick.isSelected(), new AtomicBoolean(true)).compare();
         });
         btnStart.disableProperty().bind(
                 (cboBackup.getSelectionModel().selectedItemProperty().isNull())
         );
 
-        Button btnHelp = P2Button.helpButton(getStage(), "Neu einlesen",
-                "Beim \"neu Einlesen\" werden die Dateien (Daten und Backup) " +
-                        "neu gelesen und werden dann verglichen. Ansonsten werden die gespeicherten Infos " +
-                        "verglichen. Das \"neue Einlesen\" kann bei vielen Dateien lange dauern.");
-
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, chkLong,
-                P2GuiTools.getHBoxGrower(), btnHelp, btnStart);
+        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, chkQuick,
+                P2GuiTools.getHBoxGrower(), btnStart);
 
         getVBoxCont().getChildren().addAll(hBox);
     }
@@ -144,6 +146,7 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
     private void addRadio() {
         ToggleGroup tg = new ToggleGroup();
         rbAll.setToggleGroup(tg);
+        rbOk.setToggleGroup(tg);
         rbNotOk.setToggleGroup(tg);
         rbErrorDiff.setToggleGroup(tg);
         rbOnlyData.setToggleGroup(tg);
@@ -152,12 +155,13 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
         rbAll.setSelected(true);
 
         HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
-        hBox1.getChildren().addAll(rbAll, rbNotOk);
+        hBox1.getChildren().addAll(rbAll, rbOk, rbNotOk);
         HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
         hBox2.getChildren().addAll(rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash,
                 P2GuiTools.getHBoxGrower(), lblSum);
         getVBoxCont().getChildren().addAll(hBox1, hBox2);
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
+        rbOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbErrorDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOnlyData.selectedProperty().addListener((u, o, n) -> setPredicate());
@@ -170,8 +174,15 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
         Predicate<FileData> prErrorDiff = FileDataProps::isErrorDiff;
         Predicate<FileData> prNotInData = data -> !data.isExistInData();
         Predicate<FileData> prNotInBackup = data -> !data.isExistInBackup();
+        Predicate<FileData> prIsInData = FileDataProps::isExistInBackup;
+        Predicate<FileData> prIsInBackup = FileDataProps::isExistInBackup;
         Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
-        if (rbNotOk.isSelected()) {
+        if (rbOk.isSelected()) {
+            predicate = predicate.and(prErrorDiff.negate()
+                    .and(prIsInData.and(prIsInBackup)
+                            .and(prErrorHash.negate())));
+
+        } else if (rbNotOk.isSelected()) {
             predicate = predicate.and(prErrorHash
                     .or(prErrorDiff).or(prNotInData).or(prNotInBackup).or(prErrorHash));
 

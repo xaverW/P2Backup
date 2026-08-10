@@ -27,6 +27,7 @@ import de.p2tools.p2backup.controller.runner.tools.ToolCountFiles;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
+import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.guitools.P2Text;
@@ -71,6 +72,10 @@ public class ToolBackupInfoDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+
+        Button btnHelp = P2Button.helpButton(getStage(), "Infos",
+                "Hier werden Infos über das Backup angezeigt, Anzahl Backups, Größe, ..");
+        addHlpButton(btnHelp);
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);

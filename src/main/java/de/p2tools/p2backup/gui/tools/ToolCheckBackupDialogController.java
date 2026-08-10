@@ -33,6 +33,7 @@ import de.p2tools.p2backup.gui.table.TableToolCheckBackup;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
+import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -57,6 +58,7 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
     private final Label lblSum = new Label();
 
     private final RadioButton rbAll = new RadioButton("Alles");
+    private final RadioButton rbOk = new RadioButton("OK");
     private final RadioButton rbNotOk = new RadioButton("Fehler");
     private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
     private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
@@ -81,6 +83,14 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+
+        Button btnHelp = P2Button.helpButton(getStage(), "Backup überprüfen",
+                "Hier kann überprüft werden, ob das Backup fehlerhaft ist. " +
+                        "Die gespeicherten Daten werden mit den realen Dateien im " +
+                        "Backupordner verglichen. Unterscheiden die sich, ist das Backup " +
+                        "fehlerhaft. Es ist auch möglich, die Fehlerhaften Dateien aus dem " +
+                        "Backup zu entfernen.");
+
         btnRepair.setOnAction(a -> {
             if (!RepairFactory.repairBackup(backupInfo, errorList)) {
                 P2Alert.showErrorAlert(getStage(), "Dateien aus dem Backup löschen",
@@ -92,7 +102,7 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
         btnRepair.setDisable(true);
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
-        getHboxLeft().getChildren().addAll(hBox, btnRepair);
+        getHboxLeft().getChildren().addAll(hBox, btnRepair, btnHelp);
 
         init();
         addTable();
@@ -155,6 +165,7 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
     private void addRadio() {
         ToggleGroup tg = new ToggleGroup();
         rbAll.setToggleGroup(tg);
+        rbOk.setToggleGroup(tg);
         rbNotOk.setToggleGroup(tg);
         rbErrorDiff.setToggleGroup(tg);
         rbOnlyData.setToggleGroup(tg);
@@ -163,12 +174,13 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
         rbAll.setSelected(true);
 
         HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
-        hBox1.getChildren().addAll(rbAll, rbNotOk, P2GuiTools.getHBoxGrower(), lblSum);
+        hBox1.getChildren().addAll(rbAll, rbOk, rbNotOk, P2GuiTools.getHBoxGrower(), lblSum);
         HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
         hBox2.getChildren().addAll(rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash);
         getVBoxCont().getChildren().addAll(hBox1, hBox2);
 
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
+        rbOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbErrorDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOnlyData.selectedProperty().addListener((u, o, n) -> setPredicate());
@@ -181,8 +193,16 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
         Predicate<FileData> prErrorDiff = FileDataProps::isErrorDiff;
         Predicate<FileData> prNotInData = data -> !data.isExistInData();
         Predicate<FileData> prNotInBackup = data -> !data.isExistInBackup();
+        Predicate<FileData> prIsInData = FileDataProps::isExistInBackup;
+        Predicate<FileData> prIsInBackup = FileDataProps::isExistInBackup;
         Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
-        if (rbNotOk.isSelected()) {
+
+        if (rbOk.isSelected()) {
+            predicate = predicate.and(prErrorDiff.negate()
+                    .and(prIsInData.and(prIsInBackup)
+                            .and(prErrorHash.negate())));
+
+        } else if (rbNotOk.isSelected()) {
             predicate = predicate.and(prErrorHash
                     .or(prErrorDiff).or(prNotInData).or(prNotInBackup).or(prErrorHash));
 

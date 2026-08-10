@@ -27,6 +27,7 @@ import de.p2tools.p2backup.controller.runner.tools.ToolSearchInBackup;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
+import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -70,6 +71,12 @@ public class ToolSearchInBackupDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+
+        Button btnHelp = P2Button.helpButton(getStage(), "Backup durchsuchen",
+                "Hier werden alle Dateien des Backups angezeigt. Es kann darin nach Dateien " +
+                        "gesucht werden. Dateien können geöffnet und kopiert werden.");
+        addHlpButton(btnHelp);
+
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
         getHboxLeft().getChildren().add(hBox);

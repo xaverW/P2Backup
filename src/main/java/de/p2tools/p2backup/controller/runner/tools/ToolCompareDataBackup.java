@@ -33,7 +33,7 @@ import de.p2tools.p2lib.tools.log.P2Log;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ToolCompareHash {
+public class ToolCompareDataBackup {
 
     private ProgData progData;
     private final BackupInfo backupInfo;
@@ -41,13 +41,15 @@ public class ToolCompareHash {
     private final AtomicBoolean atomicBoolean;
     private final ToolCompareBackupDialogController toolCompareBackupDialogController;
     private final String toPath;
+    private final boolean quick;
 
 
-    public ToolCompareHash(ToolCompareBackupDialogController toolCompareBackupDialogController,
-                           BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
+    public ToolCompareDataBackup(ToolCompareBackupDialogController toolCompareBackupDialogController,
+                                 BackupInfo backupInfo, BackupData backupData, boolean quick, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
         this.toolCompareBackupDialogController = toolCompareBackupDialogController;
         this.backupData = backupData;
+        this.quick = quick;
         this.toPath = FileFactory.getToPathStr(backupInfo, backupData);
         this.backupInfo = backupInfo;
         this.atomicBoolean = atomicBoolean;
@@ -72,8 +74,10 @@ public class ToolCompareHash {
     private void compareDir() {
         backupInfo.runnerDto.setRunnerText("Daten laden");
         FileDataList fileListData = getFileDataList();
+
         backupInfo.runnerDto.setRunnerText("Backup laden");
         FileDataList fileListBackup = getFileBackupList(toPath);
+
         FileFactory.cleanFileData(fileListBackup, toPath); // Pfade anpassen
         FileFactory.unSetCorrPath(fileListBackup); // Pfade anpassen
 
@@ -100,7 +104,7 @@ public class ToolCompareHash {
         // dann ist es der Pfad der DATEN
         AtomicBoolean a = new AtomicBoolean(true);
         CreateDataHash.create(backupInfo, null, fileDataList,
-                false, false, a);
+                quick, false, a);
         while (a.get()) {
             P2Wait.pause(500);
         }
@@ -115,7 +119,7 @@ public class ToolCompareHash {
                 Path.of(toPath).toFile(),
                 null, fileDataList,
                 "",
-                false, false,
+                quick, false,
                 a).create();
         while (a.get()) {
             P2Wait.pause(500);

@@ -32,6 +32,7 @@ import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolFileHistory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
+import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
@@ -84,6 +85,13 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
+
+        Button btnHelp = P2Button.helpButton(getStage(), "Änderungen einer Datei",
+                "Es werden alle Dateien zum Sichern angezeigt. Beim Klick auf eine Datei " +
+                        "werden alle Backups angezeigt in dem die Datei gesichert ist. " +
+                        "Dadurch kann man sehen, wie oft sich die Datei geändert hat und dann gesichert wurde.");
+        addHlpButton(btnHelp);
+
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
         getHboxLeft().getChildren().add(hBox);
