@@ -75,11 +75,10 @@ public class ToolBackupInfoDialogController extends P2DialogExtra {
 
         Button btnHelp = P2Button.helpButton(getStage(), "Infos",
                 "Hier werden Infos über das Backup angezeigt, Anzahl Backups, Größe, ..");
-        addHlpButton(btnHelp);
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
-        getHboxLeft().getChildren().addAll(hBox);
+        getHboxLeft().getChildren().addAll(hBox, btnHelp);
         add();
     }
 

@@ -88,11 +88,10 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
                         "nur mit Größe und Änderungsdatum verglichen. Das ist schneller. " +
                         "Ansonsten wird der Hash der Dateien erstellt. Das ist sicherer, dauert aber " +
                         "deutlich länger.");
-        addHlpButton(btnHelp);
 
         HBox hBox = getProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
-        getHboxLeft().getChildren().add(hBox);
+        getHboxLeft().getChildren().addAll(hBox, btnHelp);
 
         init();
         addTable();

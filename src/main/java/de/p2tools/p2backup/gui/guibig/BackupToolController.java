@@ -104,7 +104,7 @@ public class BackupToolController extends VBox {
                 new ToolFileHistoryDialogController(progData).showDialog();
             }
         });
-        Label lblHistory = new Label("Hier sieht man den Änderungs-Verlauf von Dateien.");
+        Label lblHistory = new Label("Hier sieht man den Änderungsverlauf von Dateien.");
         lblHistory.setWrapText(true);
         lblHistory.getStyleClass().add("lblToolInfo");
 

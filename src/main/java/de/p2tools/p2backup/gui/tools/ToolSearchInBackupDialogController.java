@@ -75,11 +75,10 @@ public class ToolSearchInBackupDialogController extends P2DialogExtra {
         Button btnHelp = P2Button.helpButton(getStage(), "Backup durchsuchen",
                 "Hier werden alle Dateien des Backups angezeigt. Es kann darin nach Dateien " +
                         "gesucht werden. Dateien können geöffnet und kopiert werden.");
-        addHlpButton(btnHelp);
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
-        getHboxLeft().getChildren().add(hBox);
+        getHboxLeft().getChildren().addAll(hBox, btnHelp);
 
         addSearch();
         addComboBox();

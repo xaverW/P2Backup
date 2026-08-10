@@ -90,11 +90,10 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
                 "Es werden alle Dateien zum Sichern angezeigt. Beim Klick auf eine Datei " +
                         "werden alle Backups angezeigt in dem die Datei gesichert ist. " +
                         "Dadurch kann man sehen, wie oft sich die Datei geändert hat und dann gesichert wurde.");
-        addHlpButton(btnHelp);
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
-        getHboxLeft().getChildren().add(hBox);
+        getHboxLeft().getChildren().addAll(hBox, btnHelp);
 
         addSearch();
         initGui();
