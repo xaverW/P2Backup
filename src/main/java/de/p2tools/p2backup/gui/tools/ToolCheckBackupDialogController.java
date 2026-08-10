@@ -193,14 +193,15 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
         Predicate<FileData> prErrorDiff = FileDataProps::isErrorDiff;
         Predicate<FileData> prNotInData = data -> !data.isExistInData();
         Predicate<FileData> prNotInBackup = data -> !data.isExistInBackup();
-        Predicate<FileData> prIsInData = FileDataProps::isExistInBackup;
+        Predicate<FileData> prIsInData = FileDataProps::isExistInData;
         Predicate<FileData> prIsInBackup = FileDataProps::isExistInBackup;
         Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
 
         if (rbOk.isSelected()) {
-            predicate = predicate.and(prErrorDiff.negate()
-                    .and(prIsInData.and(prIsInBackup)
-                            .and(prErrorHash.negate())));
+            predicate = predicate.and(prErrorDiff.negate())
+                    .and(prIsInData)
+                    .and(prIsInBackup)
+                    .and(prErrorHash.negate());
 
         } else if (rbNotOk.isSelected()) {
             predicate = predicate.and(prErrorHash
