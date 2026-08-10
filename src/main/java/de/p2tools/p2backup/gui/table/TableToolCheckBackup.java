@@ -66,6 +66,11 @@ public class TableToolCheckBackup extends PTable<FileData> {
         btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
         btnColumn.setCellFactory(new CellCheckBackupOpenFileButton<>(stageProp).cellFactory);
 
+
+        final TableColumn<FileData, String> copyColumn = new TableColumn<>("Kopieren");
+        copyColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
+        copyColumn.setCellFactory(new CellCopyFileButton<>(stageProp).cellFileFactory);
+
         final TableColumn<FileData, Boolean> errorDiffColumn = new TableColumn<>("Verändert");
         errorDiffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
         errorDiffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
@@ -83,7 +88,8 @@ public class TableToolCheckBackup extends PTable<FileData> {
         TableFactory.columnFactoryBoolean(errorHashColumn);
 
         pathFileColumn.setPrefWidth(500);
-        getColumns().addAll(pathFileColumn, btnColumn, errorDiffColumn, onlyDataColumn, onlyBackupColumn, errorHashColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, copyColumn,
+                errorDiffColumn, onlyDataColumn, onlyBackupColumn, errorHashColumn);
 
     }
 }

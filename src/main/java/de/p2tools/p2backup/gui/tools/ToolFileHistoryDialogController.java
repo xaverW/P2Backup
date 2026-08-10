@@ -34,6 +34,7 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
+import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -53,8 +54,10 @@ import java.util.function.Predicate;
 
 public class ToolFileHistoryDialogController extends P2DialogExtra {
 
-    private final Label lblSum = new Label();
+    private final Label lblSumFound = new Label();
+    private final Label lblSumAll = new Label();
     private final Button btnLoad = new Button("Dateien laden");
+    private final Button btnClear = new Button("");
 
     private final ObjectProperty<BackupInfo> backupInfoProp = new SimpleObjectProperty<>(null);
     private ObjectProperty<BackupData> backupDataProp = new SimpleObjectProperty<>(null);
@@ -100,22 +103,30 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
     public void setResult(FileDataList fileDataList) {
         Platform.runLater(() -> {
             this.fileDataList.setAll(fileDataList);
-            lblSum.setText(tableView.getItems().size() + "");
+            lblSumFound.setText(tableView.getItems().size() + "");
+            lblSumAll.setText(listViewFile.getItems().size() + "");
             setPred();
         });
     }
 
     private void initGui() {
+        Label lblBackupPath = P2Text.getLblTextBold("Backupordner:");
+        Label lblPath = P2Text.getLblTextBold("Dateipfad:");
+        Label lblFile = P2Text.getLblTextBold("Dateiname:");
+//
         GridPane gridPane = new GridPane();
         gridPane.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);
         gridPane.setHgap(P2LibConst.DIST_GRIDPANE_HGAP);
+        gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
+                P2GridConstraints.getCcComputedSizeAndHgrowLeft());
 
-        gridPane.add(P2Text.getLblTextBold("Dateiname:"), 0, 0);
-        gridPane.add(lblFileName, 1, 0);
-        gridPane.add(P2Text.getLblTextBold("Dateipfad:"), 0, 1);
-        gridPane.add(lblFilePath, 1, 1);
-        gridPane.add(P2Text.getLblTextBold("Backupordner:"), 0, 2);
-        gridPane.add(lblToPath, 1, 2);
+        int row = 0;
+        gridPane.add(lblBackupPath, 0, row);
+        gridPane.add(lblToPath, 1, row);
+        gridPane.add(lblPath, 0, ++row);
+        gridPane.add(lblFilePath, 1, row);
+        gridPane.add(lblFile, 0, ++row);
+        gridPane.add(lblFileName, 1, row);
 
         Label lblDaten = P2Text.getLblTextBold("Daten");
         Label lblBackup = P2Text.getLblTextBold("Backup");
@@ -146,6 +157,10 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
 
         listViewFile.setItems(fileDataList.getSortedList());
         listViewFile.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> setTable());
+
+        btnClear.setGraphic(PIconFactory.PICON.BTN_CLEAR.getFontIcon());
+        btnClear.setTooltip(new Tooltip("Suche löschen"));
+        btnClear.setOnAction(a -> txtSearch.clear());
         txtSearch.textProperty().addListener((u, o, n) -> setPred());
     }
 
@@ -153,6 +168,7 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
         Predicate<FileData> pred = (p -> true);
         pred = pred.and(f -> f.getFileNameStr().toLowerCase().contains(txtSearch.getText().toLowerCase()));
         fileDataList.getFilteredList().setPredicate(pred);
+        lblSumAll.setText(listViewFile.getItems().size() + "");
     }
 
     private void initTable() {
@@ -188,7 +204,7 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
         SqlFileData.readFileHistoryList(backupInfoProp.get(), fileData.getFilePathStr(), list);
         tableView.setItems(list);
         tableView.getSelectionModel().selectFirst();
-        lblSum.setText(tableView.getItems().size() + "");
+        lblSumFound.setText(tableView.getItems().size() + "");
     }
 
     private ContextMenu getContextMenu() {
@@ -211,7 +227,7 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(new Label("Suchen: "), txtSearch, P2GuiTools.getHBoxGrower(), btnLoad);
+        hBox.getChildren().addAll(new Label("Suchen: "), txtSearch, btnClear, P2GuiTools.getHBoxGrower(), btnLoad);
         getVBoxCont().getChildren().addAll(hBox);
     }
 
@@ -235,7 +251,9 @@ public class ToolFileHistoryDialogController extends P2DialogExtra {
 
     private void initSum() {
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(P2GuiTools.getHBoxGrower(), new Label("Anzahl: "), lblSum);
+        hBox.getChildren().addAll(new Label("Anzahl: "), lblSumAll,
+                P2GuiTools.getHBoxGrower(),
+                new Label("Anzahl: "), lblSumFound);
         hBox.setAlignment(Pos.CENTER_LEFT);
         getVBoxCont().getChildren().add(hBox);
     }

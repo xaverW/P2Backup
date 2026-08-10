@@ -19,16 +19,21 @@ package de.p2tools.p2backup.gui.table;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2lib.guitools.ptable.P2CellCheckBox;
 import de.p2tools.p2lib.guitools.ptable.P2TableFactory;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class TableToolCompareDir extends PTable<FileData> {
 
-    public TableToolCompareDir(Table.TABLE_ENUM table_enum) {
+    private final ObjectProperty<Stage> stage;
+
+    public TableToolCompareDir(Table.TABLE_ENUM table_enum, ObjectProperty<Stage> stage) {
         super(table_enum);
         this.table_enum = table_enum;
+        this.stage = stage;
 
         initFileRunnerColumn();
     }
@@ -58,22 +63,32 @@ public class TableToolCompareDir extends PTable<FileData> {
         final TableColumn<FileData, String> pathFileColumn = new TableColumn<>("Dateien in den Daten");
         pathFileColumn.setCellValueFactory(new PropertyValueFactory<>("filePathStr"));
 
-        final TableColumn<FileData, Boolean> diffColumn = new TableColumn<>("Verändert");
-        diffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
-        diffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> fromColumn = new TableColumn<>("In den Daten");
-        fromColumn.setCellValueFactory(new PropertyValueFactory<>("existInData"));
-        fromColumn.setCellFactory(new P2CellCheckBox().cellFactory);
-        final TableColumn<FileData, Boolean> toColumn = new TableColumn<>("Im Backup");
-        toColumn.setCellValueFactory(new PropertyValueFactory<>("existInBackup"));
-        toColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+        final TableColumn<FileData, String> btnColumn = new TableColumn<>("Öffnen");
+        btnColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
+        btnColumn.setCellFactory(new CellStartOpenFileButton<>(stage).cellFactory);
 
-        final TableColumn<FileData, Boolean> errorColumn = new TableColumn<>("Fehler");
-        errorColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
-        TableFactory.columnFactoryBoolean(errorColumn);
+        final TableColumn<FileData, String> copyColumn = new TableColumn<>("Kopieren");
+        copyColumn.setCellValueFactory(new PropertyValueFactory<>("toPathStr"));
+        copyColumn.setCellFactory(new CellCopyFileButton<>(stage).cellFileFactory);
 
+        final TableColumn<FileData, Boolean> errorDiffColumn = new TableColumn<>("Verändert");
+        errorDiffColumn.setCellValueFactory(new PropertyValueFactory<>("errorDiff"));
+        errorDiffColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> onlyDataColumn = new TableColumn<>("Fehlt");
+        onlyDataColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInData"));
+        onlyDataColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> onlyBackupColumn = new TableColumn<>("Zuviel");
+        onlyBackupColumn.setCellValueFactory(new PropertyValueFactory<>("onlyInBackup"));
+        onlyBackupColumn.setCellFactory(new P2CellCheckBox().cellFactory);
+
+        final TableColumn<FileData, Boolean> errorHashColumn = new TableColumn<>("Lesefehler");
+        errorHashColumn.setCellValueFactory(new PropertyValueFactory<>("errorHash"));
+        TableFactory.columnFactoryBoolean(errorHashColumn);
+        
         pathFileColumn.setPrefWidth(500);
-        getColumns().addAll(pathFileColumn, diffColumn, fromColumn, toColumn, errorColumn);
+        getColumns().addAll(pathFileColumn, btnColumn, copyColumn, errorDiffColumn, onlyDataColumn, onlyBackupColumn, errorHashColumn);
 
     }
 }

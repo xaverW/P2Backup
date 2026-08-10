@@ -86,6 +86,7 @@ public class ToolCompareHash {
         } else {
             // ==============
             // und jetzt mit dem Hash vergleichen
+            fileListData.forEach(f -> f.setToPathStr(backupData.getToPathStr(backupInfo)));
             CompareFactory.compare(toolCompareBackupDialogController.getStage(),
                     fileListData, fileListBackup, resultList, true);
         }

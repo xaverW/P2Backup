@@ -68,7 +68,7 @@ public class CellStartOpenFileButton<S, T> extends TableCell<S, T> {
                 btnStart.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnStart.setTooltip(new Tooltip("Gespeicherte Datei öffnen"));
                 btnStart.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
-                btnStart.setDisable(fileData.isErrorHash());
+                btnStart.setDisable(fileData.isErrorHash() || fileData.isOnlyInData());
 
                 btnStart.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
@@ -84,6 +84,7 @@ public class CellStartOpenFileButton<S, T> extends TableCell<S, T> {
                 btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
                 btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+                btnOpenDirectory.setDisable(fileData.isOnlyInData());
 
                 btnOpenDirectory.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();

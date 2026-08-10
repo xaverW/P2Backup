@@ -71,7 +71,7 @@ public class ToolBlockedFilesDialogController extends P2DialogExtra {
 
         this.progData = ProgData.getInstance();
         this.backupInfo = backupInfo;
-        tableView = new TableToolBlockedFile(Table.TABLE_ENUM.BLOCKED_FILE, getStage());
+        tableView = new TableToolBlockedFile(Table.TABLE_ENUM.BLOCKED_FILE, getStageProp());
 
         filteredFileList = new FilteredList<>(fileList, p -> true);
         sortedFileList = new SortedList<>(filteredFileList);

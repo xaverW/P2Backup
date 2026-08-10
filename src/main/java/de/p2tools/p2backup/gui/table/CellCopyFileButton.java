@@ -67,7 +67,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
                 btnCopy.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
-                btnCopy.setDisable(fileData.isErrorHash());
+                btnCopy.setDisable(fileData.isErrorHash() || fileData.isOnlyInData());
 
                 btnCopy.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();

@@ -17,6 +17,7 @@
 package de.p2tools.p2backup.gui.table;
 
 import de.p2tools.p2lib.guitools.ptable.P2TableFactory;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -27,12 +28,13 @@ import java.io.File;
 
 public class TableToolBlockedFile extends PTable<File> {
 
-    private final Stage stage;
+    private final ObjectProperty<Stage> stage;
 
-    public TableToolBlockedFile(Table.TABLE_ENUM table_enum, Stage stage) {
+    public TableToolBlockedFile(Table.TABLE_ENUM table_enum, ObjectProperty<Stage> stage) {
         super(table_enum);
         this.table_enum = table_enum;
         this.stage = stage;
+
 
         initColumn();
     }

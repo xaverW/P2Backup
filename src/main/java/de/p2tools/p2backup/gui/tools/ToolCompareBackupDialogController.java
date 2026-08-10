@@ -56,10 +56,10 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
     private final TableToolCompareDir tableView;
 
     private final RadioButton rbAll = new RadioButton("Alle");
-    private final RadioButton rbNotOk = new RadioButton("Daten/Backup unterschiedlich");
-    private final RadioButton rbErrorDiff = new RadioButton("Verändert");
-    private final RadioButton rbOnlyData = new RadioButton("Nur in den Daten");
-    private final RadioButton rbOnlyBackup = new RadioButton("Nur im Backup");
+    private final RadioButton rbNotOk = new RadioButton("Fehler");
+    private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
+    private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
+    private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
     private final RadioButton rbErrorHash = new RadioButton("Kann nicht gelesen werden");
     private final CheckBox chkLong = new CheckBox("Neu einlesen");
     private final Label lblSum = new Label();
@@ -70,7 +70,7 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
 
         this.progData = ProgData.getInstance();
         this.backupInfo = backupInfo;
-        tableView = new TableToolCompareDir(Table.TABLE_ENUM.DIR_COMPARE);
+        tableView = new TableToolCompareDir(Table.TABLE_ENUM.DIR_COMPARE, getStageProp());
         init(false);
     }
 
@@ -151,10 +151,12 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
         rbErrorHash.setToggleGroup(tg);
         rbAll.setSelected(true);
 
-        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(rbAll, rbNotOk, rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash,
+        HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
+        hBox1.getChildren().addAll(rbAll, rbNotOk);
+        HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
+        hBox2.getChildren().addAll(rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash,
                 P2GuiTools.getHBoxGrower(), lblSum);
-        getVBoxCont().getChildren().add(hBox);
+        getVBoxCont().getChildren().addAll(hBox1, hBox2);
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbErrorDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
@@ -166,20 +168,21 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
     private void setPredicate() {
         Predicate<FileData> predicate = fileData -> true;
         Predicate<FileData> prErrorDiff = FileDataProps::isErrorDiff;
-        Predicate<FileData> prExistNotInData = data -> !data.isExistInData();
-        Predicate<FileData> prExistNotInBackup = data -> !data.isExistInBackup();
+        Predicate<FileData> prNotInData = data -> !data.isExistInData();
+        Predicate<FileData> prNotInBackup = data -> !data.isExistInBackup();
         Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
         if (rbNotOk.isSelected()) {
-            predicate = predicate.and(prErrorDiff.or(prExistNotInData).or(prExistNotInBackup).or(prErrorHash));
+            predicate = predicate.and(prErrorHash
+                    .or(prErrorDiff).or(prNotInData).or(prNotInBackup).or(prErrorHash));
 
         } else if (rbErrorDiff.isSelected()) {
             predicate = predicate.and(prErrorDiff);
 
         } else if (rbOnlyData.isSelected()) {
-            predicate = predicate.and(prExistNotInBackup);
+            predicate = predicate.and(prNotInBackup);
 
         } else if (rbOnlyBackup.isSelected()) {
-            predicate = predicate.and(prExistNotInData);
+            predicate = predicate.and(prNotInData);
 
         } else if (rbErrorHash.isSelected()) {
             predicate = predicate.and(prErrorHash);
