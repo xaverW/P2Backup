@@ -21,16 +21,20 @@ import de.p2tools.p2backup.controller.config.PEvents;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.tools.ToolCheckBackupDialogController;
+import de.p2tools.p2backup.gui.tools.DialogCheckBackup;
+import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ToolCheckBackup {
@@ -39,13 +43,13 @@ public class ToolCheckBackup {
     private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
-    private final ToolCheckBackupDialogController toolCheckBackupDialogController;
+    private final DialogCheckBackup dialogCheckBackup;
 
 
-    public ToolCheckBackup(ToolCheckBackupDialogController toolCheckBackupDialogController,
+    public ToolCheckBackup(DialogCheckBackup dialogCheckBackup,
                            BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.toolCheckBackupDialogController = toolCheckBackupDialogController;
+        this.dialogCheckBackup = dialogCheckBackup;
         this.backupInfo = backupInfo;
         this.backupData = backupData;
         this.atomicBoolean = atomicBoolean;
@@ -96,10 +100,24 @@ public class ToolCheckBackup {
             // ==============
             // und jetzt den Hash vergleichen
             backupInfo.runnerDto.setRunnerText("Vergleichen");
-            CompareFactory.compare(toolCheckBackupDialogController.getStage(),
-                    fileListDb, fileListBackup, resultList, false);
+            List<FileData> errorList = new ArrayList<>();
+            CompareFactory.compare(dialogCheckBackup.getStage(),
+                    fileListDb, fileListBackup, resultList, errorList);
+
+            if (resultList.isEmpty()) {
+                P2AlertAppThread.infoAlert(dialogCheckBackup.getStage(),
+                        "Prüfen", "Backup ist OK",
+                        "Im Backup befinden sich keine Dateien.");
+
+            } else if (errorList.isEmpty()) {
+                // dann nur eine kurze Meldung
+                P2AlertAppThread.infoAlert(dialogCheckBackup.getStage(),
+                        "Prüfen", "Backup ist OK",
+                        "Das Backup ist unverändert. Es fehlt nichts " +
+                                "oder ist verändert.");
+            }
         }
-        toolCheckBackupDialogController.setResult(resultList);
+        dialogCheckBackup.setResult(resultList);
         atomicBoolean.set(false);
     }
 

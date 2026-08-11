@@ -21,33 +21,37 @@ import de.p2tools.p2backup.controller.config.PEvents;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.CreateDataHash;
 import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
-import de.p2tools.p2backup.gui.tools.ToolCompareBackupDialogController;
+import de.p2tools.p2backup.gui.tools.DialogCompareBackupData;
+import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ToolCompareDataBackup {
+public class ToolCompareBackupData {
 
     private ProgData progData;
     private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
-    private final ToolCompareBackupDialogController toolCompareBackupDialogController;
+    private final DialogCompareBackupData dialogCompareBackupData;
     private final String toPath;
     private final boolean quick;
 
 
-    public ToolCompareDataBackup(ToolCompareBackupDialogController toolCompareBackupDialogController,
+    public ToolCompareBackupData(DialogCompareBackupData dialogCompareBackupData,
                                  BackupInfo backupInfo, BackupData backupData, boolean quick, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.toolCompareBackupDialogController = toolCompareBackupDialogController;
+        this.dialogCompareBackupData = dialogCompareBackupData;
         this.backupData = backupData;
         this.quick = quick;
         this.toPath = FileFactory.getToPathStr(backupInfo, backupData);
@@ -87,15 +91,34 @@ public class ToolCompareDataBackup {
             fileListData.clear();
             fileListBackup.clear();
 
+        } else if (fileListBackup.isEmpty()) {
+            // wenn Backup leer ist
+            P2AlertAppThread.infoAlert(dialogCompareBackupData.getStage(), "Vergleichen",
+                    "Backup mit den Daten vergleichen",
+                    "Das Backup ist leer, es enthält keine Dateien.");
+
         } else {
             // ==============
             // und jetzt mit dem Hash vergleichen
             fileListData.forEach(f -> f.setToPathStr(backupData.getToPathStr(backupInfo)));
-            CompareFactory.compare(toolCompareBackupDialogController.getStage(),
-                    fileListData, fileListBackup, resultList, true);
+            if (quick) {
+                CompareFactory.compareQuick(backupInfo, fileListData, fileListBackup, resultList, new ArrayList<>());
+            } else {
+                List<FileData> list = new ArrayList<>();
+                CompareFactory.compare(dialogCompareBackupData.getStage(),
+                        fileListData, fileListBackup, resultList, list);
+
+                if (list.isEmpty()) {
+                    // dann nur eine kurze Meldung
+                    P2AlertAppThread.infoAlert(dialogCompareBackupData.getStage(),
+                            "Vergleich", "Dateien und Backup sind identisch",
+                            "Die Dateien im Backup sind identisch\n" +
+                                    "mit den Original-Dateien");
+                }
+            }
         }
 
-        toolCompareBackupDialogController.setResult(resultList);
+        dialogCompareBackupData.setResult(resultList);
         atomicBoolean.set(false);
     }
 

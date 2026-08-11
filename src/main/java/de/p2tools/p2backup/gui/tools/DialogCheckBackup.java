@@ -27,6 +27,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackup;
+import de.p2tools.p2backup.gui.dialog.CheckBackupRepairDialogController;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolCheckBackup;
@@ -36,8 +37,6 @@ import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -48,7 +47,7 @@ import javafx.scene.layout.VBox;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
-public class ToolCheckBackupDialogController extends P2DialogExtra {
+public class DialogCheckBackup extends P2DialogExtra {
 
     private final BackupInfo backupInfo;
     private final FileDataList fileDataList = new FileDataList();
@@ -57,18 +56,19 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
     private final TableToolCheckBackup tableView;
     private final Label lblSum = new Label();
 
-    private final RadioButton rbAll = new RadioButton("Alles");
+    private final RadioButton rbAll = new RadioButton("Alle");
     private final RadioButton rbOk = new RadioButton("OK");
     private final RadioButton rbNotOk = new RadioButton("Fehler");
     private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
     private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
     private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
     private final RadioButton rbErrorHash = new RadioButton("Kann nicht gelesen werden");
+
     private final Button btnStart = new Button("Dateien laden");
     private final Button btnRepair = new Button("Reparieren");
-    private final ObservableList<FileData> errorList = FXCollections.observableArrayList();
+    private final FileDataList errorList = new FileDataList();
 
-    public ToolCheckBackupDialogController(BackupInfo backupInfo) {
+    public DialogCheckBackup(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.CHECK_BACKUP_DIALOG_SIZE, "Backup prüfen",
                 true, true, true, DECO.NO_BORDER);
 
@@ -92,17 +92,22 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
                         "Backup zu entfernen.");
 
         btnRepair.setOnAction(a -> {
-            if (!RepairFactory.repairBackup(backupInfo, errorList)) {
-                P2Alert.showErrorAlert(getStage(), "Dateien aus dem Backup löschen",
-                        "Es konnten nicht alle fehlerhaften Dateien aus dem " +
-                                "Backup gelöscht werden");
+            CheckBackupRepairDialogController b = new CheckBackupRepairDialogController(getStage(), errorList);
+            if (b.isOk()) {
+                if (!RepairFactory.repairBackup(backupInfo, errorList)) {
+                    P2Alert.showErrorAlert("Dateien aus dem Backup löschen",
+                            "Es konnten nicht alle fehlerhaften Dateien aus dem " +
+                                    "Backup gelöscht werden");
+                }
+                this.fileDataList.clear();
+                rbAll.setSelected(true);
             }
-            this.fileDataList.clear();
         });
         btnRepair.setDisable(true);
+
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
-        getHboxLeft().getChildren().addAll(hBox, btnRepair, btnHelp);
+        getHboxLeft().getChildren().addAll(hBox, btnHelp, btnRepair);
 
         init();
         addTable();
@@ -129,6 +134,8 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
                     if (found) {
                         btnRepair.setDisable(false);
                         rbNotOk.setSelected(true);
+                    } else {
+                        rbAll.setSelected(true);
                     }
                     this.setPredicate();
                 }
@@ -147,6 +154,7 @@ public class ToolCheckBackupDialogController extends P2DialogExtra {
                 return;
             }
             fileDataList.clear();
+            rbAll.setSelected(true);
             backupInfo.runnerDto.initRunner();
             backupInfo.runnerDto.setRunnerText("Backup prüfen");
             new ToolCheckBackup(this, backupInfo,

@@ -73,7 +73,7 @@ public class BackupToolController extends VBox {
         btnInfo.setMaxWidth(Double.MAX_VALUE);
         btnInfo.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new ToolBackupInfoDialogController(progData.backupInfoProperty.get());
+                new DialogBackupInfo(progData.backupInfoProperty.get());
             }
         });
         Label lblInfo = new Label("Hier werden Infos über die " +
@@ -87,7 +87,7 @@ public class BackupToolController extends VBox {
         btnBackup.setMaxWidth(Double.MAX_VALUE);
         btnBackup.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new ToolSearchInBackupDialogController(progData.backupInfoProperty.get()).showDialog();
+                new DialogSearchInBackup(progData.backupInfoProperty.get()).showDialog();
             }
         });
         Label lblBackup = new Label("Damit kann man Dateien in einem Backup suchen. Dateien können auch aus dem " +
@@ -101,7 +101,7 @@ public class BackupToolController extends VBox {
         btnHistory.setMaxWidth(Double.MAX_VALUE);
         btnHistory.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new ToolFileHistoryDialogController(progData).showDialog();
+                new DialogFileHistory(progData).showDialog();
             }
         });
         Label lblHistory = new Label("Hier sieht man den Änderungsverlauf von Dateien.");
@@ -110,15 +110,15 @@ public class BackupToolController extends VBox {
 
 
         // Vergleich
-        Button btnCompare = new Button("Daten und Backup vergleichen");
+        Button btnCompare = new Button("Backup mit den Daten vergleichen");
         btnCompare.setMaxWidth(Double.MAX_VALUE);
         btnCompare.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new ToolCompareBackupDialogController(progData.backupInfoProperty.get()).showDialog();
+                new DialogCompareBackupData(progData.backupInfoProperty.get()).showDialog();
             }
         });
-        Label lblCompare = new Label("Damit können die Daten mit " +
-                "einem Backup vergleichen werden. So kann geprüft werden, was sich geändert hat.");
+        Label lblCompare = new Label("Damit kann das Backup mit den Daten " +
+                "vergleichen werden. So kann geprüft werden, was sich geändert hat.");
         lblCompare.setWrapText(true);
         lblCompare.getStyleClass().add("lblToolInfo");
 
@@ -128,7 +128,7 @@ public class BackupToolController extends VBox {
         btnCheck.setMaxWidth(Double.MAX_VALUE);
         btnCheck.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new ToolCheckBackupDialogController(progData.backupInfoProperty.get()).showDialog();
+                new DialogCheckBackup(progData.backupInfoProperty.get()).showDialog();
             }
         });
         Label lblCheck = new Label("Hiermit kann überprüft werden, ob sich ein Backup verändert hat. Es wird " +
@@ -141,7 +141,7 @@ public class BackupToolController extends VBox {
         btnBlocked.setMaxWidth(Double.MAX_VALUE);
         btnBlocked.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new ToolBlockedFilesDialogController(progData.backupInfoProperty.get()).showDialog();
+                new DialogBlockedFiles(progData.backupInfoProperty.get()).showDialog();
             }
         });
         lblBlocked.setWrapText(true);

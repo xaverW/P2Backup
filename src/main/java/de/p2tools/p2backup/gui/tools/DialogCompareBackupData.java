@@ -25,7 +25,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
-import de.p2tools.p2backup.controller.runner.tools.ToolCompareDataBackup;
+import de.p2tools.p2backup.controller.runner.tools.ToolCompareBackupData;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolCompareDir;
@@ -38,6 +38,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -45,7 +46,7 @@ import javafx.scene.layout.VBox;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
-public class ToolCompareBackupDialogController extends P2DialogExtra {
+public class DialogCompareBackupData extends P2DialogExtra {
 
     private final BackupInfo backupInfo;
     private final FileDataList fileDataList = new FileDataList();
@@ -54,7 +55,8 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
     private final Button btnStart = new Button("Starten");
     private final TableToolCompareDir tableView;
 
-    private final RadioButton rbAll = new RadioButton("Alle");
+    private final RadioButton rbAllBackup = new RadioButton("Alle");
+    private final RadioButton rbAllData = new RadioButton("Alle");
     private final RadioButton rbOk = new RadioButton("OK");
     private final RadioButton rbNotOk = new RadioButton("Fehler");
     private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
@@ -64,7 +66,7 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
     private final CheckBox chkQuick = new CheckBox("Schnell");
     private final Label lblSum = new Label();
 
-    public ToolCompareBackupDialogController(BackupInfo backupInfo) {
+    public DialogCompareBackupData(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.COMPARE_DIALOG_SIZE, "Daten mit Backup vergleichen",
                 true, true, true, DECO.NO_BORDER);
 
@@ -80,8 +82,8 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
 
-        Button btnHelp = P2Button.helpButton(getStage(), "Daten und Backup vergleichen",
-                "Hier kann man die Daten mit einem Backup vergleichen. Damit sieht man, " +
+        Button btnHelp = P2Button.helpButton(getStage(), "Backup mit den Daten vergleichen",
+                "Hier kann man das Backup mit den Daten vergleichen. Damit sieht man, " +
                         "welche Dateien im Backup liegen und sich geändert haben." +
                         "\n\n" +
                         "Mit \"Schnell\" werden die Dateien (Daten und Backup) " +
@@ -116,6 +118,10 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
         chkQuick.setSelected(true);
         cboBackup.setItems(backupInfo.getBackupDataList());
         cboBackup.getSelectionModel().selectLast();
+        cboBackup.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
+            fileDataList.clear();
+            rbAllBackup.setSelected(true);
+        });
 
         btnStart.setOnAction(a -> {
             BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
@@ -123,10 +129,11 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
                 return;
             }
             fileDataList.clear();
+            rbAllBackup.setSelected(true);
             backupInfo.runnerDto.initRunner();
 
             backupInfo.runnerDto.setRunnerText("Daten mit Backup vergleichen");
-            new ToolCompareDataBackup(this, backupInfo,
+            new ToolCompareBackupData(this, backupInfo,
                     backupData, chkQuick.isSelected(), new AtomicBoolean(true)).compare();
         });
         btnStart.disableProperty().bind(
@@ -144,22 +151,53 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
 
     private void addRadio() {
         ToggleGroup tg = new ToggleGroup();
-        rbAll.setToggleGroup(tg);
+        rbAllBackup.setToggleGroup(tg);
+        rbAllData.setToggleGroup(tg);
         rbOk.setToggleGroup(tg);
         rbNotOk.setToggleGroup(tg);
         rbErrorDiff.setToggleGroup(tg);
         rbOnlyData.setToggleGroup(tg);
         rbOnlyBackup.setToggleGroup(tg);
         rbErrorHash.setToggleGroup(tg);
-        rbAll.setSelected(true);
+        rbAllBackup.setSelected(true);
+
+        GridPane gridPane = new GridPane(P2LibConst.DIST_GRIDPANE_HGAP, P2LibConst.DIST_GRIDPANE_VGAP);
+        gridPane.add(new Label("Daten:"), 0, 0);
+        gridPane.add(rbAllData, 1, 0);
+
+        gridPane.add(new Label("Backup:"), 0, 1);
+//        gridPane.add(rbAllBackup, 1, 1);
+//        gridPane.add(rbOk, 2, 1);
+//        gridPane.add(rbNotOk, 3, 1);
+
+//        gridPane.add(rbErrorDiff, 1, 2);
+//        gridPane.add(rbOnlyData, 2, 2);
+//        gridPane.add(rbOnlyBackup, 3, 2);
+//        gridPane.add(rbErrorHash, 4, 2);
+        getVBoxCont().getChildren().add(gridPane);
+
+//        HBox hBox0 = new HBox(P2LibConst.SPACING_HBOX);
+//        hBox0.setAlignment(Pos.CENTER_LEFT);
+//        hBox0.getChildren().addAll(new Label("Daten:"), rbAllData);
 
         HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
-        hBox1.getChildren().addAll(rbAll, rbOk, rbNotOk);
+        hBox1.setAlignment(Pos.CENTER_LEFT);
+        hBox1.getChildren().addAll(/*new Label("Backup:"),*/ rbAllBackup, rbOk, rbNotOk);
+
         HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
-        hBox2.getChildren().addAll(rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash,
+        GridPane.setHgrow(hBox2, Priority.ALWAYS);
+        Label lbl = new Label("Backup:");
+        lbl.setVisible(false);
+        hBox2.setAlignment(Pos.CENTER_LEFT);
+        hBox2.getChildren().addAll(/*lbl,*/ rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash,
                 P2GuiTools.getHBoxGrower(), lblSum);
-        getVBoxCont().getChildren().addAll(hBox1, hBox2);
-        rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
+
+        gridPane.add(hBox1, 1, 1);
+        gridPane.add(hBox2, 1, 2);
+
+//        getVBoxCont().getChildren().addAll(hBox0, hBox1, hBox2);
+        rbAllBackup.selectedProperty().addListener((u, o, n) -> setPredicate());
+        rbAllData.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbNotOk.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbErrorDiff.selectedProperty().addListener((u, o, n) -> setPredicate());
@@ -176,15 +214,27 @@ public class ToolCompareBackupDialogController extends P2DialogExtra {
         Predicate<FileData> prIsInData = FileDataProps::isExistInData;
         Predicate<FileData> prIsInBackup = FileDataProps::isExistInBackup;
         Predicate<FileData> prErrorHash = FileDataProps::isErrorHash;
-        if (rbOk.isSelected()) {
-            predicate = predicate.and(prErrorDiff.negate())
-                    .and(prIsInData)
-                    .and(prIsInBackup)
-                    .and(prErrorHash.negate());
+        if (rbAllBackup.isSelected()) {
+            // alle Backups
+            predicate = predicate.and(prIsInBackup);
+
+        } else if (rbAllData.isSelected()) {
+            // alle Backups
+            predicate = predicate.and(prIsInData);
+
+        } else if (rbOk.isSelected()) {
+            predicate = predicate.and(prIsInBackup)
+                    .and(prErrorDiff.negate())
+                    .and(prErrorHash.negate())
+                    .and(prIsInData);
+
 
         } else if (rbNotOk.isSelected()) {
             predicate = predicate.and(prErrorHash
-                    .or(prErrorDiff).or(prNotInData).or(prNotInBackup).or(prErrorHash));
+                    .or(prErrorDiff)
+                    .or(prNotInData)
+                    .or(prNotInBackup)
+                    .or(prErrorHash));
 
         } else if (rbErrorDiff.isSelected()) {
             predicate = predicate.and(prErrorDiff);

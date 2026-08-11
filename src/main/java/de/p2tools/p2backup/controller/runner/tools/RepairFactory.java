@@ -6,6 +6,7 @@ import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepairFactory {
@@ -16,26 +17,35 @@ public class RepairFactory {
         if (!SqlFileData.deleteBackupFileList(backupInfo, errorList)) {
             return false;
         }
-        return true;
-        // zur Sicherheit bleiben die drin!
-        // return deleteErrorFiles(errorList);
+        return deleteErrorFiles(errorList);
     }
 
     private static boolean deleteErrorFiles(List<FileData> errorList) {
-        FileData fileData = null;
         boolean ret = true;
+        FileData fileData = null;
+        List<Path> list = new ArrayList<>();
         try {
             for (FileData f : errorList) {
                 fileData = f;
                 if (fileData.isErrorDiff() || fileData.isOnlyInBackup() || fileData.isErrorHash()) {
                     Path baPath = fileData.getBackupFilePath();
                     if (baPath.toFile().exists()) {
-                        if (!baPath.toFile().delete()) {
-                            P2Log.errorLog(956234780, "Fehlerhafte Dateien aus dem Backup löschen");
-                            P2Log.errorLog(956234780, baPath.toString());
-                            ret = false;
-                        }
+                        list.add(baPath);
                     }
+                }
+            }
+            if (list.isEmpty()) {
+                return true;
+            }
+
+            for (Path path : list) {
+                if (path.toFile().delete()) {
+                    P2Log.debugLog("Fehlerhafte Dateien aus dem Backup löschen:");
+                    P2Log.debugLog(path.toString());
+                } else {
+                    P2Log.errorLog(956234780, "Fehlerhafte Dateien aus dem Backup löschen:");
+                    P2Log.errorLog(956234780, path.toString());
+                    ret = false;
                 }
             }
         } catch (Exception ex) {

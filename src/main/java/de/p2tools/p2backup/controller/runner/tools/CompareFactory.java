@@ -6,10 +6,8 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
-import de.p2tools.p2lib.alert.P2AlertAppThread;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +19,8 @@ public class CompareFactory {
 
     public static void compare(Stage stage,
                                FileDataList fileListData, FileDataList fileListBackup,
-                               FileDataList resultList, boolean compare) {
+                               List<FileData> resultList, List<FileData> errorList) {
+
         // beim Backup prüfen ist fileListData die aus der DB, fileListBackup die aus dem Backup-Ordner
         final HashMap<String, FileData> dataMap = new HashMap<>();
         fileListData.forEach(fileData -> {
@@ -31,6 +30,7 @@ public class CompareFactory {
             resultList.add(fileData);
             if (fileData.getHash().equals(FileFactory.HASH_ERROR)) {
                 fileData.setErrorHash(true);
+                errorList.add(fileData);
             }
         });
 
@@ -49,6 +49,7 @@ public class CompareFactory {
                 resultList.add(fileBackup);
                 if (fileBackup.getHash().equals(FileFactory.HASH_ERROR)) {
                     fileBackup.setErrorHash(true);
+                    errorList.add(fileBackup);
                 }
 
             } else {
@@ -56,20 +57,19 @@ public class CompareFactory {
                 fileDb.setExistInBackup(true);
                 if (fileBackup.getHash().equals(FileFactory.HASH_ERROR)) {
                     fileDb.setErrorHash(true);
+                    errorList.add(fileDb);
 
                 } else if (!fileBackup.getHash().equals(fileDb.getHash())) {
                     fileDb.setErrorDiff(true);
+                    errorList.add(fileDb);
                 }
             }
         });
 
-//        List<FileData> list = new ArrayList<>(dataMap.values());
-//        // nur in den Daten
-//        for (FileData fileDb : list) {
-//            fileDb.setExistInData(true);
-//        }
-
+        errorList.addAll(resultList.stream().filter(f ->
+                f.isErrorDiff() || f.isErrorHash() || f.isOnlyInData() || f.isOnlyInBackup()).toList());
         resultList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
+        errorList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
 
         boolean found = false;
         System.out.println("====NOT====");
@@ -78,78 +78,55 @@ public class CompareFactory {
                 found = true;
             }
         }
-
-        if (compare) {
-            if (!found) {
-                // dann nur eine kurze Meldung
-                P2AlertAppThread.infoAlert(stage,
-                        "Vergleich", "Dateien und Backup sind identisch",
-                        "Die Dateien im Backup sind identisch\n" +
-                                "mit den Original-Dateien");
-            }
-        } else {
-            if (resultList.isEmpty()) {
-                P2AlertAppThread.infoAlert(stage,
-                        "Prüfen", "Backup ist OK",
-                        "Im Backup befinden sich keine Dateien.");
-
-            } else {
-                if (!found) {
-                    // dann nur eine kurze Meldung
-                    P2AlertAppThread.infoAlert(stage,
-                            "Prüfen", "Backup ist OK",
-                            "Das Backup ist unverändert. Es fehlt nichts " +
-                                    "oder ist verändert.");
-                }
-            }
-        }
     }
 
     public static void compareQuick(BackupInfo backupInfo,
                                     FileDataList fileListDataDb, FileDataList fileListBackup,
-                                    FileDataList errorList) {
-        final HashMap<String, FileData> baFileMap = new HashMap<>();
-        for (FileData baFile : fileListBackup) {
-            baFile.resetError();
-            baFile.setExistInBackup(true);
-            baFileMap.put(baFile.getFilePathStr(), baFile);
+                                    List<FileData> resultList, List<FileData> errorList) {
+
+        final HashMap<String, FileData> backupFileMap = new HashMap<>();
+        for (FileData backupFile : fileListBackup) {
+            backupFile.resetError();
+            backupFile.setExistInBackup(true);
+            backupFileMap.put(backupFile.getFilePathStr(), backupFile);
+            resultList.add(backupFile);
         }
 
-        for (FileData dbFile : fileListDataDb) {
-            String path = dbFile.getFilePathStr();
-            dbFile.resetError();
-            dbFile.setExistInData(true);
+        for (FileData dataFile : fileListDataDb) {
+            dataFile.resetError();
+            dataFile.setExistInData(true);
 
-            FileData baFile = baFileMap.remove(path);
-            if (baFile == null) {
-                errorList.add(dbFile);
+            String path = dataFile.getFilePathStr();
+            FileData backupFile = backupFileMap.remove(path);
+
+            if (backupFile == null) {
+                resultList.add(dataFile);
                 continue;
             }
 
-            dbFile.setExistInBackup(true);
-            if (dbFile.getSize() != baFile.getSize()) {
-                dbFile.setErrorDiff(true);
-                errorList.add(dbFile);
+            backupFile.setExistInData(true);
+            if (dataFile.getSize() != backupFile.getSize()) {
+                backupFile.setErrorDiff(true);
                 continue;
             }
 
-            if (dbFile.getDate() != baFile.getDate()) {
+            if (dataFile.getDate() != backupFile.getDate()) {
                 // wenn sich nur das Datum unterscheidet, können die Dateien doch gleich sein
-                FileData baHash = FileHashFactory.getFileDataHash(backupInfo, "", false,
-                        baFile.getBackupFilePath().toFile(), true);
+                FileData backupHash = FileHashFactory.getFileDataHash(backupInfo, "", false,
+                        backupFile.getBackupFilePath().toFile(), true);
 
-                if (baHash == null || !dbFile.getHash().equals(baHash.getHash())) {
-                    dbFile.setErrorDiff(true);
-                    if (baHash != null && baHash.getHash().equals(FileFactory.HASH_ERROR)) {
-                        dbFile.setErrorHash(true);
+                if (backupHash == null || !dataFile.getHash().equals(backupHash.getHash())) {
+                    backupFile.setErrorDiff(true);
+                    if (backupHash != null && backupHash.getHash().equals(FileFactory.HASH_ERROR)) {
+                        backupFile.setErrorHash(true);
                     }
-                    errorList.add(dbFile);
                 }
             }
-
         }
-        // und jetzt noch die baFiles die zuviel sind
-        List<FileData> list = new ArrayList<>(baFileMap.values());
-        errorList.addAll(list);
+        errorList.addAll(resultList.stream().filter(f ->
+                f.isErrorDiff() || f.isErrorHash() || f.isOnlyInData() || f.isOnlyInBackup()).toList());
+
+        errorList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
+        resultList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
     }
 }

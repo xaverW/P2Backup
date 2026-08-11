@@ -22,6 +22,7 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
+import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
@@ -30,6 +31,7 @@ import de.p2tools.p2lib.tools.P2Wait;
 import de.p2tools.p2lib.tools.log.P2Log;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ToolCheckBackupQuick {
@@ -82,7 +84,9 @@ public class ToolCheckBackupQuick {
 
         } else {
             // ==============
-            CompareFactory.compareQuick(backupInfo, fileListDb, fileListBackup, errorList);
+            CompareFactory.compareQuick(backupInfo, fileListDb, fileListBackup, new ArrayList<>(), errorList);
+            // und jetzt noch die, die "zuviel im Backup sind, löschen, sind keine BackupFehler
+            errorList.removeIf(FileDataProps::isOnlyInBackup);
         }
         atomicBoolean.set(false);
     }

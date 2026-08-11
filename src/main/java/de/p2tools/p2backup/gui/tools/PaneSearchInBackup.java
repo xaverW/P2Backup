@@ -209,7 +209,7 @@ public class PaneSearchInBackup extends HBox {
 
         HBox hBoxPath = new HBox();
         hBoxPath.setPadding(new Insets(5, 5, 5, 5));
-        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Ordner:  "), lblPath);
+        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Backup-Ordner:  "), lblPath);
 
         HBox hBoxFilePath = new HBox();
         hBoxFilePath.setPadding(new Insets(5, 5, 5, 5));

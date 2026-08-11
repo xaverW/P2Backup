@@ -18,14 +18,10 @@ package de.p2tools.p2backup.gui.dialog;
 
 
 import de.p2tools.p2backup.controller.config.ProgConfig;
-import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableBackupError;
-import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
@@ -33,7 +29,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -41,30 +40,28 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class BackupErrorListDialogController extends P2DialogExtra {
+public class CheckBackupRepairDialogController extends P2DialogExtra {
 
-    public enum ERROR {CANCEL, REPAIR, IGNORE}
-
-    private final Button btnRepair = new Button("Reparieren");
+    private final Button btnRepair = new Button("Dateien löschen");
     private final Button btnCancel = new Button("Abbrechen");
-    private final Button btnIgnore = new Button("Ignorieren");
-    private final BackupInfo backupInfo;
     private final FileDataList errorList;
-    private final ObjectProperty<ERROR> errorEnum;
     private TableBackupError tableView;
     private final ObjectProperty<Stage> stageProp = new SimpleObjectProperty<>();
+    private boolean ok = false;
 
-    public BackupErrorListDialogController(BackupInfo backupInfo, FileDataList errorList, ObjectProperty<ERROR> errorEnum) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.BACKUP_ERROR_DIALOG_SIZE, "Backup kontrollieren",
+    public CheckBackupRepairDialogController(Stage stage, FileDataList errorList) {
+        super(stage, ProgConfig.BACKUP_ERROR_DIALOG_SIZE, "Backup prüfen",
                 true, true, false, DECO.NO_BORDER);
 
-        this.backupInfo = backupInfo;
         this.errorList = errorList;
-        this.errorEnum = errorEnum;
         this.tableView = new TableBackupError(Table.TABLE_ENUM.BACKUP_ERROR, stageProp);
         initTable();
         init(true);
         stageProp.set(getStage());
+    }
+
+    public boolean isOk() {
+        return ok;
     }
 
     @Override
@@ -76,12 +73,11 @@ public class BackupErrorListDialogController extends P2DialogExtra {
     @Override
     public void make() {
         Button btnHelp;
-        btnHelp = PIconFactory.getHelpButton(getStage(), "Datei kopieren",
-                "Dateien im Backup sind verändert oder fehlen. Das Backup kann " +
-                        "abgebrochen werden oder die Dateien können aus dem Backup gelöscht werden. " +
-                        "Ansonsten kann mit einem komplett neuen Backup wieder begonnen werden.");
+        btnHelp = PIconFactory.getHelpButton(getStage(), "Backup reparieren",
+                "Dateien im Backup sind verändert, fehlen oder sind zuviel. Das Backup kann " +
+                        "repariert werden, die Dateien werden dann im Backup gelöscht.");
         Text text;
-        text = P2Text.getTextBold("Dateien im Backup fehlen oder sind verändert");
+        text = P2Text.getTextBold("Dateien im Backup fehlerhaft");
         HBox hBoxText = new HBox();
         hBoxText.setAlignment(Pos.CENTER);
         hBoxText.getChildren().add(text);
@@ -100,34 +96,14 @@ public class BackupErrorListDialogController extends P2DialogExtra {
         HBox.setHgrow(vBoxTable, Priority.ALWAYS);
         VBox.setVgrow(hBoxCenter, Priority.ALWAYS);
 
-        Label lblRepair = P2Text.getLblTextBold("Backup reparieren, fehlerhafte Dateien aus dem Backup löschen");
-        HBox hBoxRepair = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxRepair.setAlignment(Pos.CENTER_RIGHT);
-        hBoxRepair.getChildren().addAll(lblRepair, P2GuiTools.getHBoxGrower(), btnHelp, btnRepair);
-
-        Label lblCancel = P2Text.getLblTextBold("Backup abbrechen");
-        HBox hBoxCancel = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxCancel.setAlignment(Pos.CENTER_RIGHT);
-        hBoxCancel.getChildren().addAll(lblCancel, P2GuiTools.getHBoxGrower(), btnCancel);
-
-        Label lblIgnore = P2Text.getLblTextBold("Fehler ignorieren und ein Vollbackup machen");
-        HBox hBoxIgnore = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxIgnore.setAlignment(Pos.CENTER_RIGHT);
-        hBoxIgnore.getChildren().addAll(lblIgnore, P2GuiTools.getHBoxGrower(), btnIgnore);
-
-        getVBoxCont().getChildren().addAll(hBoxText, P2GuiTools.getVDistance(5),
-                hBoxCenter, P2GuiTools.getVDistance(50), hBoxRepair, hBoxIgnore, hBoxCancel);
-
+        getVBoxCont().getChildren().addAll(hBoxText, P2GuiTools.getVDistance(5), hBoxCenter);
+        getHboxLeft().getChildren().add(btnHelp);
+        addOkCancelButtons(btnRepair, btnCancel);
         btnRepair.setOnAction(a -> {
-            errorEnum.set(ERROR.REPAIR);
+            ok = true;
             close();
         });
         btnCancel.setOnAction(a -> {
-            errorEnum.set(ERROR.CANCEL);
-            close();
-        });
-        btnIgnore.setOnAction(a -> {
-            errorEnum.set(ERROR.IGNORE);
             close();
         });
     }
@@ -139,12 +115,6 @@ public class BackupErrorListDialogController extends P2DialogExtra {
             if (m.getButton().equals(MouseButton.SECONDARY)) {
                 ContextMenu contextMenu = getContextMenu();
                 tableView.setContextMenu(contextMenu);
-            }
-        });
-        tableView.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
-            FileData f = tableView.getSelectionModel().getSelectedItem();
-            if (f == null) {
-            } else {
             }
         });
     }

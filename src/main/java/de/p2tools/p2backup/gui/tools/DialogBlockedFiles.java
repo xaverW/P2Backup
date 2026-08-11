@@ -47,7 +47,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
-public class ToolBlockedFilesDialogController extends P2DialogExtra {
+public class DialogBlockedFiles extends P2DialogExtra {
 
     private final BackupInfo backupInfo;
     private final Set<File> foundFileList = new HashSet<>();
@@ -65,7 +65,7 @@ public class ToolBlockedFilesDialogController extends P2DialogExtra {
     private final RadioButton rbFound = new RadioButton("Sichern");
     private final RadioButton rbBlock = new RadioButton("Geblockt");
 
-    public ToolBlockedFilesDialogController(BackupInfo backupInfo) {
+    public DialogBlockedFiles(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BLOCKED_FILE_DIALOG_SIZE, "In den Daten/Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 

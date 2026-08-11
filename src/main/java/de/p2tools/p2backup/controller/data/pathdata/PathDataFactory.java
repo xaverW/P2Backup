@@ -3,12 +3,12 @@ package de.p2tools.p2backup.controller.data.pathdata;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +22,11 @@ public class PathDataFactory {
             return false;
         }
 
-        final String from = FileFactory.cleanFileData(path.trim(), "");
+        if (path.endsWith(File.separator)) {
+            path = path.substring(0, path.length() - 1);
+        }
+//        final String from = FileFactory.cleanFileData(path.trim(), "");
+        final String from = path;
         if (backupInfo.getPathListFrom().isEmpty()) {
             backupInfo.getPathListFrom().add(new PathData(from));
             ProgConfig.SYSTEM_FROM_PATH.set(from);

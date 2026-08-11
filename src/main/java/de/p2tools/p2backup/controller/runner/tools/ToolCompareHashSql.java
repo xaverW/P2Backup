@@ -21,12 +21,16 @@ import de.p2tools.p2backup.controller.config.PEvents;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.tools.ToolCompareBackupDialogController;
+import de.p2tools.p2backup.gui.tools.DialogCompareBackupData;
+import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ToolCompareHashSql {
@@ -35,13 +39,13 @@ public class ToolCompareHashSql {
     private final BackupInfo backupInfo;
     private final BackupData backupData;
     private final AtomicBoolean atomicBoolean;
-    private final ToolCompareBackupDialogController toolCompareBackupDialogController;
+    private final DialogCompareBackupData dialogCompareBackupData;
     private final String subPathBackup;
 
-    public ToolCompareHashSql(ToolCompareBackupDialogController toolCompareBackupDialogController,
+    public ToolCompareHashSql(DialogCompareBackupData dialogCompareBackupData,
                               BackupInfo backupInfo, BackupData backupData, AtomicBoolean atomicBoolean) {
         this.progData = ProgData.getInstance();
-        this.toolCompareBackupDialogController = toolCompareBackupDialogController;
+        this.dialogCompareBackupData = dialogCompareBackupData;
         this.backupInfo = backupInfo;
         this.backupData = backupData;
         this.subPathBackup = backupData.getSubPath();
@@ -87,11 +91,20 @@ public class ToolCompareHashSql {
             // ==============
             // und jetzt mit dem Hash vergleichen
             fileListData.forEach(f -> f.setToPathStr(backupData.getToPathStr(backupInfo)));
-            CompareFactory.compare(toolCompareBackupDialogController.getStage(),
-                    fileListData, fileListBackup, resultList, true);
+            List<FileData> list = new ArrayList<>();
+            CompareFactory.compare(dialogCompareBackupData.getStage(),
+                    fileListData, fileListBackup, resultList, list);
+
+            if (list.isEmpty()) {
+                // dann nur eine kurze Meldung
+                P2AlertAppThread.infoAlert(dialogCompareBackupData.getStage(),
+                        "Vergleich", "Dateien und Backup sind identisch",
+                        "Die Dateien im Backup sind identisch\n" +
+                                "mit den Original-Dateien");
+            }
         }
 
-        toolCompareBackupDialogController.setResult(resultList);
+        dialogCompareBackupData.setResult(resultList);
         atomicBoolean.set(false);
     }
 }

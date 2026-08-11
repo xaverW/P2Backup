@@ -46,13 +46,13 @@ import javafx.scene.layout.VBox;
 import java.io.File;
 import java.nio.file.Path;
 
-public class ToolBackupInfoDialogController extends P2DialogExtra {
+public class DialogBackupInfo extends P2DialogExtra {
 
     private final BackupInfo backupInfo;
     private final ProgData progData;
     private final VBox vBoxGrid = new VBox();
 
-    public ToolBackupInfoDialogController(BackupInfo backupInfo) {
+    public DialogBackupInfo(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BACKUP_INFO_DIALOG_SIZE, "Infos über die Daten",
                 true, true, false, DECO.NO_BORDER);
 
@@ -74,7 +74,7 @@ public class ToolBackupInfoDialogController extends P2DialogExtra {
         addOkButton(btnOk);
 
         Button btnHelp = P2Button.helpButton(getStage(), "Infos",
-                "Hier werden Infos über das Backup angezeigt, Anzahl Backups, Größe, ..");
+                "Hier werden Infos über das Backup angezeigt: Anzahl Backups, Größe, ..");
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
