@@ -96,6 +96,8 @@ public class ToolCompareBackupData {
             P2AlertAppThread.infoAlert(dialogCompareBackupData.getStage(), "Vergleichen",
                     "Backup mit den Daten vergleichen",
                     "Das Backup ist leer, es enthält keine Dateien.");
+            resultList.setAll(fileListData);
+            resultList.forEach(f -> f.setExistInData(true));
 
         } else {
             // ==============

@@ -219,7 +219,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
             predicate = predicate.and(prIsInBackup);
 
         } else if (rbAllData.isSelected()) {
-            // alle Backups
+            // alle Daten
             predicate = predicate.and(prIsInData);
 
         } else if (rbOk.isSelected()) {
