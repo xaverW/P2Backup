@@ -101,6 +101,7 @@ public class DialogCheckBackup extends P2DialogExtra {
                 }
                 this.fileDataList.clear();
                 rbAll.setSelected(true);
+                btnRepair.setDisable(true);
             }
         });
         btnRepair.setDisable(true);
