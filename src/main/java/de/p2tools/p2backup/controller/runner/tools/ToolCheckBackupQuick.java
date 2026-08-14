@@ -87,6 +87,7 @@ public class ToolCheckBackupQuick {
             CompareFactory.compareQuick(backupInfo, fileListDb, fileListBackup, new ArrayList<>(), errorList);
             // und jetzt noch die, die "zuviel im Backup sind, löschen, sind keine BackupFehler
             errorList.removeIf(FileDataProps::isOnlyInBackup);
+            errorList.forEach(f -> P2Log.debugLog("---> ErrorList: " + f.getBackupFilePathStr()));
         }
         atomicBoolean.set(false);
     }
