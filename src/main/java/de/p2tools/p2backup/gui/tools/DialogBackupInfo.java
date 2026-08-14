@@ -118,13 +118,6 @@ public class DialogBackupInfo extends P2DialogExtra {
 
         // zuerst die DATEN
         gridPane.add(P2Text.getLblTextBold("Daten"), 0, ++row);
-        ++row;
-        if (backupInfo.getPathListFrom().size() > 1) {
-            gridPane.add(new Label("Summe aller Dateien:"), 0, ++row);
-        }
-        gridPane.add(new Label(backupInfo.getCount() + ""), 2, row);
-        gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 3, row);
-
         for (PathData p : backupInfo.getPathListFrom()) {
             final Button btnOpenDirectory;
             btnOpenDirectory = new Button();
@@ -145,12 +138,18 @@ public class DialogBackupInfo extends P2DialogExtra {
             gridPane.add(new Label(p.getCount() + ""), 2, row);
             gridPane.add(new Label(P2SizeTools.humanReadableByteCount(p.getSize(), true)), 3, row);
         }
+        if (backupInfo.getPathListFrom().size() > 1) {
+            gridPane.add(P2Text.getLblTextItalic("Summe:"), 0, ++row);
+            gridPane.add(P2Text.getLblTextItalic(backupInfo.getCount() + ""), 2, row);
+            gridPane.add(P2Text.getLblTextItalic(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 3, row);
+        }
 
 
         // Dann die angelegten Backups
         gridPane.add(new Label(""), 0, ++row);
         gridPane.add(P2Text.getLblTextBold("Backup-Ordner"), 0, ++row);
-        ++row;
+        int sum = 0;
+        long sumSize = 0;
         for (BackupData backupData : backupInfo.getBackupDataList()) {
             final Button btnOpenDirectory;
             btnOpenDirectory = new Button();
@@ -168,9 +167,15 @@ public class DialogBackupInfo extends P2DialogExtra {
 
             gridPane.add(new Label(backupInfo.getBackupPath() + File.separator + backupData.getSubPath()), 0, ++row);
             gridPane.add(btnOpenDirectory, 1, row);
+            sum += backupData.getCount();
+            sumSize += backupData.getSize();
             gridPane.add(new Label(backupData.getCount() + ""), 2, row);
             gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupData.getSize(), true)), 3, row);
         }
+
+        gridPane.add(P2Text.getLblTextItalic("Summe"), 0, ++row);
+        gridPane.add(P2Text.getLblTextItalic(sum + ""), 2, row);
+        gridPane.add(P2Text.getLblTextItalic(P2SizeTools.humanReadableByteCount(sumSize, true)), 3, row);
 
         vBoxGrid.getChildren().add(gridPane);
     }
