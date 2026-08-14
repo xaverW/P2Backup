@@ -48,18 +48,19 @@ public class BackupRunnerFactory {
         }
 
         LocalDateTime localDateTime = LocalDateTime.now();
+        backupInfo.runnerDto.startDateProperty().set(localDateTime);
         String subPath = FileFactory.initSubPath(localDateTime);
         Path toPath = FileFactory.getToPath(backupInfo, subPath);
 
-        AtomicBoolean a = new AtomicBoolean(true);
-        Platform.runLater(() -> {
-            // ändert das GUI
-            backupInfo.setLastStartDate(localDateTime);
-            a.set(false);
-        });
-        while (a.get()) {
-            P2Wait.pause(100);
-        }
+//        AtomicBoolean a = new AtomicBoolean(true);
+//        Platform.runLater(() -> {
+//            // ändert das GUI
+//            backupInfo.setLastStartDate(localDateTime);
+//            a.set(false);
+//        });
+//        while (a.get()) {
+//            P2Wait.pause(100);
+//        }
 
         backupInfo.runnerDto.setDataSubPath(subPath);
         backupInfo.runnerDto.setToPath(toPath);

@@ -61,7 +61,7 @@ public class BackupRunner {
 
             AtomicBoolean a = new AtomicBoolean(true);
             Platform.runLater(() -> {
-                backupData.setStartDate(this.backupInfo.getLastStartDate());
+                backupData.setStartDate(this.backupInfo.runnerDto.getStartDate());
                 backupData.setSubPath(this.backupInfo.runnerDto.getDataSubPath());
                 a.set(false);
             });
@@ -182,6 +182,15 @@ public class BackupRunner {
             // ==============================================
             // dann passts
             // ==============================================
+            AtomicBoolean a = new AtomicBoolean(true);
+            Platform.runLater(() -> {
+                // erst wenns OK war, ändert das GUI
+                backupInfo.setLastStartDate(backupInfo.runnerDto.getStartDate());
+                a.set(false);
+            });
+            while (a.get()) {
+                P2Wait.pause(100);
+            }
             backupInfo.runnerDto.setOk(true);
         }
 

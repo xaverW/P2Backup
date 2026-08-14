@@ -6,10 +6,12 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.p2event.P2Listener;
+import de.p2tools.p2lib.tools.date.P2LDateTimeProperty;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 
 public class RunnerDto {
     private final BooleanProperty stop = new SimpleBooleanProperty(false); // wird in den nur in Running-Threads verwendet!!
@@ -31,6 +33,7 @@ public class RunnerDto {
     private final IntegerProperty runnerAlreadyDone = new SimpleIntegerProperty(0); // schon fertig
     private final StringProperty runnerText = new SimpleStringProperty(""); // Text, was Runner macht
     private final StringProperty runnerFileName = new SimpleStringProperty(""); // aktuelle Datei (zum Erstellen des Hash)
+    private final P2LDateTimeProperty startDate = new P2LDateTimeProperty(""); // aktuelle Datei (zum Erstellen des Hash)
 
     // backupPath   /tmp/usb/backup
     // subPath      /2025-10-23__10-12-00
@@ -267,8 +270,16 @@ public class RunnerDto {
         this.runnerFileName.set(runnerFileName);
     }
 
+    public LocalDateTime getStartDate() {
+        return startDate.get();
+    }
+
+    public P2LDateTimeProperty startDateProperty() {
+        return startDate;
+    }
+
     // =====================
-    // Einlesefehler
+    // EinleseFehler
     public boolean getGoAlwaysOverError() {
         return goAlwaysOverError.get();
     }

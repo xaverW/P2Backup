@@ -15,6 +15,7 @@ import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.p2event.P2Listener;
 import de.p2tools.p2lib.tools.P2ColorFactory;
 import de.p2tools.p2lib.tools.date.P2LDateTimeFactory;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -171,12 +172,17 @@ public class PaneGenerateBackupList extends VBox {
 
         // ==========
         // LastDate
-        if (!P2LDateTimeFactory.toString(backupInfo.getLastStartDate()).isEmpty()) {
-            Label lblLastDate = new Label();
-            lblLastDate.setText(P2LDateTimeFactory.toString(backupInfo.getLastStartDate()));
-            gridPane.add(new Label("Letztes Backup:"), 0, ++row);
-            gridPane.add(lblLastDate, 2, row);
-        }
+//        if (!P2LDateTimeFactory.toString(backupInfo.getLastStartDate()).isEmpty()) {
+        Label lblLastDate = new Label();
+        lblLastDate.textProperty().bind(Bindings.createStringBinding(
+                () -> P2LDateTimeFactory.toString(backupInfo.getLastStartDate()),
+                backupInfo.lastStartDateProperty()));
+
+
+//        lblLastDate.setText(P2LDateTimeFactory.toString(backupInfo.getLastStartDate()));
+        gridPane.add(new Label("Letztes Backup:"), 0, ++row);
+        gridPane.add(lblLastDate, 2, row);
+//        }
 
         // ===========
         // To
