@@ -176,7 +176,7 @@ public class BackupToolController extends VBox {
         lblInfo.setMaxWidth(Double.MAX_VALUE);
         GridPane.setVgrow(lblInfo, Priority.ALWAYS);
         lblBackup.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblInfo, Priority.ALWAYS);
+        GridPane.setVgrow(lblBackup, Priority.ALWAYS);
         lblHistory.setMaxWidth(Double.MAX_VALUE);
         GridPane.setVgrow(lblHistory, Priority.ALWAYS);
         lblCompare.setMaxWidth(Double.MAX_VALUE);

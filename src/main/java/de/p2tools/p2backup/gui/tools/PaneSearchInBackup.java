@@ -64,11 +64,10 @@ public class PaneSearchInBackup extends HBox {
 
     private final ObjectProperty<BackupInfo> backupInfoProp = new SimpleObjectProperty<>(null);
     private final ObjectProperty<BackupData> backupDataProp;
-    private final Label lblPath = new Label("");
-    private final Label lblFilePath = new Label("");
-    private final Button btnOpenDirectory = new Button();
     private final ProgData progData;
     private final ObjectProperty<Stage> stage;
+    private final VBox vBoxTable = new VBox();
+    private final VBox vBoxTree = new VBox();
 
     public PaneSearchInBackup(ObjectProperty<Stage> stage, BackupInfo backupInfo, ObjectProperty<BackupData> backupDataProp) {
         this.progData = ProgData.getInstance();
@@ -85,6 +84,13 @@ public class PaneSearchInBackup extends HBox {
     private void make() {
         initTable();
         initTree();
+
+        SplitPane splitPane = new SplitPane();
+        splitPane.getItems().addAll(vBoxTree, vBoxTable);
+        splitPane.getDividers().getFirst().positionProperty().bindBidirectional(ProgConfig.SHOW_BACKUP_SPLIT_DIVIDER);
+        SplitPane.setResizableWithParent(treeView, false);
+        getChildren().add(splitPane);
+        HBox.setHgrow(splitPane, Priority.ALWAYS);
     }
 
     public void close() {
@@ -167,7 +173,23 @@ public class PaneSearchInBackup extends HBox {
     }
 
     private void initTable() {
-        SplitPane splitPane = new SplitPane();
+        final Label lblPath = new Label("");
+        final Label lblFilePath = new Label("");
+        final Button btnOpenDirectory = new Button();
+        btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
+        btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
+        btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+        btnOpenDirectory.setOnAction(a -> {
+            FileData fileData = tableViewFile.getSelectionModel().getSelectedItem();
+            if (fileData == null) {
+                return;
+            }
+            Path path = fileData.getParentBackupFilePath();
+            if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
+                P2Open.openDir(stage.get(), path.toFile().toString());
+            }
+        });
+        btnOpenDirectory.visibleProperty().bind(lblFilePath.textProperty().isEmpty().not());
 
         Table.setTable(tableViewFile);
         tableViewFile.setItems(foundFileList.getSortedList());
@@ -189,9 +211,32 @@ public class PaneSearchInBackup extends HBox {
             }
         });
 
-//        lblPath.getStyleClass().add("p2FileLabel");
-//        lblFilePath.getStyleClass().add("p2FileLabel");
 
+        HBox hBoxPath = new HBox();
+        hBoxPath.setPadding(new Insets(5, 5, 5, 5));
+        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Backup-Ordner:  "), lblPath);
+
+        HBox hBoxFilePath = new HBox();
+        hBoxFilePath.setPadding(new Insets(5, 5, 5, 5));
+        hBoxFilePath.getChildren().addAll(P2Text.getLblTextBold("Datei:   "), lblFilePath,
+                P2GuiTools.getHBoxGrower(), btnOpenDirectory);
+
+        vBoxTable.getChildren().addAll(tableViewFile, hBoxPath, hBoxFilePath);
+        VBox.setVgrow(tableViewFile, Priority.ALWAYS);
+    }
+
+    private ContextMenu getContextMenuFile() {
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem resetTable = new MenuItem("Tabelle zurücksetzen");
+        resetTable.setOnAction(e -> tableViewFile.resetTable());
+        contextMenu.getItems().add(new SeparatorMenuItem());
+        contextMenu.getItems().addAll(resetTable);
+        return contextMenu;
+    }
+
+    private void initTree() {
+        final Label lblPath = new Label("");
+        final Button btnOpenDirectory = new Button();
         btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
         btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
@@ -205,38 +250,8 @@ public class PaneSearchInBackup extends HBox {
                 P2Open.openDir(stage.get(), path.toFile().toString());
             }
         });
-        btnOpenDirectory.visibleProperty().bind(lblFilePath.textProperty().isEmpty().not());
+        btnOpenDirectory.visibleProperty().bind(lblPath.textProperty().isEmpty().not());
 
-        HBox hBoxPath = new HBox();
-        hBoxPath.setPadding(new Insets(5, 5, 5, 5));
-        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Backup-Ordner:  "), lblPath);
-
-        HBox hBoxFilePath = new HBox();
-        hBoxFilePath.setPadding(new Insets(5, 5, 5, 5));
-        hBoxFilePath.getChildren().addAll(P2Text.getLblTextBold("Datei:   "), lblFilePath,
-                P2GuiTools.getHBoxGrower(), btnOpenDirectory);
-
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(tableViewFile, hBoxPath, hBoxFilePath);
-        VBox.setVgrow(tableViewFile, Priority.ALWAYS);
-
-        splitPane.getItems().addAll(treeView, vBox);
-        splitPane.getDividers().get(0).positionProperty().bindBidirectional(ProgConfig.SHOW_BACKUP_SPLIT_DIVIDER);
-        SplitPane.setResizableWithParent(treeView, false);
-        getChildren().add(splitPane);
-        HBox.setHgrow(splitPane, Priority.ALWAYS);
-    }
-
-    private ContextMenu getContextMenuFile() {
-        final ContextMenu contextMenu = new ContextMenu();
-        MenuItem resetTable = new MenuItem("Tabelle zurücksetzen");
-        resetTable.setOnAction(e -> tableViewFile.resetTable());
-        contextMenu.getItems().add(new SeparatorMenuItem());
-        contextMenu.getItems().addAll(resetTable);
-        return contextMenu;
-    }
-
-    private void initTree() {
         treeView.setRoot(new TreeItem<>(backupInfoProp.get().getName()));
         treeView.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
@@ -249,7 +264,13 @@ public class PaneSearchInBackup extends HBox {
             if (treeItem != null && !treeItem.getValue().isEmpty()) {
                 if (backupDataProp.get() != null) {
                     String treeFileData = treeItem.getValue();
-                    lblPath.setText(backupDataProp.get().getToPathStr(backupInfoProp.get()));
+                    if (treeFileData.contains(File.separator)) {
+                        final String path = treeFileData.substring(treeFileData.lastIndexOf(File.separator) + 1);
+                        lblPath.setText(path);
+                    } else {
+                        lblPath.setText("");
+                    }
+
                     if (!treeView.getRoot().equals(treeItem)) {
                         Predicate<FileData> pr = f -> {
                             String path = f.getParentFilePathStr();
@@ -265,6 +286,14 @@ public class PaneSearchInBackup extends HBox {
             }
             sizeProp.set(foundFileList.getFilteredList().size());
         });
+
+        HBox hBoxPath = new HBox();
+        hBoxPath.setPadding(new Insets(5, 5, 5, 5));
+        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Ordner kopieren:  "),
+                lblPath, P2GuiTools.getHBoxGrower(), btnOpenDirectory);
+
+        vBoxTree.getChildren().addAll(treeView, hBoxPath);
+        VBox.setVgrow(treeView, Priority.ALWAYS);
     }
 
     private void expandTreeView(TreeItem<?> item, boolean expand) {
