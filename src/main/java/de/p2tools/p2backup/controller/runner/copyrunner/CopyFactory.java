@@ -42,7 +42,7 @@ public class CopyFactory {
     }
 
     public static boolean copyFiles(BackupInfo backupInfo,
-                                    List<FileData> fileDataList) {
+                                    List<FileData> fileDataList /* eingelesenen DATEN */) {
 
         ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         for (FileData fileData : fileDataList) {
@@ -57,6 +57,8 @@ public class CopyFactory {
             FileHashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (fileData.isErrorHash()) {
+                System.out.println("=== get hash error ===");
+                System.out.println("   from " + fileData.getFilePathStr());
                 continue;
             }
 
@@ -74,6 +76,13 @@ public class CopyFactory {
                 backupInfo.runnerDto.addRunnerAlreadyDone();
                 FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
             } catch (Exception ex) {
+                // auch die sind nicht zugreifbar, wahrscheinlich während des Backups gelöscht worden?? Vorsichtshalber
+                fileData.setHash(FileFactory.HASH_ERROR);
+                fileData.setErrorHash(true);
+                System.out.println("=== copy file error ===");
+                System.out.println("   from " + fromPath);
+                System.out.println("     to " + toFilePath);
+
                 if (!FileFactory.goOnError(backupInfo, fromPath.toString(), true)) {
                     backupInfo.runnerDto.setRunnerMax(0);
                     backupInfo.runnerDto.setRunnerFileName("");

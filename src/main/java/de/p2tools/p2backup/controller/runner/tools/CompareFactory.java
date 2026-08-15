@@ -71,14 +71,6 @@ public class CompareFactory {
                 f.isErrorDiff() || f.isErrorHash() || f.isOnlyInData() || f.isOnlyInBackup()).toList());
         resultList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
         errorList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
-
-        boolean found = false;
-        System.out.println("====NOT====");
-        for (FileData f : resultList) {
-            if (f.isErrorDiff() || f.isOnlyInData() || f.isOnlyInBackup() || f.isErrorHash()) {
-                found = true;
-            }
-        }
     }
 
     public static void compareQuick(BackupInfo backupInfo,
@@ -115,7 +107,7 @@ public class CompareFactory {
             if (dataFile.getDate() != backupFile.getDate()) {
                 // wenn sich nur das Datum unterscheidet, können die Dateien doch gleich sein
                 P2Log.debugLog("QuickError, date!!: " + backupFile.getBackupFilePathStr());
-                FileData backupHash = FileHashFactory.getFileDataHash(backupInfo, "", false,
+                FileData backupHash = FileHashFactory.getFileData(backupInfo, "", false,
                         backupFile.getBackupFilePath().toFile(), true);
 
                 if (backupHash == null || !dataFile.getHash().equals(backupHash.getHash())) {

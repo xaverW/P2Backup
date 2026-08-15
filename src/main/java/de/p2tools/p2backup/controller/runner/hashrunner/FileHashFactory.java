@@ -35,8 +35,8 @@ public class FileHashFactory {
     private FileHashFactory() {
     }
 
-    public static FileData getFileDataHash(BackupInfo backupInfo, String toPath,
-                                           boolean quick, File file, boolean followLink) {
+    public static FileData getFileData(BackupInfo backupInfo, String toPath,
+                                       boolean quick, File file, boolean followLink) {
         // liefert ein FileData mit oder ohne wenn (quick) dem Hash
         // toPath wird vom Pfad entfernt, wenn vorhanden -> wird dann der Pfad des ORG-DATEN-File
 
@@ -57,6 +57,24 @@ public class FileHashFactory {
         } catch (Exception ex) {
             P2Log.errorLog(784512589, ex.getLocalizedMessage());
             return null;
+        }
+    }
+
+    public static void setFileData(BackupInfo backupInfo, boolean quick, FileData fileData) {
+        try {
+            File file = fileData.getFilePath().toFile();
+            // zuerst mal den Hash bauen
+            String hashString = "";
+            if (!quick) {
+                hashString = getFileHash(backupInfo, file);
+            }
+
+            fileData.setDate(file.lastModified());
+            fileData.setSize(file.length());
+            fileData.setHash(hashString);
+            fileData.setLink(Files.isSymbolicLink(file.toPath()));
+        } catch (Exception ex) {
+            P2Log.errorLog(969695687, ex.getLocalizedMessage());
         }
     }
 

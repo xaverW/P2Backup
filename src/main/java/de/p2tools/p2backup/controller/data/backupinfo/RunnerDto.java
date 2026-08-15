@@ -64,11 +64,11 @@ public class RunnerDto {
                         guiFileName.set(runnerFileName.get());
                     }
 
-                    System.out.println("     max " + runnerMax.get());
-                    System.out.println("     double " + runnerDouble.get());
-                    System.out.println("     progress " + guiProgress.get());
-                    System.out.println("===> text " + guiText.get());
-                    System.out.println("===> fileName " + guiFileName.get());
+//                    System.out.println("     max " + runnerMax.get());
+//                    System.out.println("     double " + runnerDouble.get());
+//                    System.out.println("     progress " + guiProgress.get());
+//                    System.out.println("===> text " + guiText.get());
+//                    System.out.println("===> fileName " + guiFileName.get());
 
                 } else {
                     guiProgress.set(0);

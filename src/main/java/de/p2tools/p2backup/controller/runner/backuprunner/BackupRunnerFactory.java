@@ -253,9 +253,6 @@ public class BackupRunnerFactory {
 
     public static boolean copyFilesToBackup(BackupInfo backupInfo) {
         boolean ret;
-        // wieder neu auf Anfang setzen
-//        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
-
         // ====================
         // BackupPfad nochmal prüfen, ist doppelt, schadet aber nicht
         if (!CopyFactory.checkToPath(FileFactory.getToPath(backupInfo))) {
@@ -312,7 +309,8 @@ public class BackupRunnerFactory {
         // noch die fehlerhaften löschen
         ArrayList<FileData> removeList = new ArrayList<>();
         for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
-            if (fileData.isErrorHash()) { // todo
+            if (fileData.isErrorHash()) {
+                // sind auch die, die beim Kopieren fehlerhaft waren
                 removeList.add(fileData);
             }
         }

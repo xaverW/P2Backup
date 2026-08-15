@@ -12,7 +12,6 @@ import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.gui.dialog.BackupErrorListDialogController;
-import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.tools.P2Wait;
 import javafx.application.Platform;
@@ -32,11 +31,6 @@ public class CopyDiffFactory {
     }
 
     public static boolean copyDiffFilesToBackup(BackupInfo backupInfo) {
-        FileDataList oldFileList = new FileDataList();
-        FileDataList copyList = new FileDataList();
-        FileDataList moveList = new FileDataList();
-        final Map<String, FileData> oldBackupFileMap = new HashMap<>(); // sind alle Dateien im alten Backup
-
         Stage stage;
         if (ProgData.getInstance().primaryStageSmall != null &&
                 ProgData.getInstance().primaryStageSmall.isShowing()) {
@@ -45,15 +39,13 @@ public class CopyDiffFactory {
             stage = ProgData.getInstance().primaryStage;
         }
 
-        // ======================
-        // altes Backup laden
+
+        // =========================================
+        // erst mal das alte Backup überprüfen
+        // =========================================
         BackupData oldBackup = backupInfo.getBackupDataList().getLast();
         final String oldToPathStr = FileFactory.getToPathStr(backupInfo, oldBackup);
 
-
-        // =====================================
-        // erst mal das alte Backup überprüfen
-        // =====================================
         AtomicBoolean a = new AtomicBoolean(true);
         FileDataList errorList = new FileDataList();
         new ToolCheckBackupQuick(backupInfo, oldBackup, a).compare(errorList);
@@ -84,10 +76,10 @@ public class CopyDiffFactory {
                 }
                 case REPAIR -> {
                     if (!RepairFactory.repairBackup(backupInfo, errorList)) {
-                        P2Alert.showErrorAlert("Dateien aus dem Backup löschen",
+                        P2AlertAppThread.showErrorAlert(stage,
+                                "Fehler reparieren",
                                 "Es konnten nicht alle fehlerhaften Dateien aus dem " +
                                         "Backup gelöscht werden");
-
                         return false;
                     }
                 }
@@ -95,11 +87,21 @@ public class CopyDiffFactory {
         }
 
 
-        // =====================================
+        // =========================================
         // und jetzt Dateien kopieren
-        // =====================================
-        SqlFileData.readBackupFileList(backupInfo, oldBackup, oldFileList);
-        oldFileList.forEach(fileData -> {
+        // =========================================
+
+        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().size() * 2); // läuft 2x durch
+        backupInfo.runnerDto.runnerDoubleProperty().set(true); // läuft 2x durch
+
+        final Map<String, FileData> oldBackupFileMap = new HashMap<>(); // sind alle Dateien im alten Backup
+        final FileDataList oldBackupFileList = new FileDataList();
+        final FileDataList copyList = new FileDataList();
+        final FileDataList moveList = new FileDataList();
+
+        // altes Backup laden
+        SqlFileData.readBackupFileList(backupInfo, oldBackup, oldBackupFileList);
+        oldBackupFileList.forEach(fileData -> {
             if (!fileData.getFilePathStr().isEmpty() &&
                     !fileData.getToPathStr().isEmpty() &&
                     !fileData.isErrorHash()) {
@@ -107,17 +109,13 @@ public class CopyDiffFactory {
             }
         });
 
-
-        // ===============
         // suchen was kopiert werden muss
-        backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().size() * 2); // läuft 2x durch
-        backupInfo.runnerDto.runnerDoubleProperty().set(true); // läuft 2x durch
-
         for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
             backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
             backupInfo.runnerDto.addRunnerAlreadyDone();
-            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            FileHashFactory.setFileData(backupInfo, false, fileData);
             fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
+
             if (backupInfo.runnerDto.isStop()) {
                 return false;
             }
@@ -125,7 +123,7 @@ public class CopyDiffFactory {
                 continue;
             }
 
-            FileData oldFile = oldBackupFileMap.get(fileData.getFilePathStr());
+            FileData oldFile = oldBackupFileMap.remove(fileData.getFilePathStr());
             if (oldFile == null || !fileData.getHash().equals(oldFile.getHash())) {
                 // dann gibt es sie nicht oder
                 // sie sind nicht gleich -> aus DATEIEN kopieren
@@ -133,38 +131,34 @@ public class CopyDiffFactory {
 
             } else {
                 // dann sind sie gleich -> move aus altem Backup
-                FileData moveData = fileData.getCopy();
-                if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
-                    // aus der Map löschen, gibts dann nicht mehr
-                    oldBackupFileMap.remove(oldFile.getFilePathStr());
-                }
-                moveList.add(moveData);
+                moveList.add(fileData.getCopy());
             }
         }
 
-        // ======================
+
+        // =========================================
         // und jetzt kopieren/linken/moven
+        // =========================================
         if (!CopyFactory.copyFiles(backupInfo, copyList)) {
             return false;
         }
 
-
         if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
-            // ==============================
-            // move files form OldBAckup
-            oldFileList.setAll(oldBackupFileMap.values()); // ist der Rest bei DIFF
+            oldBackupFileList.setAll(oldBackupFileMap.values()); // ist der Rest bei DIFF
             FileDataList resetList = new FileDataList();
-
             boolean ret = CopyFactory.moveFiles(backupInfo, oldToPathStr, moveList, resetList);
 
             if (backupInfo.runnerDto.isStop() && !resetList.isEmpty()) {
                 // ======== FEHLER ======================
-                // die gesamte moveList wieder eintragen
-                oldFileList.addAll(moveList);
-
                 // dann wieder alles zurückfahren, resetList sind die kopierten
                 backupInfo.runnerDto.setRunnerText("Abbruch: aufräumen");
                 backupInfo.runnerDto.setRunnerMax(resetList.size());
+
+                // die gesamte moveList wieder eintragen
+                oldBackupFileList.addAll(moveList);
+
+                // und jetzt zurück kopieren
+                boolean error = false;
                 for (FileData fileData : resetList) {
                     File fromFile = fileData.getBackupFilePath().toFile();
                     File toFile = fileData.getBackupFilePath(oldToPathStr).toFile();
@@ -173,16 +167,18 @@ public class CopyDiffFactory {
                         backupInfo.runnerDto.addRunnerAlreadyDone();
                         FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
                     } catch (IOException e) {
-                        P2AlertAppThread.showErrorAlert(stage, "Backup abbrechen", "Es können nicht alle " +
-                                "Dateien wieder hergestellt werden. Bitte nochmals ein Backup machen!");
+                        error = true;
                     }
+                }
+                if (error) {
+                    P2AlertAppThread.showErrorAlert(stage, "Backup abbrechen", "Es können nicht alle " +
+                            "Dateien wieder hergestellt werden. Bitte nochmals ein Backup machen!");
                 }
             }
 
-            // ===============
             // oldBackup aktualisieren, backupFiles des alten Backup
-            oldBackup.setCount(oldFileList.size());
-            if (!SqlFileData.updateBackupFileList(backupInfo, oldBackup.getId(), oldFileList)) {
+            oldBackup.setCount(oldBackupFileList.size());
+            if (!SqlFileData.updateBackupFileList(backupInfo, oldBackup.getId(), oldBackupFileList)) {
                 backupInfo.runnerDto.setStop();
             }
             return ret;
@@ -190,7 +186,7 @@ public class CopyDiffFactory {
 
         } else {
             // ==============================
-            // link files from OldBackup
+            // link files
             return CopyFactory.linkFiles(backupInfo, oldToPathStr, moveList);
         }
     }
