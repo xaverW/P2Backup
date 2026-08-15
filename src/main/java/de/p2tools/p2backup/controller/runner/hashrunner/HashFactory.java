@@ -31,8 +31,8 @@ import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
-public class FileHashFactory {
-    private FileHashFactory() {
+public class HashFactory {
+    private HashFactory() {
     }
 
     public static FileData getFileData(BackupInfo backupInfo, String toPath,

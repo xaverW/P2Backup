@@ -6,7 +6,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
-import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
+import de.p2tools.p2backup.controller.runner.hashrunner.HashFactory;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.p2event.P2Event;
 import org.apache.commons.io.FileUtils;
@@ -54,7 +54,7 @@ public class CopyFactory {
                 return false;
             }
 
-            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            HashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (fileData.isErrorHash()) {
                 System.out.println("=== get hash error ===");
@@ -72,9 +72,9 @@ public class CopyFactory {
             Path toFilePath = fileData.getBackupFilePath(); // neue Speicherpfad
 
             try {
+                FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
                 backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
                 backupInfo.runnerDto.addRunnerAlreadyDone();
-                FileUtils.copyFile(fromPath.toFile(), toFilePath.toFile(), StandardCopyOption.COPY_ATTRIBUTES);
             } catch (Exception ex) {
                 // auch die sind nicht zugreifbar, wahrscheinlich während des Backups gelöscht worden?? Vorsichtshalber
                 fileData.setHash(FileFactory.HASH_ERROR);
@@ -104,7 +104,7 @@ public class CopyFactory {
                 break;
             }
 
-            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            HashFactory.setFileData(backupInfo, false, fileData);
             fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (fileData.isErrorHash()) {
                 continue;
@@ -114,10 +114,10 @@ public class CopyFactory {
             File fromFile = fileData.getBackupFilePath(oldToPath).toFile();
             File toFile = fileData.getBackupFilePath().toFile();
             try {
-                backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
-                backupInfo.runnerDto.addRunnerAlreadyDone();
                 FileUtils.moveFileToDirectory(fromFile, toFile.getParentFile(), true);
                 resetList.add(fileData);
+                backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
+                backupInfo.runnerDto.addRunnerAlreadyDone();
             } catch (IOException e) {
                 if (!FileFactory.goOnError(backupInfo, fromFile.toString(), true)) {
                     backupInfo.runnerDto.setRunnerFileName("");
@@ -139,7 +139,7 @@ public class CopyFactory {
                 break;
             }
 
-            FileHashFactory.setFileDataHash(backupInfo, fileData);
+            HashFactory.setFileDataHash(backupInfo, fileData);
             fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
             if (fileData.isErrorHash()) {
                 continue;

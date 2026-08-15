@@ -7,7 +7,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
-import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
+import de.p2tools.p2backup.controller.runner.hashrunner.HashFactory;
 import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
@@ -113,7 +113,7 @@ public class CopyDiffFactory {
         for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
             backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
             backupInfo.runnerDto.addRunnerAlreadyDone();
-            FileHashFactory.setFileData(backupInfo, false, fileData);
+            HashFactory.setFileData(backupInfo, false, fileData);
             fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
 
             if (backupInfo.runnerDto.isStop()) {

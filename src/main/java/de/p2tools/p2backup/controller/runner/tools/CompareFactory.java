@@ -5,7 +5,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
-import de.p2tools.p2backup.controller.runner.hashrunner.FileHashFactory;
+import de.p2tools.p2backup.controller.runner.hashrunner.HashFactory;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.stage.Stage;
 
@@ -99,25 +99,18 @@ public class CompareFactory {
 
             backupFile.setExistInData(true);
             if (dataFile.getSize() != backupFile.getSize()) {
-                backupFile.setErrorDiff(true);
-                P2Log.debugLog("QuickError, size: " + backupFile.getBackupFilePathStr());
+                // könnten doch gleich sein
+                P2Log.debugLog("QuickError, size!!: " + backupFile.getBackupFilePathStr());
+                isEqual(backupInfo, dataFile, backupFile);
                 continue;
             }
 
             if (dataFile.getDate() != backupFile.getDate()) {
-                // wenn sich nur das Datum unterscheidet, können die Dateien doch gleich sein
+                // könnten doch gleich sein
                 P2Log.debugLog("QuickError, date!!: " + backupFile.getBackupFilePathStr());
-                FileData backupHash = FileHashFactory.getFileData(backupInfo, "", false,
-                        backupFile.getBackupFilePath().toFile(), true);
+                isEqual(backupInfo, dataFile, backupFile);
+                continue;
 
-                if (backupHash == null || !dataFile.getHash().equals(backupHash.getHash())) {
-                    backupFile.setErrorDiff(true);
-                    P2Log.debugLog("QuickError, diff: " + backupFile.getBackupFilePathStr());
-                    if (backupHash != null && backupHash.getHash().equals(FileFactory.HASH_ERROR)) {
-                        backupFile.setErrorHash(true);
-                        P2Log.debugLog("QuickError, hash: " + backupFile.getBackupFilePathStr());
-                    }
-                }
             }
         }
         errorList.addAll(resultList.stream().filter(f ->
@@ -125,5 +118,19 @@ public class CompareFactory {
 
         errorList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
         resultList.sort(Comparator.comparing(FileDataProps::getFilePathStr));
+    }
+
+    private static void isEqual(BackupInfo backupInfo, FileData dataFile, FileData backupFile) {
+        FileData backupHash = HashFactory.getFileData(backupInfo, "", false,
+                backupFile.getBackupFilePath().toFile(), true);
+
+        if (backupHash == null || !dataFile.getHash().equals(backupHash.getHash())) {
+            backupFile.setErrorDiff(true);
+            P2Log.debugLog("QuickError, diff: " + backupFile.getBackupFilePathStr());
+            if (backupHash != null && backupHash.getHash().equals(FileFactory.HASH_ERROR)) {
+                backupFile.setErrorHash(true);
+                P2Log.debugLog("QuickError, hash: " + backupFile.getBackupFilePathStr());
+            }
+        }
     }
 }

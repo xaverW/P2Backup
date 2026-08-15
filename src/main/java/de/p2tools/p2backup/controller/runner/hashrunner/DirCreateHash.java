@@ -92,7 +92,7 @@ public class DirCreateHash {
                 // in DirDataList eintragen
                 if (dirDataList != null) {
                     foundDirList.forEach(f -> {
-                        FileData fileData = FileHashFactory.getFileData(backupInfo,
+                        FileData fileData = HashFactory.getFileData(backupInfo,
                                 toPath, true, f, followLink);
                         if (fileData != null) {
                             dirDataList.add(fileData);
@@ -128,7 +128,7 @@ public class DirCreateHash {
             }
 
             // Pfad steht im dataPath
-            FileData fileData = FileHashFactory.getFileData(backupInfo,
+            FileData fileData = HashFactory.getFileData(backupInfo,
                     toPath, quick, file, followLink);
             if (fileData != null) {
                 fileData.setErrorHash(fileData.getHash().equals(FileFactory.HASH_ERROR));
