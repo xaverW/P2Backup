@@ -21,6 +21,7 @@ import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.P2LibConst;
+import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.dialogs.P2DialogFileChooser;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2ComboBoxString;
@@ -42,7 +43,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class CopyDialogController extends P2DialogExtra {
+public class DialogCopyFileController extends P2DialogExtra {
 
     private final Button btnOk = new Button("Ok");
     private final Button btnCancel = new Button("Abbrechen");
@@ -54,13 +55,15 @@ public class CopyDialogController extends P2DialogExtra {
     private final Node errorNode = PIconFactory.getAttentionIconSmall("mdoal-error");
     private final HBox hBoxErrorMsg = new HBox(P2LibConst.PADDING_HBOX);
     private final ProgData progData;
+    private final boolean file;
 
 
-    public CopyDialogController(Stage stage, String srcFile) {
-        super(stage, null, "Kopieren",
+    public DialogCopyFileController(Stage stage, String srcFile, boolean file) {
+        super(stage, null, "Datei kopieren",
                 true, false, false, DECO.NO_BORDER);
         this.progData = ProgData.getInstance();
         this.srcFile = srcFile;
+        this.file = file;
         init(true);
     }
 
@@ -72,8 +75,8 @@ public class CopyDialogController extends P2DialogExtra {
         btnSearch.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
         btnSearch.setOnAction(a -> {
             ProgConfig.COPY_DIALOG_DEST_DIR.set(
-                    P2DialogFileChooser.showFileChooser(getStage(), "Datei kopieren", "Ziel auswählen",
-                            "Einen Ordner zum Speichern der Datei auswählen", true, false, ""));
+                    P2DialogFileChooser.showFileChooser(getStage(), "Kopieren", "Ziel auswählen",
+                            "Einen Ordner zum Speichern auswählen", true, false, ""));
         });
 
         String name = Path.of(srcFile).toFile().getName();
@@ -100,16 +103,17 @@ public class CopyDialogController extends P2DialogExtra {
         ProgConfig.COPY_DIALOG_DEST_DIR.addListener((u, o, n) -> checkFileName());
         txtName.textProperty().addListener((u, o, n) -> checkFileName());
 
-        Label lblTitle = P2Text.getLblTextBoldBig("Datei kopieren");
+        final Label lblTitle;
+        if (file) {
+            lblTitle = P2Text.getLblTextBoldBig("Datei kopieren");
+        } else {
+            lblTitle = P2Text.getLblTextBoldBig("Ordner kopieren");
+        }
 
-        Label lblName = P2Text.getLblTextBold("Name:");
-        HBox hBoxName = new HBox(5);
-        hBoxName.setAlignment(Pos.CENTER_LEFT);
         TextArea taSrc = new TextArea(srcFile);
         taSrc.setWrapText(true);
         taSrc.setEditable(false);
         taSrc.setPrefRowCount(2);
-        hBoxName.getChildren().addAll(lblName, taSrc);
 
         GridPane gridPane = new GridPane(P2LibConst.DIST_GRIDPANE_HGAP, P2LibConst.DIST_GRIDPANE_VGAP);
         gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
@@ -117,32 +121,51 @@ public class CopyDialogController extends P2DialogExtra {
                 P2GridConstraints.getCcPrefSizeRight());
 
         int row = 0;
-        gridPane.add(new Label("Zeil:"), 0, row);
+        gridPane.add(new Label("Name:"), 0, row);
+        gridPane.add(taSrc, 1, row);
+
+        gridPane.add(new Label("Ziel:"), 0, ++row);
         gridPane.add(cboDest, 1, row);
         gridPane.add(btnSearch, 2, row);
 
-        gridPane.add(new Label("Dateiname:"), 0, ++row);
-        gridPane.add(txtName, 1, row);
-        gridPane.add(btnProposeFileName, 2, row);
+        if (file) {
+            gridPane.add(new Label("Dateiname:"), 0, ++row);
+            gridPane.add(txtName, 1, row);
+            gridPane.add(btnProposeFileName, 2, row);
+        }
 
         VBox vBox = new VBox(5);
         vBox.setPadding(new Insets(0, 20, 0, 0));
         vBox.setAlignment(Pos.CENTER_LEFT);
-        vBox.getChildren().addAll(lblTitle, P2GuiTools.getHDistance(20), hBoxName, gridPane);
+        vBox.getChildren().addAll(lblTitle, P2GuiTools.getHDistance(20), gridPane);
 
         hBoxErrorMsg.setAlignment(Pos.CENTER_LEFT);
         hBoxErrorMsg.getChildren().addAll(errorNode, new Label("Datei existiert bereits!"));
         getVBoxCont().getChildren().addAll(vBox);
-        getHboxLeft().getChildren().add(hBoxErrorMsg);
-        getHboxLeft().setAlignment(Pos.CENTER_LEFT);
+        if (file) {
+            getHboxLeft().getChildren().add(hBoxErrorMsg);
+            getHboxLeft().setAlignment(Pos.CENTER_LEFT);
+        }
 
         addOkCancelButtons(btnOk, btnCancel);
-        btnOk.disableProperty().bind(ProgConfig.COPY_DIALOG_DEST_DIR.isEmpty().or(txtName.textProperty().isEmpty()));
-        btnOk.setOnAction(a -> {
-            if (copyFile()) {
-                close();
-            }
-        });
+        if (file) {
+            btnOk.disableProperty().bind(ProgConfig.COPY_DIALOG_DEST_DIR.isEmpty().or(txtName.textProperty().isEmpty()));
+            btnOk.setOnAction(a -> {
+                if (copyFile()) {
+                    close();
+                }
+            });
+        } else {
+            btnOk.disableProperty().bind(ProgConfig.COPY_DIALOG_DEST_DIR.isEmpty());
+            btnOk.setOnAction(a -> {
+                if (copyDir()) {
+                    close();
+                } else {
+                    P2Alert.showErrorAlert(getStage(), "Kopieren",
+                            "Das Kopieren hat nicht korrekt geklappt");
+                }
+            });
+        }
         btnCancel.setOnAction(a -> close());
     }
 
@@ -154,5 +177,9 @@ public class CopyDialogController extends P2DialogExtra {
     private boolean copyFile() {
         return P2FileUtils.copyFileToDir(getStage(), Path.of(srcFile), Path.of(ProgConfig.COPY_DIALOG_DEST_DIR.getValueSafe()),
                 txtName.getText(), true);
+    }
+
+    private boolean copyDir() {
+        return P2FileUtils.copyPath(getStage(), srcFile, ProgConfig.COPY_DIALOG_DEST_DIR.getValueSafe());
     }
 }

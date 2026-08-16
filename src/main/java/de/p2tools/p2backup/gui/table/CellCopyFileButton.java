@@ -20,7 +20,7 @@ package de.p2tools.p2backup.gui.table;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
-import de.p2tools.p2backup.gui.dialog.CopyDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogCopyFileController;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -72,7 +72,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 btnCopy.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
-                    new CopyDialogController(stage.get(), fileData.getBackupFilePathStr());
+                    new DialogCopyFileController(stage.get(), fileData.getBackupFilePathStr(), true);
                     getTableView().refresh();
                     getTableView().requestFocus();
                 });
@@ -117,7 +117,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 btnCopy.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
-                    new CopyDialogController(stage.get(), fileData.getBackupFilePathStr());
+                    new DialogCopyFileController(stage.get(), fileData.getBackupFilePathStr(), true);
                     getTableView().refresh();
                     getTableView().requestFocus();
                 });

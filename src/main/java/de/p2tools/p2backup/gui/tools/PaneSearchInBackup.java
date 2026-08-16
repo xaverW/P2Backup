@@ -25,6 +25,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
+import de.p2tools.p2backup.gui.dialog.DialogCopyFileController;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolSearchInBackup;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -241,14 +242,24 @@ public class PaneSearchInBackup extends HBox {
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
         btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
         btnOpenDirectory.setOnAction(a -> {
-            FileData fileData = tableViewFile.getSelectionModel().getSelectedItem();
-            if (fileData == null) {
+            TreeItem<String> tree = treeView.getSelectionModel().getSelectedItem();
+            if (tree == null) {
                 return;
             }
-            Path path = fileData.getParentBackupFilePath();
-            if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
-                P2Open.openDir(stage.get(), path.toFile().toString());
+            String pStr = tree.getValue();
+            if (pStr.isEmpty()) {
+                return;
             }
+
+            pStr = FileFactory.cleanFileData(pStr); // Pfade anpassen
+            pStr = FileFactory.setCorrPath(pStr); // Pfade anpassen
+
+            Path path = Path.of(backupDataProp.getValue().getToPathStr(backupInfoProp.get()), pStr);
+            if (!path.toFile().exists() || !path.toFile().isDirectory()) {
+                return;
+            }
+
+            new DialogCopyFileController(stage.get(), path.toString(), false);
         });
         btnOpenDirectory.visibleProperty().bind(lblPath.textProperty().isEmpty().not());
 

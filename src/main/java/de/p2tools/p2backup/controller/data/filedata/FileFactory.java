@@ -69,6 +69,10 @@ public class FileFactory {
         return path;
     }
 
+    public static String cleanFileData(String path) {
+        return cleanFileData(path, "");
+    }
+
     public static String cleanFileData(String path, String toPath) {
         if (!toPath.isEmpty() && path.startsWith(toPath)) {
             path = path.replaceFirst(toPath, "");

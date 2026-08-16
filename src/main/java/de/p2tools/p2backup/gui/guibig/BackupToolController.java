@@ -90,8 +90,8 @@ public class BackupToolController extends VBox {
                 new DialogSearchInBackup(progData.backupInfoProperty.get()).showDialog();
             }
         });
-        Label lblBackup = new Label("Damit kann man Dateien in einem Backup suchen. Dateien können auch aus dem " +
-                "Backup kopiert werden.");
+        Label lblBackup = new Label("Damit kann man Dateien in einem Backup suchen. Dateien und ganze Ordner " +
+                "können auch aus dem Backup kopiert werden.");
         lblBackup.setWrapText(true);
         lblBackup.getStyleClass().add("lblToolInfo");
 
