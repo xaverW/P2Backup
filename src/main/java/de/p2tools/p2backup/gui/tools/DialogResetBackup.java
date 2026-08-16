@@ -23,7 +23,6 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
-import de.p2tools.p2backup.controller.runner.tools.ToolSearchInBackup;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
@@ -41,9 +40,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-public class DialogSearchInBackup extends P2DialogExtra {
+public class DialogResetBackup extends P2DialogExtra {
 
     private final Label lblSum = new Label();
     private final Button btnLoad = new Button("Backup laden");
@@ -54,7 +51,7 @@ public class DialogSearchInBackup extends P2DialogExtra {
     private final ProgData progData;
     private final PaneSearchInBackup paneSearchInBackup;
 
-    public DialogSearchInBackup(BackupInfo backupInfo) {
+    public DialogResetBackup(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.SEARCH_DIALOG_SIZE, "Dateien im Backup suchen",
                 true, true, true, DECO.NO_BORDER);
 
@@ -105,8 +102,8 @@ public class DialogSearchInBackup extends P2DialogExtra {
                 if (!subPath.isEmpty()) {
                     backupInfoProp.get().runnerDto.initRunner();
                     backupInfoProp.get().runnerDto.setRunnerText("Backup laden");
-                    new ToolSearchInBackup(this,
-                            backupInfoProp.get(), backupDataProp.get(), new AtomicBoolean(true)).search();
+//                    new ToolSearchInBackup(this,
+//                            backupInfoProp.get(), backupDataProp.get(), new AtomicBoolean(true)).search();
                 }
 
             } else {

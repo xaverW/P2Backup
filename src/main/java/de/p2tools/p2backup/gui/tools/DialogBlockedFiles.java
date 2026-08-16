@@ -58,7 +58,7 @@ public class DialogBlockedFiles extends P2DialogExtra {
     private final Label lblSum = new Label();
     private final ProgData progData;
     private final TextField txtSearch = new TextField();
-    private final Button btnStart = new Button("Dateien laden");
+    private final Button btnStart = new Button("Backup laden");
     private final Button btnClear = new Button();
     private final TableToolBlockedFile tableView;
     private final RadioButton rbAll = new RadioButton("Alle");

@@ -64,7 +64,7 @@ public class DialogCheckBackup extends P2DialogExtra {
     private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
     private final RadioButton rbErrorHash = new RadioButton("Kann nicht gelesen werden");
 
-    private final Button btnStart = new Button("Dateien laden");
+    private final Button btnStart = new Button("Backup laden");
     private final Button btnRepair = new Button("Reparieren");
     private final FileDataList errorList = new FileDataList();
 

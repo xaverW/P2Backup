@@ -180,6 +180,9 @@ public class DialogCopyFileController extends P2DialogExtra {
     }
 
     private boolean copyDir() {
-        return P2FileUtils.copyPath(getStage(), srcFile, ProgConfig.COPY_DIALOG_DEST_DIR.getValueSafe());
+        new Thread(() -> {
+            P2FileUtils.copyPath(getStage(), srcFile, ProgConfig.COPY_DIALOG_DEST_DIR.getValueSafe());
+        }).start();
+        return true;
     }
 }

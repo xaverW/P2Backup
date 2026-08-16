@@ -237,10 +237,11 @@ public class PaneSearchInBackup extends HBox {
 
     private void initTree() {
         final Label lblPath = new Label("");
+
         final Button btnOpenDirectory = new Button();
         btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
-        btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+        btnOpenDirectory.setGraphic(PIconFactory.PICON.BTN_COPY.getFontIcon());
         btnOpenDirectory.setOnAction(a -> {
             TreeItem<String> tree = treeView.getSelectionModel().getSelectedItem();
             if (tree == null) {

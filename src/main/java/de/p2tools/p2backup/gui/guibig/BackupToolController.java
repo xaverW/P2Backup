@@ -70,6 +70,7 @@ public class BackupToolController extends VBox {
 
         // Infos
         Button btnInfo = new Button("Backup Infos");
+        btnInfo.setStyle("-fx-font-weight: bold;");
         btnInfo.setMaxWidth(Double.MAX_VALUE);
         btnInfo.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
@@ -80,6 +81,20 @@ public class BackupToolController extends VBox {
                 "Backups angezeigt.");
         lblInfo.setWrapText(true);
         lblInfo.getStyleClass().add("lblToolInfo");
+
+
+        // Backup wieder herstellen
+        Button btnResetBackup = new Button("Backup wieder herstellen");
+        btnResetBackup.setStyle("-fx-font-weight: bold;");
+        btnResetBackup.setMaxWidth(Double.MAX_VALUE);
+        btnResetBackup.setOnAction(a -> {
+            if (progData.backupInfoProperty.get() != null) {
+                new DialogResetBackup(progData.backupInfoProperty.get()).showDialog();
+            }
+        });
+        Label lblResetBackup = new Label("Hier kann ein Backup wieder hergestellt werden.");
+        lblResetBackup.setWrapText(true);
+        lblResetBackup.getStyleClass().add("lblToolInfo");
 
 
         // Backup durchsuchen
@@ -158,6 +173,9 @@ public class BackupToolController extends VBox {
         gridPane.add(btnInfo, 0, row);
         gridPane.add(lblInfo, 1, row);
 
+        gridPane.add(btnResetBackup, 0, ++row);
+        gridPane.add(lblResetBackup, 1, row);
+
         gridPane.add(btnBackup, 0, ++row);
         gridPane.add(lblBackup, 1, row);
 
@@ -175,6 +193,8 @@ public class BackupToolController extends VBox {
 
         lblInfo.setMaxWidth(Double.MAX_VALUE);
         GridPane.setVgrow(lblInfo, Priority.ALWAYS);
+        lblResetBackup.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setVgrow(lblResetBackup, Priority.ALWAYS);
         lblBackup.setMaxWidth(Double.MAX_VALUE);
         GridPane.setVgrow(lblBackup, Priority.ALWAYS);
         lblHistory.setMaxWidth(Double.MAX_VALUE);

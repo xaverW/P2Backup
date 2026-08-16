@@ -57,7 +57,7 @@ public class DialogFileHistory extends P2DialogExtra {
 
     private final Label lblSumFound = new Label();
     private final Label lblSumAll = new Label();
-    private final Button btnLoad = new Button("Dateien laden");
+    private final Button btnLoad = new Button("Backup laden");
     private final Button btnClear = new Button("");
 
     private final ObjectProperty<BackupInfo> backupInfoProp = new SimpleObjectProperty<>(null);
