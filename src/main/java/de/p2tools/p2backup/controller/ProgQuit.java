@@ -22,7 +22,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoFactory;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.controller.sqlite.SqlBackupInfo;
 import de.p2tools.p2backup.controller.sqlite.SqlTable;
-import de.p2tools.p2backup.gui.dialog.QuitDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogQuit;
 import de.p2tools.p2lib.guitools.P2GuiSize;
 import de.p2tools.p2lib.tools.log.P2LogMessage;
 import javafx.application.Platform;
@@ -40,7 +40,7 @@ public class ProgQuit {
     public static void quit() {
 
         if (BackupInfoFactory.isRunning()) {
-            new QuitDialogController();
+            new DialogQuit();
 
         } else {
             quitNow();

@@ -23,10 +23,10 @@ import de.p2tools.p2backup.controller.config.ProgInfos;
 import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2lib.dialogs.AboutDialog;
 
-public class AboutDialogController extends AboutDialog {
+public class DialogAbout extends AboutDialog {
     private final ProgData progData;
 
-    public AboutDialogController(ProgData progData) {
+    public DialogAbout(ProgData progData) {
         super(progData.primaryStage, ProgConst.PROGRAM_NAME, ProgConst.URL_WEBSITE, ProgConst.URL_WEBSITE_HELP,
                 ProgConfig.SYSTEM_PROG_OPEN_URL,
                 ProgConfig.SYSTEM_DARK_THEME.getValue(),

@@ -41,7 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class BackupErrorListDialogController extends P2DialogExtra {
+public class DialogBackupErrorList extends P2DialogExtra {
 
     public enum ERROR {CANCEL, REPAIR, IGNORE}
 
@@ -54,7 +54,7 @@ public class BackupErrorListDialogController extends P2DialogExtra {
     private TableBackupError tableView;
     private final ObjectProperty<Stage> stageProp = new SimpleObjectProperty<>();
 
-    public BackupErrorListDialogController(BackupInfo backupInfo, FileDataList errorList, ObjectProperty<ERROR> errorEnum) {
+    public DialogBackupErrorList(BackupInfo backupInfo, FileDataList errorList, ObjectProperty<ERROR> errorEnum) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BACKUP_ERROR_DIALOG_SIZE, "Backup kontrollieren",
                 true, true, false, DECO.NO_BORDER);
 

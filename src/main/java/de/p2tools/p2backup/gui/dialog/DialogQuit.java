@@ -35,16 +35,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.*;
 
-public class QuitDialogController extends P2DialogExtra {
+public class DialogQuit extends P2DialogExtra {
 
     private final StackPane stackPane = new StackPane();
     private final P2MaskerPane maskerPane = new P2MaskerPane();
     private final WaitTask waitTask = new WaitTask();
     private final ProgressBar progressBar = new ProgressBar();
 
-    public QuitDialogController() {
+    public DialogQuit() {
         super(ProgData.getInstance().primaryStage, null, "Programm beenden");
-        ProgData.getInstance().quitDialogController = this;
+        ProgData.getInstance().dialogQuit = this;
         init(true);
     }
 
@@ -118,7 +118,7 @@ public class QuitDialogController extends P2DialogExtra {
 
     @Override
     public void close() {
-        ProgData.getInstance().quitDialogController = null;
+        ProgData.getInstance().dialogQuit = null;
         if (waitTask.isRunning()) {
             waitTask.cancel();
         }

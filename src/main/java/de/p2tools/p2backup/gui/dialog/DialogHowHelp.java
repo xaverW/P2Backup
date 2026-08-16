@@ -30,7 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-public class HowHelpDialog extends P2DialogExtra {
+public class DialogHowHelp extends P2DialogExtra {
 
     private final ProgData progData;
     private final TabPane tabPane = new TabPane();
@@ -63,7 +63,7 @@ public class HowHelpDialog extends P2DialogExtra {
                     "sind oft nur mit fat32 formatiert, die " +
                     "müssten dann mit NTFS neu formatiert werden.";
 
-    public HowHelpDialog() {
+    public DialogHowHelp() {
         super(ProgData.getInstance().primaryStage, ProgConfig.DIALOG_HOW_HELP_SIZE, "Wie jetzt?",
                 true, true, false);
 

@@ -36,7 +36,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class AskBackupPathDialogController extends P2DialogExtra {
+public class DialogAskBackupPath extends P2DialogExtra {
 
     private final Button btnOk = new Button("OK");
     private final Button btnCancel = new Button("Abbrechen");
@@ -45,7 +45,7 @@ public class AskBackupPathDialogController extends P2DialogExtra {
     private final ProgData progData;
     private boolean ok = false;
 
-    public AskBackupPathDialogController(ProgData progData, ObjectProperty<BackupInfo> backupDataProb) {
+    public DialogAskBackupPath(ProgData progData, ObjectProperty<BackupInfo> backupDataProb) {
         super(ProgData.getInstance().primaryStage, null, "Ordner für das Backup",
                 true, false, false, DECO.NO_BORDER);
 

@@ -23,7 +23,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoList;
 import de.p2tools.p2backup.controller.worker.ColorWorker;
 import de.p2tools.p2backup.controller.worker.Worker;
-import de.p2tools.p2backup.gui.dialog.QuitDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogQuit;
 import de.p2tools.p2backup.gui.guibig.BackupBigGui;
 import de.p2tools.p2backup.gui.guismall.BackupSmallGui;
 import de.p2tools.p2lib.css.P2CssFactory;
@@ -60,7 +60,7 @@ public class ProgData {
     public ColorWorker colorWorker = null;
 
     public P2MaskerPane maskerPane = new P2MaskerPane();
-    public QuitDialogController quitDialogController = null;
+    public DialogQuit dialogQuit = null;
 
     // data
 //    public DbDataList dbDataList;

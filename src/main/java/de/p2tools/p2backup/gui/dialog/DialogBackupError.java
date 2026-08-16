@@ -32,13 +32,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class BackupErrorDialogController extends P2DialogExtra {
+public class DialogBackupError extends P2DialogExtra {
 
     private final Button btnOk = new Button("Ok");
     private final BackupInfo backupInfo;
 
 
-    public BackupErrorDialogController(Stage stage, BackupInfo backupInfo) {
+    public DialogBackupError(Stage stage, BackupInfo backupInfo) {
         super(stage, null, "Backup",
                 true, false, false, DECO.NO_BORDER);
 

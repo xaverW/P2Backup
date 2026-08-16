@@ -33,7 +33,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-public class AddBackupDialogController extends P2DialogExtra {
+public class DialogAddBackup extends P2DialogExtra {
 
     private final Button btnOk = new Button("OK");
     private final Button btnCancel = new Button("Abbrechen");
@@ -41,7 +41,7 @@ public class AddBackupDialogController extends P2DialogExtra {
     private final ProgData progData;
     private boolean ok = false;
 
-    public AddBackupDialogController(ProgData progData, ObjectProperty<BackupInfo> backupInfoProb) {
+    public DialogAddBackup(ProgData progData, ObjectProperty<BackupInfo> backupInfoProb) {
         super(ProgData.getInstance().primaryStage, null, "Backup anlegen",
                 true, false, false, DECO.NO_BORDER);
 

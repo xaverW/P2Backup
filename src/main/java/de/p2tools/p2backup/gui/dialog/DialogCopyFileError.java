@@ -34,7 +34,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class CopyFileErrorDialogController extends P2DialogExtra {
+public class DialogCopyFileError extends P2DialogExtra {
 
     private final Button btnYes = new Button("Ja");
     private final Button btnNo = new Button("Nein");
@@ -44,8 +44,8 @@ public class CopyFileErrorDialogController extends P2DialogExtra {
     private final BooleanProperty yesProp;
     private final boolean isFile;
 
-    public CopyFileErrorDialogController(BackupInfo backupInfo, String file, BooleanProperty yesProp,
-                                         boolean isFile) {
+    public DialogCopyFileError(BackupInfo backupInfo, String file, BooleanProperty yesProp,
+                               boolean isFile) {
         super(ProgData.getInstance().primaryStage, null, "Datei kopieren",
                 true, false, false, DECO.NO_BORDER);
 

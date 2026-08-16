@@ -20,7 +20,7 @@ import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.gui.dialog.HowHelpDialog;
+import de.p2tools.p2backup.gui.dialog.DialogHowHelp;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -109,7 +109,7 @@ public class BackupHowController extends VBox {
 
         final Button btnHowHelp = new Button();
         btnHowHelp.setGraphic(P2IconFactory.P2ICON.BTN_HELP.getFontIcon());
-        btnHowHelp.setOnAction(a -> new HowHelpDialog());
+        btnHowHelp.setOnAction(a -> new DialogHowHelp());
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getChildren().addAll(gridPaneHow, btnHowHelp);

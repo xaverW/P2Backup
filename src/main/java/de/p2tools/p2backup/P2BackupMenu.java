@@ -26,8 +26,8 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2backup.gui.configdialog.ConfigDialogController;
-import de.p2tools.p2backup.gui.dialog.AboutDialogController;
-import de.p2tools.p2backup.gui.dialog.ResetDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogAbout;
+import de.p2tools.p2backup.gui.dialog.DialogReset;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.tools.log.P2Logger;
 import de.p2tools.p2lib.tools.shortcut.P2ShortcutWorker;
@@ -128,11 +128,11 @@ public class P2BackupMenu extends MenuButton {
             P2Logger.openLogFile();
         });
         final MenuItem miReset = new MenuItem("Einstellungen zurücksetzen");
-        miReset.setOnAction(event -> new ResetDialogController(progData));
+        miReset.setOnAction(event -> new DialogReset(progData));
         final MenuItem miSearchUpdate = new MenuItem("Gibt's ein Update?");
         miSearchUpdate.setOnAction(a -> new SearchProgramUpdate(progData).searchNewProgramVersion(true));
         final MenuItem miAbout = new MenuItem("Über dieses Programm");
-        miAbout.setOnAction(event -> new AboutDialogController(progData).showDialog());
+        miAbout.setOnAction(event -> new DialogAbout(progData).showDialog());
 
         final Menu mHelp = new Menu("Hilfe");
         mHelp.getItems().addAll(miLog, miReset,

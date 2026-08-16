@@ -40,7 +40,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class CheckBackupRepairDialogController extends P2DialogExtra {
+public class DialogCheckBackupRepair extends P2DialogExtra {
 
     private final Button btnRepair = new Button("Dateien löschen");
     private final Button btnCancel = new Button("Abbrechen");
@@ -49,7 +49,7 @@ public class CheckBackupRepairDialogController extends P2DialogExtra {
     private final ObjectProperty<Stage> stageProp = new SimpleObjectProperty<>();
     private boolean ok = false;
 
-    public CheckBackupRepairDialogController(Stage stage, FileDataList errorList) {
+    public DialogCheckBackupRepair(Stage stage, FileDataList errorList) {
         super(stage, ProgConfig.BACKUP_ERROR_DIALOG_SIZE, "Backup prüfen",
                 true, true, false, DECO.NO_BORDER);
 

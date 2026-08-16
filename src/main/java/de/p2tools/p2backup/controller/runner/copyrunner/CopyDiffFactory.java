@@ -11,7 +11,7 @@ import de.p2tools.p2backup.controller.runner.hashrunner.HashFactory;
 import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackupQuick;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
-import de.p2tools.p2backup.gui.dialog.BackupErrorListDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogBackupErrorList;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.tools.P2Wait;
 import javafx.application.Platform;
@@ -54,11 +54,11 @@ public class CopyDiffFactory {
         }
 
         if ((!errorList.isEmpty())) {
-            ObjectProperty<BackupErrorListDialogController.ERROR> repairProp = new SimpleObjectProperty<>(null);
+            ObjectProperty<DialogBackupErrorList.ERROR> repairProp = new SimpleObjectProperty<>(null);
             AtomicBoolean atomicBoolean = new AtomicBoolean(true);
             Platform.runLater(() -> {
                 // wird im GUI angezeigt
-                new BackupErrorListDialogController(backupInfo, errorList, repairProp);
+                new DialogBackupErrorList(backupInfo, errorList, repairProp);
                 atomicBoolean.set(false);
             });
             while (atomicBoolean.get()) {

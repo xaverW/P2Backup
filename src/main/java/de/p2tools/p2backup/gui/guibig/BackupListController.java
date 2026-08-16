@@ -20,7 +20,7 @@ import de.p2tools.p2backup.controller.LoadFactory;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
-import de.p2tools.p2backup.gui.dialog.AddBackupDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogAddBackup;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2BigButton;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -111,7 +111,7 @@ public class BackupListController extends VBox {
 
     private void add() {
         ObjectProperty<BackupInfo> backupDataProb = new SimpleObjectProperty<>(new BackupInfo());
-        if (new AddBackupDialogController(progData, backupDataProb).isOk()) {
+        if (new DialogAddBackup(progData, backupDataProb).isOk()) {
             progData.backupInfoList.add(backupDataProb.get());
             progData.backupInfoProperty.set(backupDataProb.get());
         }

@@ -36,12 +36,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class ResetDialogController extends P2DialogExtra {
+public class DialogReset extends P2DialogExtra {
 
     final ProgData progData;
     final StackPane stackPane;
 
-    public ResetDialogController(ProgData progData) {
+    public DialogReset(ProgData progData) {
         super(progData.primaryStage, null, "Programm zurücksetzen");
 
         this.progData = progData;

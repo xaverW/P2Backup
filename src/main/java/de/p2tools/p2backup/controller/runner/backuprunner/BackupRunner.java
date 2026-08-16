@@ -6,7 +6,7 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.controller.sqlite.SqlTable;
-import de.p2tools.p2backup.gui.dialog.BackupErrorDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogBackupError;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.P2Wait;
@@ -160,7 +160,7 @@ public class BackupRunner {
                 stage = progData.primaryStage;
             }
 
-            Platform.runLater(() -> new BackupErrorDialogController(stage, backupInfo));
+            Platform.runLater(() -> new DialogBackupError(stage, backupInfo));
 
             // delete backup-files
             Path toPath = backupInfo.runnerDto.getToPath();

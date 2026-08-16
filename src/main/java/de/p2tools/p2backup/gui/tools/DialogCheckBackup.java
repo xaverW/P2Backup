@@ -27,7 +27,7 @@ import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.RepairFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCheckBackup;
-import de.p2tools.p2backup.gui.dialog.CheckBackupRepairDialogController;
+import de.p2tools.p2backup.gui.dialog.DialogCheckBackupRepair;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolCheckBackup;
@@ -92,7 +92,7 @@ public class DialogCheckBackup extends P2DialogExtra {
                         "Backup zu entfernen.");
 
         btnRepair.setOnAction(a -> {
-            CheckBackupRepairDialogController b = new CheckBackupRepairDialogController(getStage(), errorList);
+            DialogCheckBackupRepair b = new DialogCheckBackupRepair(getStage(), errorList);
             if (b.isOk()) {
                 if (!RepairFactory.repairBackup(backupInfo, errorList)) {
                     P2Alert.showErrorAlert("Dateien aus dem Backup löschen",
