@@ -17,7 +17,7 @@
 
 package de.p2tools.p2backup.gui.table;
 
-import de.p2tools.p2backup.controller.data.resetdata.ResetData;
+import de.p2tools.p2backup.controller.data.resetdata.CopyBackData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.guitools.P2Open;
 import javafx.beans.property.ObjectProperty;
@@ -34,18 +34,18 @@ import javafx.util.Callback;
 
 import java.nio.file.Path;
 
-public class CellStartOpenResetDataButton<S, T> extends TableCell<S, T> {
+public class CellStartOpenCopyBackDataButton<S, T> extends TableCell<S, T> {
 
     private final ObjectProperty<Stage> stage;
 
-    public CellStartOpenResetDataButton(ObjectProperty<Stage> stage) {
+    public CellStartOpenCopyBackDataButton(ObjectProperty<Stage> stage) {
         this.stage = stage;
     }
 
-    public final Callback<TableColumn<ResetData, String>, TableCell<ResetData, String>> cellFactory
-            = (final TableColumn<ResetData, String> param) -> {
+    public final Callback<TableColumn<CopyBackData, String>, TableCell<CopyBackData, String>> cellFactory
+            = (final TableColumn<CopyBackData, String> param) -> {
 
-        final TableCell<ResetData, String> cell = new TableCell<>() {
+        final TableCell<CopyBackData, String> cell = new TableCell<>() {
 
             @Override
             public void updateItem(String item, boolean empty) {
@@ -62,7 +62,7 @@ public class CellStartOpenResetDataButton<S, T> extends TableCell<S, T> {
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setPadding(new Insets(0, 2, 0, 2));
 
-                ResetData resetData = getTableView().getItems().get(getIndex());
+                CopyBackData copyBackData = getTableView().getItems().get(getIndex());
 
                 final Button btnStart = new Button("");
                 btnStart.getStyleClass().addAll("btnFunction", "btnFuncTable");
@@ -72,7 +72,7 @@ public class CellStartOpenResetDataButton<S, T> extends TableCell<S, T> {
                 btnStart.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
-                    P2Open.openFile(stage.get(), resetData.getFileData().getBackupFilePathStr());
+                    P2Open.openFile(stage.get(), copyBackData.getFileData().getBackupFilePathStr());
                     getTableView().refresh();
                     getTableView().requestFocus();
                 });
@@ -87,7 +87,7 @@ public class CellStartOpenResetDataButton<S, T> extends TableCell<S, T> {
                 btnOpenDirectory.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
-                    Path path = resetData.getFileData().getParentBackupFilePath();
+                    Path path = copyBackData.getFileData().getParentBackupFilePath();
                     if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
                         P2Open.openDir(stage.get(), path.toFile().toString());
                     }

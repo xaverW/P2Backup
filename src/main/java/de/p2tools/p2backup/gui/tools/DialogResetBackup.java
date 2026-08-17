@@ -22,12 +22,12 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
-import de.p2tools.p2backup.controller.data.resetdata.ResetDataList;
-import de.p2tools.p2backup.controller.data.resetdata.ResetFactory;
+import de.p2tools.p2backup.controller.data.resetdata.CopyBackDataList;
+import de.p2tools.p2backup.controller.data.resetdata.CopyBackFactory;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
-import de.p2tools.p2backup.gui.table.TableToolResetBackup;
+import de.p2tools.p2backup.gui.table.TableToolCopyBackBackup;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
@@ -53,11 +53,11 @@ public class DialogResetBackup extends P2DialogExtra {
     private final ListView<BackupData> listView = new ListView<>();
     private final VBox vBoxList = new VBox(P2LibConst.SPACING_VBOX);
     private final VBox vBoxCont = new VBox(P2LibConst.SPACING_VBOX);
-    private final TableToolResetBackup tableView;
+    private final TableToolCopyBackBackup tableView;
     private final Button btnSearch = new Button();
     private final P2ComboBoxString cboDest = new P2ComboBoxString();
     private final Label lblName = new Label();
-    private final ResetDataList resetDataList = new ResetDataList();
+    private final CopyBackDataList copyBackDataList = new CopyBackDataList();
 
     private final ProgData progData;
 
@@ -68,7 +68,7 @@ public class DialogResetBackup extends P2DialogExtra {
 
         this.progData = ProgData.getInstance();
         this.backupInfo = backupInfo;
-        this.tableView = new TableToolResetBackup(Table.TABLE_ENUM.RESET_BACKUP, getStageProp());
+        this.tableView = new TableToolCopyBackBackup(Table.TABLE_ENUM.COPY_BACK_BACKUP, getStageProp());
 
         initTable();
         initList();
@@ -91,7 +91,7 @@ public class DialogResetBackup extends P2DialogExtra {
 
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(vBoxList, vBoxCont);
-        splitPane.getDividers().getFirst().positionProperty().bindBidirectional(ProgConfig.RESET_BACKUP_SPLIT_DIVIDER);
+        splitPane.getDividers().getFirst().positionProperty().bindBidirectional(ProgConfig.COPY_BACK_BACKUP_SPLIT_DIVIDER);
         VBox.setVgrow(splitPane, Priority.ALWAYS);
         getVBoxCont().getChildren().addAll(splitPane);
 
@@ -101,7 +101,7 @@ public class DialogResetBackup extends P2DialogExtra {
     }
 
     public void close() {
-        Table.saveTable(tableView, Table.TABLE_ENUM.RESET_BACKUP);
+        Table.saveTable(tableView, Table.TABLE_ENUM.COPY_BACK_BACKUP);
         backupInfo.runnerDto.setStop();
         super.close();
     }
@@ -118,7 +118,7 @@ public class DialogResetBackup extends P2DialogExtra {
                 tableView.setContextMenu(contextMenu);
             }
         });
-        tableView.setItems(resetDataList);
+        tableView.setItems(copyBackDataList);
     }
 
     private ContextMenu getContextMenu() {
@@ -151,7 +151,7 @@ public class DialogResetBackup extends P2DialogExtra {
         gridPane.add(new Label("Backup:"), 0, row);
         gridPane.add(lblName, 1, row);
 
-        cboDest.init(ProgConfig.CBO_RESET_DIALOG_DEST_DIR, ProgConfig.COPY_RESET_DIALOG_DEST_DIR);
+        cboDest.init(ProgConfig.CBO_COPY_BACK_DIALOG_DEST_DIR, ProgConfig.COPY_BACK_DIALOG_DEST_DIR);
         cboDest.setMaxWidth(Double.MAX_VALUE);
         btnSearch.setTooltip(new Tooltip("Verzeichnis auswählen"));
         btnSearch.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
@@ -162,7 +162,7 @@ public class DialogResetBackup extends P2DialogExtra {
         Button btnStartCopy = new Button("Starten");
         btnStartCopy.setTooltip(new Tooltip("Das Kopieren des Backups starten"));
         btnStartCopy.setOnAction(a -> {
-            ResetFactory.copyResetFiles(getStage(), backupInfo, resetDataList, ProgConfig.COPY_RESET_DIALOG_DEST_DIR.getValueSafe());
+            CopyBackFactory.copyResetFiles(getStage(), backupInfo, copyBackDataList, ProgConfig.COPY_BACK_DIALOG_DEST_DIR.getValueSafe());
         });
 
         HBox hBoxBottom = new HBox(P2LibConst.SPACING_HBOX);
@@ -181,7 +181,7 @@ public class DialogResetBackup extends P2DialogExtra {
             lblName.setText("");
         } else {
             lblName.setText(backupDataProp.get().getSubPath());
-            ResetFactory.getResetDataList(backupInfo, backupDataProp.get(), resetDataList);
+            CopyBackFactory.getResetDataList(backupInfo, backupDataProp.get(), copyBackDataList);
         }
     }
 

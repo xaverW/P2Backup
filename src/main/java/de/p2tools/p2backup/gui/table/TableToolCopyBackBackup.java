@@ -16,7 +16,7 @@
 
 package de.p2tools.p2backup.gui.table;
 
-import de.p2tools.p2backup.controller.data.resetdata.ResetData;
+import de.p2tools.p2backup.controller.data.resetdata.CopyBackData;
 import de.p2tools.p2lib.guitools.ptable.P2TableFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.SelectionMode;
@@ -27,10 +27,10 @@ import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
 
-public class TableToolResetBackup extends PTable<ResetData> {
+public class TableToolCopyBackBackup extends PTable<CopyBackData> {
     private final ObjectProperty<Stage> stage;
 
-    public TableToolResetBackup(Table.TABLE_ENUM table_enum, ObjectProperty<Stage> stage) {
+    public TableToolCopyBackBackup(Table.TABLE_ENUM table_enum, ObjectProperty<Stage> stage) {
         super(table_enum);
         this.table_enum = table_enum;
         this.stage = stage;
@@ -55,19 +55,19 @@ public class TableToolResetBackup extends PTable<ResetData> {
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        final TableColumn<ResetData, LocalDateTime> backupDataIdColumn = new TableColumn<>("Backup");
+        final TableColumn<CopyBackData, LocalDateTime> backupDataIdColumn = new TableColumn<>("Backup");
         backupDataIdColumn.setCellValueFactory(new PropertyValueFactory<>("backupSubPath"));
 
-        final TableColumn<ResetData, LocalDateTime> fileNameColumn = new TableColumn<>("Datei");
+        final TableColumn<CopyBackData, LocalDateTime> fileNameColumn = new TableColumn<>("Datei");
         fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
 
-        final TableColumn<ResetData, String> btnColumn = new TableColumn<>("Öffnen");
+        final TableColumn<CopyBackData, String> btnColumn = new TableColumn<>("Öffnen");
         btnColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
-        btnColumn.setCellFactory(new CellStartOpenResetDataButton<>(stage).cellFactory);
+        btnColumn.setCellFactory(new CellStartOpenCopyBackDataButton<>(stage).cellFactory);
 
-        final TableColumn<ResetData, String> copyColumn = new TableColumn<>("Kopieren");
+        final TableColumn<CopyBackData, String> copyColumn = new TableColumn<>("Kopieren");
         copyColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
-        copyColumn.setCellFactory(new CellCopyFileButton<>(stage).cellResetFactory);
+        copyColumn.setCellFactory(new CellCopyFileButton<>(stage).cellCopyBackFactory);
 
         backupDataIdColumn.setPrefWidth(200);
         fileNameColumn.setPrefWidth(500);

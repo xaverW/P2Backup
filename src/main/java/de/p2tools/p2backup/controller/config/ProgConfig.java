@@ -206,14 +206,14 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty FILE_HISTORY_TABLE_ORDER = addStrProp("file-histoy-table-order");
 
     // ResetBackup
-    public static ObservableList<String> CBO_RESET_DIALOG_DEST_DIR = addListProp("cbo-reset-dialog-dest-dir");
-    public static StringProperty COPY_RESET_DIALOG_DEST_DIR = addStrProp("reset-dialog-dest-dir");
-    public static DoubleProperty RESET_BACKUP_SPLIT_DIVIDER = addDoubleProp("reset-backup-split-divider", 0.3);
-    public static StringProperty RESET_BACKUP_TABLE_WIDTH = addStrProp("reset-backup-table-width");
-    public static StringProperty RESET_BACKUP_TABLE_SORT = addStrProp("reset-backup-table-sort");
-    public static StringProperty RESET_BACKUP_TABLE_UP_DOWN = addStrProp("reset-backup-table-up-down");
-    public static StringProperty RESET_BACKUP_TABLE_VIS = addStrProp("reset-backup-table-vis");
-    public static StringProperty RESET_BACKUP_TABLE_ORDER = addStrProp("reset-backup-table-order");
+    public static ObservableList<String> CBO_COPY_BACK_DIALOG_DEST_DIR = addListProp("cbo-copy-back-dialog-dest-dir");
+    public static StringProperty COPY_BACK_DIALOG_DEST_DIR = addStrProp("copy-back-dialog-dest-dir");
+    public static DoubleProperty COPY_BACK_BACKUP_SPLIT_DIVIDER = addDoubleProp("copy-back-backup-split-divider", 0.3);
+    public static StringProperty COPY_BACK_BACKUP_TABLE_WIDTH = addStrProp("copy-back-backup-table-width");
+    public static StringProperty COPY_BACK_BACKUP_TABLE_SORT = addStrProp("copy-back-backup-table-sort");
+    public static StringProperty COPY_BACK_BACKUP_TABLE_UP_DOWN = addStrProp("copy-back-backup-table-up-down");
+    public static StringProperty COPY_BACK_BACKUP_TABLE_VIS = addStrProp("copy-back-backup-table-vis");
+    public static StringProperty COPY_BACK_BACKUP_TABLE_ORDER = addStrProp("copy-back-backup-table-order");
 
     // BackupError
     public static StringProperty BACKUP_ERROR_DIALOG_SIZE = addStrProp("backup-error-dialog-size", "800:500");

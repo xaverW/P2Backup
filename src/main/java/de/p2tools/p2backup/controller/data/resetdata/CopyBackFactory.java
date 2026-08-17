@@ -19,13 +19,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class ResetFactory {
-    private ResetFactory() {
+public class CopyBackFactory {
+    private CopyBackFactory() {
     }
 
-    public static boolean getResetDataList(BackupInfo backupInfo, BackupData backupData, ResetDataList resetDataList) {
+    public static boolean getResetDataList(BackupInfo backupInfo, BackupData backupData, CopyBackDataList copyBackDataList) {
         List<BackupData> list = new ArrayList<>();
-        HashMap<String, ResetData> hashMap = new HashMap<>();
+        HashMap<String, CopyBackData> hashMap = new HashMap<>();
 
         backupInfo.getBackupDataList().forEach(ba -> {
             if (ba.getId() >= backupData.getId()) {
@@ -35,17 +35,17 @@ public class ResetFactory {
 
         list.sort(Comparator.reverseOrder());
         list.forEach(ba -> {
-            ResetDataList reset = new ResetDataList();
+            CopyBackDataList reset = new CopyBackDataList();
             SqlResetData.getResetData(backupInfo, ba, reset);
             reset.forEach(r -> hashMap.put(r.getFileData().getFilePathStr(), r));
         });
 
-        resetDataList.setAll(hashMap.values());
+        copyBackDataList.setAll(hashMap.values());
         return true;
     }
 
-    public static boolean copyResetFiles(Stage stage, BackupInfo backupInfo, ResetDataList resetDataList, String destDir) {
-        if (resetDataList.isEmpty()) {
+    public static boolean copyResetFiles(Stage stage, BackupInfo backupInfo, CopyBackDataList copyBackDataList, String destDir) {
+        if (copyBackDataList.isEmpty()) {
             P2Alert.showErrorAlert(stage, "Backup kopieren", "Die Liste der Dateien " +
                     "zum Kopieren ist leer.");
             return false;
@@ -80,7 +80,7 @@ public class ResetFactory {
 
         new Thread(() -> {
             BooleanProperty ret = new SimpleBooleanProperty(true);
-            resetDataList.forEach(r -> {
+            copyBackDataList.forEach(r -> {
                 System.out.println("Backup kopieren: " + r.getFileName());
                 try {
                     Path from = r.getFileData().getBackupFilePath();

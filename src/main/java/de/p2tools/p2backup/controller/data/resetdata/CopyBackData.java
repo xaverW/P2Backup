@@ -3,11 +3,11 @@ package de.p2tools.p2backup.controller.data.resetdata;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 
-public class ResetData {
+public class CopyBackData {
     private FileData fileData;
     private BackupData backupData;
 
-    public ResetData(FileData fileData, BackupData backupData) {
+    public CopyBackData(FileData fileData, BackupData backupData) {
         this.fileData = fileData;
         this.backupData = backupData;
     }
