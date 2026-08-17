@@ -137,6 +137,8 @@ public class BackupDataProps implements Comparable<BackupData> {
     public int compareTo(BackupData arg0) {
         if (getId() == arg0.getId()) {
             return 0;
+        } else if (getId() > arg0.getId()) {
+            return 1;
         } else {
             return -1;
         }

@@ -17,6 +17,7 @@
 package de.p2tools.p2backup.controller.data.backupinfo;
 
 import de.p2tools.p2backup.controller.config.ProgConst;
+import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupDataList;
 import de.p2tools.p2backup.controller.data.pathdata.PathDataList;
 import de.p2tools.p2lib.configfile.config.*;
@@ -269,6 +270,16 @@ public class BackupInfoProps extends P2DataSample<BackupInfo> implements Compara
 
     public BackupDataList getBackupDataList() {
         return backupDataList;
+    }
+
+    public BackupData getBackupData(long id) {
+        for (BackupData backupData : backupDataList) {
+            if (backupData.getId() == id) {
+                return backupData;
+            }
+        }
+
+        return null;
     }
 
     public BackupDataList getBackupDataListReverse() {

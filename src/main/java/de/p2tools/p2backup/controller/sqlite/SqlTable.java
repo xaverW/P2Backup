@@ -135,7 +135,7 @@ public class SqlTable {
             return false;
         }
 
-        // Tabellen anlegen: dataFileData, vom Backup
+        // Tabellen anlegen: FileData, vom Backup
         sql = "CREATE TABLE IF NOT EXISTS backupFiles ("
                 + "	id LONG PRIMARY KEY,"
                 + " backupId LONG NOT NULL,"

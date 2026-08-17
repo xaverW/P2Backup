@@ -22,43 +22,57 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
+import de.p2tools.p2backup.controller.data.resetdata.ResetDataList;
+import de.p2tools.p2backup.controller.data.resetdata.ResetFactory;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
+import de.p2tools.p2backup.gui.table.Table;
+import de.p2tools.p2backup.gui.table.TableToolResetBackup;
 import de.p2tools.p2lib.P2LibConst;
+import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
-import de.p2tools.p2lib.guitools.P2GuiTools;
-import javafx.application.Platform;
+import de.p2tools.p2lib.guitools.P2ComboBoxString;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.util.Comparator;
+
 public class DialogResetBackup extends P2DialogExtra {
 
-    private final Label lblSum = new Label();
-    private final Button btnLoad = new Button("Backup laden");
-    private final ComboBox<BackupData> cboBackup = new ComboBox<>();
-
-    private final ObjectProperty<BackupInfo> backupInfoProp = new SimpleObjectProperty<>(null);
+    private final BackupInfo backupInfo;
     private ObjectProperty<BackupData> backupDataProp = new SimpleObjectProperty<>(null);
+    private final ListView<BackupData> listView = new ListView<>();
+    private final VBox vBoxList = new VBox(P2LibConst.SPACING_VBOX);
+    private final VBox vBoxCont = new VBox(P2LibConst.SPACING_VBOX);
+    private final TableToolResetBackup tableView;
+    private final Button btnSearch = new Button();
+    private final P2ComboBoxString cboDest = new P2ComboBoxString();
+    private final Label lblName = new Label();
+    private final ResetDataList resetDataList = new ResetDataList();
+
     private final ProgData progData;
-    private final PaneSearchInBackup paneSearchInBackup;
+
 
     public DialogResetBackup(BackupInfo backupInfo) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.SEARCH_DIALOG_SIZE, "Dateien im Backup suchen",
+        super(ProgData.getInstance().primaryStage, ProgConfig.SEARCH_DIALOG_SIZE, "Backup wieder herstellen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
-        this.backupInfoProp.set(backupInfo);
-        this.paneSearchInBackup = new PaneSearchInBackup(getStageProp(), backupInfoProp.get(), backupDataProp);
-        VBox.setVgrow(paneSearchInBackup, Priority.ALWAYS);
+        this.backupInfo = backupInfo;
+        this.tableView = new TableToolResetBackup(Table.TABLE_ENUM.RESET_BACKUP, getStageProp());
+
+        initTable();
+        initList();
+        initInfo();
         init(false);
     }
 
@@ -68,54 +82,107 @@ public class DialogResetBackup extends P2DialogExtra {
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
 
-        Button btnHelp = P2Button.helpButton(getStage(), "Backup durchsuchen",
-                "Hier werden alle Dateien des Backups angezeigt. Es kann darin nach Dateien " +
-                        "gesucht werden. Dateien können geöffnet und kopiert werden.");
+        Button btnHelp = P2Button.helpButton(getStage(), "Backup wieder herstellen",
+                "Damit kann man ein Backup wieder herstellen. Es werden die Daten aus einem " +
+                        "Backup in einen Ordner der eigenen Wahl, kopiert.");
+
+        vBoxList.setPadding(new Insets(5));
+        vBoxCont.setPadding(new Insets(5));
+
+        SplitPane splitPane = new SplitPane();
+        splitPane.getItems().addAll(vBoxList, vBoxCont);
+        splitPane.getDividers().getFirst().positionProperty().bindBidirectional(ProgConfig.RESET_BACKUP_SPLIT_DIVIDER);
+        VBox.setVgrow(splitPane, Priority.ALWAYS);
+        getVBoxCont().getChildren().addAll(splitPane);
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
         getHboxLeft().getChildren().addAll(hBox, btnHelp);
-
-        addSearch();
-        addComboBox();
-        getVBoxCont().getChildren().add(paneSearchInBackup);
-        initSum();
     }
 
     public void close() {
-        paneSearchInBackup.close();
-        if (backupInfoProp.get() != null) {
-            backupInfoProp.get().runnerDto.setStop();
-        }
+        Table.saveTable(tableView, Table.TABLE_ENUM.RESET_BACKUP);
+        backupInfo.runnerDto.setStop();
         super.close();
     }
 
     public void setResult(FileDataList fileDataList) {
-        Platform.runLater(() -> paneSearchInBackup.makeTree(fileDataList));
+//        Platform.runLater(() -> );
     }
 
-    private void addSearch() {
-        btnLoad.setOnAction(a -> {
-            if (cboBackup.getSelectionModel().getSelectedItem() != null) {
-                backupDataProp.set(cboBackup.getSelectionModel().getSelectedItem());
-                String subPath = backupDataProp.get().getSubPath();
-                if (!subPath.isEmpty()) {
-                    backupInfoProp.get().runnerDto.initRunner();
-                    backupInfoProp.get().runnerDto.setRunnerText("Backup laden");
-//                    new ToolSearchInBackup(this,
-//                            backupInfoProp.get(), backupDataProp.get(), new AtomicBoolean(true)).search();
-                }
-
-            } else {
-                backupDataProp.set(null);
+    private void initTable() {
+        Table.setTable(tableView);
+        tableView.setOnMousePressed(m -> {
+            if (m.getButton().equals(MouseButton.SECONDARY)) {
+                ContextMenu contextMenu = getContextMenu();
+                tableView.setContextMenu(contextMenu);
             }
         });
+        tableView.setItems(resetDataList);
+    }
 
-        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getStyleClass().add("infoDialogTop");
-        hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().addAll(cboBackup, P2GuiTools.getHBoxGrower(), btnLoad);
-        getVBoxCont().getChildren().addAll(hBox);
+    private ContextMenu getContextMenu() {
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem resetTable = new MenuItem("Tabelle zurücksetzen");
+        resetTable.setOnAction(e -> tableView.resetTable());
+        contextMenu.getItems().add(new SeparatorMenuItem());
+        contextMenu.getItems().addAll(resetTable);
+        return contextMenu;
+    }
+
+    private void initList() {
+        listView.setItems(backupInfo.getBackupDataList().sorted(Comparator.reverseOrder()));
+
+        HBox hBoxTop = new HBox(P2LibConst.SPACING_HBOX);
+        hBoxTop.getChildren().add(new Label("Backups"));
+        vBoxList.getChildren().addAll(hBoxTop, listView);
+        VBox.setVgrow(listView, Priority.ALWAYS);
+    }
+
+    private void initInfo() {
+        listView.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
+            setInfo();
+        });
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);
+        gridPane.setHgap(P2LibConst.DIST_GRIDPANE_HGAP);
+
+        int row = 0;
+        gridPane.add(new Label("Backup:"), 0, row);
+        gridPane.add(lblName, 1, row);
+
+        cboDest.init(ProgConfig.CBO_RESET_DIALOG_DEST_DIR, ProgConfig.COPY_RESET_DIALOG_DEST_DIR);
+        cboDest.setMaxWidth(Double.MAX_VALUE);
+        btnSearch.setTooltip(new Tooltip("Verzeichnis auswählen"));
+        btnSearch.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
+        btnSearch.setOnAction(a -> {
+            P2DirFileChooser.DirChooser(getStage(), cboDest);
+        });
+
+        Button btnStartCopy = new Button("Starten");
+        btnStartCopy.setTooltip(new Tooltip("Das Kopieren des Backups starten"));
+        btnStartCopy.setOnAction(a -> {
+            ResetFactory.copyResetFiles(getStage(), backupInfo, resetDataList, ProgConfig.COPY_RESET_DIALOG_DEST_DIR.getValueSafe());
+        });
+
+        HBox hBoxBottom = new HBox(P2LibConst.SPACING_HBOX);
+        hBoxBottom.setAlignment(Pos.CENTER);
+        hBoxBottom.getChildren().addAll(new Label("Speicherziel:"), cboDest, btnSearch, btnStartCopy);
+        HBox.setHgrow(cboDest, Priority.ALWAYS);
+
+        vBoxCont.getChildren().addAll(gridPane, tableView, hBoxBottom);
+        VBox.setVgrow(tableView, Priority.ALWAYS);
+    }
+
+    private void setInfo() {
+        backupDataProp.set(listView.getSelectionModel().getSelectedItem());
+
+        if (backupDataProp.get() == null) {
+            lblName.setText("");
+        } else {
+            lblName.setText(backupDataProp.get().getSubPath());
+            ResetFactory.getResetDataList(backupInfo, backupDataProp.get(), resetDataList);
+        }
     }
 
     private HBox addProgress() {
@@ -123,7 +190,7 @@ public class DialogResetBackup extends P2DialogExtra {
         btnStop.setMinHeight(18);
         btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
-        btnStop.setOnAction(a -> backupInfoProp.get().runnerDto.setStop());
+        btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);
         hBoxProgress.setPadding(new Insets(0, 10, 0, 10));
@@ -132,27 +199,7 @@ public class DialogResetBackup extends P2DialogExtra {
         hBoxProgress.getChildren().addAll(/*P2GuiTools.getHBoxGrower(),*/ pProgressBar, btnStop);
         hBoxProgress.setAlignment(Pos.CENTER);
 
-        hBoxProgress.visibleProperty().bind(backupInfoProp.get().runnerDto.guiRunningProperty());
+        hBoxProgress.visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
         return hBoxProgress;
-    }
-
-    private void addComboBox() {
-        cboBackup.setItems(backupInfoProp.get().getBackupDataList());
-        if (!cboBackup.getItems().isEmpty()) {
-            cboBackup.getSelectionModel().selectLast();
-        }
-        cboBackup.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
-            paneSearchInBackup.clearTree();
-        });
-
-        btnLoad.disableProperty().bind((cboBackup.getSelectionModel().selectedItemProperty().isNull()));
-    }
-
-    private void initSum() {
-        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(P2GuiTools.getHBoxGrower(), new Label("Anzahl: "), lblSum);
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        paneSearchInBackup.getSizeProp().addListener((u, o, n) -> lblSum.setText(paneSearchInBackup.getSizeProp().get() + ""));
-        getVBoxCont().getChildren().add(hBox);
     }
 }

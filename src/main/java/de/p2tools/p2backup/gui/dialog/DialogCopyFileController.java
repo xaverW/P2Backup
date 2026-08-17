@@ -22,7 +22,7 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.alert.P2Alert;
-import de.p2tools.p2lib.dialogs.P2DialogFileChooser;
+import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2ComboBoxString;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -47,7 +47,7 @@ public class DialogCopyFileController extends P2DialogExtra {
 
     private final Button btnOk = new Button("Ok");
     private final Button btnCancel = new Button("Abbrechen");
-    private final Button btnSearch = new Button();
+    private final Button btnSearchDestPath = new Button();
     private final Button btnProposeFileName = new Button();
     private final String srcFile;
     private final P2ComboBoxString cboDest = new P2ComboBoxString();
@@ -71,12 +71,13 @@ public class DialogCopyFileController extends P2DialogExtra {
     public void make() {
         cboDest.init(ProgConfig.CBO_COPY_DIALOG_DEST_DIR, ProgConfig.COPY_DIALOG_DEST_DIR);
         cboDest.setMaxWidth(Double.MAX_VALUE);
-        btnSearch.setTooltip(new Tooltip("Verzeichnis auswählen"));
-        btnSearch.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
-        btnSearch.setOnAction(a -> {
-            ProgConfig.COPY_DIALOG_DEST_DIR.set(
-                    P2DialogFileChooser.showFileChooser(getStage(), "Kopieren", "Ziel auswählen",
-                            "Einen Ordner zum Speichern auswählen", true, false, ""));
+        btnSearchDestPath.setTooltip(new Tooltip("Verzeichnis auswählen"));
+        btnSearchDestPath.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
+        btnSearchDestPath.setOnAction(a -> {
+            P2DirFileChooser.DirChooser(getStage(), cboDest);
+//            ProgConfig.COPY_DIALOG_DEST_DIR.set(
+//                    P2DialogFileChooser.showFileChooser(getStage(), "Kopieren", "Ziel auswählen",
+//                            "Einen Ordner zum Speichern auswählen", true, false, ""));
         });
 
         String name = Path.of(srcFile).toFile().getName();
@@ -126,7 +127,7 @@ public class DialogCopyFileController extends P2DialogExtra {
 
         gridPane.add(new Label("Ziel:"), 0, ++row);
         gridPane.add(cboDest, 1, row);
-        gridPane.add(btnSearch, 2, row);
+        gridPane.add(btnSearchDestPath, 2, row);
 
         if (file) {
             gridPane.add(new Label("Dateiname:"), 0, ++row);

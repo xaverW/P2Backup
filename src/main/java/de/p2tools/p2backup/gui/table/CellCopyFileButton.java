@@ -19,6 +19,7 @@ package de.p2tools.p2backup.gui.table;
 
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
+import de.p2tools.p2backup.controller.data.resetdata.ResetData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.dialog.DialogCopyFileController;
 import javafx.beans.property.ObjectProperty;
@@ -130,4 +131,50 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
         };
         return cell;
     };
+
+    public final Callback<TableColumn<ResetData, String>, TableCell<ResetData, String>> cellResetFactory
+            = (final TableColumn<ResetData, String> param) -> {
+
+        final TableCell<ResetData, String> cell = new TableCell<>() {
+
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
+                }
+
+                final HBox hbox = new HBox();
+                hbox.setSpacing(5);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setPadding(new Insets(0, 2, 0, 2));
+
+                ResetData resetData = getTableView().getItems().get(getIndex());
+
+                final Button btnCopy = new Button("");
+                btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
+                btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
+                btnCopy.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
+                btnCopy.setDisable(resetData.getFileData().isErrorHash() || resetData.getFileData().isOnlyInData());
+
+                btnCopy.setOnAction((ActionEvent event) -> {
+                    getTableView().getSelectionModel().clearSelection();
+                    getTableView().getSelectionModel().select(getIndex());
+                    new DialogCopyFileController(stage.get(), resetData.getFileData().getBackupFilePathStr(), true);
+                    getTableView().refresh();
+                    getTableView().requestFocus();
+                });
+
+                btnCopy.setMinHeight(18);
+                btnCopy.setMaxHeight(18);
+                hbox.getChildren().addAll(btnCopy);
+                setGraphic(hbox);
+            }
+        };
+        return cell;
+    };
+
 }

@@ -146,10 +146,8 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty SYSTEM_TO_PATH = addStrProp("system-to-path", ""); // gemerkter Pfad
 
     // CopyDialog
-    // Finanzreport
     public static ObservableList<String> CBO_COPY_DIALOG_DEST_DIR = addListProp("cbo-copy-dialog-dest-dir");
     public static StringProperty COPY_DIALOG_DEST_DIR = addStrProp("copy-dialog-dest-dir");
-    public static StringProperty COPY_DIALOG_DEST_FILE_NAME = addStrProp("copy-dialog-dest-file-name");
 
     // DialogHowHelp
     public static StringProperty DIALOG_HOW_HELP_SIZE = addStrProp("dialog-how-help-size", "900:700");
@@ -206,6 +204,16 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty FILE_HISTORY_TABLE_UP_DOWN = addStrProp("file-histoy-table-up-down");
     public static StringProperty FILE_HISTORY_TABLE_VIS = addStrProp("file-histoy-table-vis");
     public static StringProperty FILE_HISTORY_TABLE_ORDER = addStrProp("file-histoy-table-order");
+
+    // ResetBackup
+    public static ObservableList<String> CBO_RESET_DIALOG_DEST_DIR = addListProp("cbo-reset-dialog-dest-dir");
+    public static StringProperty COPY_RESET_DIALOG_DEST_DIR = addStrProp("reset-dialog-dest-dir");
+    public static DoubleProperty RESET_BACKUP_SPLIT_DIVIDER = addDoubleProp("reset-backup-split-divider", 0.3);
+    public static StringProperty RESET_BACKUP_TABLE_WIDTH = addStrProp("reset-backup-table-width");
+    public static StringProperty RESET_BACKUP_TABLE_SORT = addStrProp("reset-backup-table-sort");
+    public static StringProperty RESET_BACKUP_TABLE_UP_DOWN = addStrProp("reset-backup-table-up-down");
+    public static StringProperty RESET_BACKUP_TABLE_VIS = addStrProp("reset-backup-table-vis");
+    public static StringProperty RESET_BACKUP_TABLE_ORDER = addStrProp("reset-backup-table-order");
 
     // BackupError
     public static StringProperty BACKUP_ERROR_DIALOG_SIZE = addStrProp("backup-error-dialog-size", "800:500");
