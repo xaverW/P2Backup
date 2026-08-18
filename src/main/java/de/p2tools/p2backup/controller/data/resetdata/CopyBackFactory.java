@@ -84,7 +84,7 @@ public class CopyBackFactory {
                 System.out.println("Backup kopieren: " + r.getFileName());
                 try {
                     Path from = r.getFileData().getBackupFilePath();
-                    String destStr = r.getFileData().getParentFilePathStr();
+                    String destStr = r.getFileData().getCorrParentFilePathStr();
                     Path dest = Path.of(destDir, destStr);
                     FileUtils.copyFileToDirectory(from.toFile(), dest.toFile(), true);
                 } catch (IOException e) {
