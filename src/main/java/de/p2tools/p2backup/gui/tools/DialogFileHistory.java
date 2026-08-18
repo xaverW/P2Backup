@@ -240,8 +240,8 @@ public class DialogFileHistory extends P2DialogExtra {
 
     private HBox addProgress() {
         Button btnStop = new Button();
-        btnStop.setMinHeight(18);
-        btnStop.setMaxHeight(18);
+//        btnStop.setMinHeight(18);
+//        btnStop.setMaxHeight(18);
         btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
         btnStop.setOnAction(a -> backupInfoProp.get().runnerDto.setStop());
 

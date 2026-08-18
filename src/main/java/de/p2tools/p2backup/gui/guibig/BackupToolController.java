@@ -89,7 +89,7 @@ public class BackupToolController extends VBox {
         btnResetBackup.setMaxWidth(Double.MAX_VALUE);
         btnResetBackup.setOnAction(a -> {
             if (progData.backupInfoProperty.get() != null) {
-                new DialogResetBackup(progData.backupInfoProperty.get()).showDialog();
+                new DialogCopyBackBackup(progData.backupInfoProperty.get()).showDialog();
             }
         });
         Label lblResetBackup = new Label("Hier kann ein Backup wieder hergestellt werden.");

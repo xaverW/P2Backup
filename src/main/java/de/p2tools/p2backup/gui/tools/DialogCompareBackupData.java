@@ -52,7 +52,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
     private final FileDataList fileDataList = new FileDataList();
     private final ProgData progData;
     private final ComboBox<BackupData> cboBackup = new ComboBox<>();
-    private final Button btnStart = new Button("Starten");
+    private final Button btnStart = new Button("Backup laden");
     private final TableToolCompareDir tableView;
 
     private final RadioButton rbAllBackup = new RadioButton("Alle");

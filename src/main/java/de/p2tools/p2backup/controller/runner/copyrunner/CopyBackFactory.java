@@ -1,14 +1,17 @@
-package de.p2tools.p2backup.controller.data.resetdata;
+package de.p2tools.p2backup.controller.runner.copyrunner;
 
+import de.p2tools.p2backup.controller.config.PEvents;
+import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
+import de.p2tools.p2backup.controller.data.resetdata.CopyBackData;
+import de.p2tools.p2backup.controller.data.resetdata.CopyBackDataList;
 import de.p2tools.p2backup.controller.sqlite.SqlResetData;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
+import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 
@@ -20,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CopyBackFactory {
-    private CopyBackFactory() {
+    public CopyBackFactory() {
     }
 
     public static boolean getResetDataList(BackupInfo backupInfo, BackupData backupData, CopyBackDataList copyBackDataList) {
@@ -44,7 +47,7 @@ public class CopyBackFactory {
         return true;
     }
 
-    public static boolean copyResetFiles(Stage stage, BackupInfo backupInfo, CopyBackDataList copyBackDataList, String destDir) {
+    public static boolean copyBackBackup(Stage stage, BackupInfo backupInfo, CopyBackDataList copyBackDataList, String destDir) {
         if (copyBackDataList.isEmpty()) {
             P2Alert.showErrorAlert(stage, "Backup kopieren", "Die Liste der Dateien " +
                     "zum Kopieren ist leer.");
@@ -78,25 +81,44 @@ public class CopyBackFactory {
             return false;
         }
 
+        backupInfo.runnerDto.startRunner(backupInfo.getName());
+        backupInfo.runnerDto.setRunnerMax(copyBackDataList.getSize());
         new Thread(() -> {
-            BooleanProperty ret = new SimpleBooleanProperty(true);
-            copyBackDataList.forEach(r -> {
+            ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
+            boolean ask = false;
+            for (CopyBackData r : copyBackDataList) {
                 System.out.println("Backup kopieren: " + r.getFileName());
+                if (backupInfo.runnerDto.isStop()) {
+                    break;
+                }
+
                 try {
                     Path from = r.getFileData().getBackupFilePath();
                     String destStr = r.getFileData().getCorrParentFilePathStr();
                     Path dest = Path.of(destDir, destStr);
+                    backupInfo.runnerDto.setRunnerFileName(r.getFileName());
+                    backupInfo.runnerDto.addRunnerAlreadyDone();
+
                     FileUtils.copyFileToDirectory(from.toFile(), dest.toFile(), true);
                 } catch (IOException e) {
-                    ret.set(false);
+                    if (!ask) {
+                        if (P2Alert.BUTTON.YES.equals(P2AlertAppThread.showAlert_yes_no(stage, "Backup", "Backup kopieren",
+                                "Die Datei:" +
+                                        "\n\n" + r.getFileName() + "\n\n" +
+                                        "konnte nicht kopiert werden. Soll auch bei weiteren Fehlern " +
+                                        "weiter gemacht werden?"))) {
+                            ask = true;
+                        } else {
+                            break;
+                        }
+                    }
                     P2Log.errorLog(953254126, "copy file: " + r.getFileData().getBackupFilePathStr() +
                             " to " + destDir);
                 }
-            });
-            if (!ret.get()) {
-                P2AlertAppThread.showErrorAlert(stage, "Backup kopieren",
-                        "Nicht alle Dateien des Backups konnten kopiert werden");
             }
+
+            backupInfo.runnerDto.stopRunner();
+            ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
         }).start();
 
         return true;
