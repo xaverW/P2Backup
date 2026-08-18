@@ -71,6 +71,8 @@ public class TableToolCopyBackBackup extends PTable<CopyBackData> {
 
         backupDataIdColumn.setPrefWidth(200);
         fileNameColumn.setPrefWidth(500);
+        btnColumn.setPrefWidth(150);
+
         getColumns().addAll(backupDataIdColumn, fileNameColumn, btnColumn, copyColumn);
     }
 }

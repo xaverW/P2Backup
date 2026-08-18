@@ -291,12 +291,14 @@ public class SqlBackupInfo {
             // die BACKUP_INFO und BACKUP_DATA schreiben
             if (!writeBackupInfo(backupInfo, conn)) {
                 conn.rollback();
+                return false;
             }
 
             for (BackupData backupData : backupInfo.getBackupDataList()) {
                 // BackupData
                 if (!SqlBackupData.writeBackupData(backupData, conn)) {
                     conn.rollback();
+                    return false;
                 }
             }
 

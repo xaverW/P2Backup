@@ -90,7 +90,6 @@ public class CopyDiffFactory {
         // =========================================
         // und jetzt Dateien kopieren
         // =========================================
-
         backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().size() * 2); // läuft 2x durch
         backupInfo.runnerDto.runnerDoubleProperty().set(true); // läuft 2x durch
 
@@ -110,6 +109,7 @@ public class CopyDiffFactory {
         });
 
         // suchen was kopiert werden muss
+        oldBackupFileList.clear();
         for (FileData fileData : backupInfo.runnerDto.getDataFileList()) {
             backupInfo.runnerDto.setRunnerFileName(fileData.getFileNameStr());
             backupInfo.runnerDto.addRunnerAlreadyDone();
@@ -128,6 +128,7 @@ public class CopyDiffFactory {
                 // dann gibt es sie nicht oder
                 // sie sind nicht gleich -> aus DATEIEN kopieren
                 copyList.add(fileData);
+                oldBackupFileList.add(oldFile); // bleibt im alten Backup
 
             } else {
                 // dann sind sie gleich -> move aus altem Backup
@@ -144,7 +145,8 @@ public class CopyDiffFactory {
         }
 
         if (backupInfo.getHow() == ProgConst.BACKUP_DIFF) {
-            oldBackupFileList.setAll(oldBackupFileMap.values()); // ist der Rest bei DIFF
+            oldBackupFileList.addAll(oldBackupFileMap.values()); // ist der Rest bei DIFF
+
             FileDataList resetList = new FileDataList();
             boolean ret = CopyFactory.moveFiles(backupInfo, oldToPathStr, moveList, resetList);
 

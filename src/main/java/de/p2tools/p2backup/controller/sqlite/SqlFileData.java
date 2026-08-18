@@ -181,6 +181,7 @@ public class SqlFileData {
             if (!writeBackupFileList(backupInfo.runnerDto.getBackupData().getId(),
                     backupInfo.runnerDto.getDataFileList(), conn)) {
                 conn.rollback();
+                return false;
             }
 
             // ========================

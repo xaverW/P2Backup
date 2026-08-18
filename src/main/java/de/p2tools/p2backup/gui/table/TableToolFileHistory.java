@@ -69,8 +69,6 @@ public class TableToolFileHistory extends PTable<HistoryFileData> {
 
 
         startDateColumn.setPrefWidth(200);
-//        nameColumn.setPrefWidth(200);
-//        pathColumn.setPrefWidth(500);
         btnColumn.setPrefWidth(150);
         getColumns().addAll(startDateColumn, btnColumn, copyColumn);
     }

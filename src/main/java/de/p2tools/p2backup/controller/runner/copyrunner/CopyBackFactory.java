@@ -36,7 +36,7 @@ public class CopyBackFactory {
             }
         });
 
-        list.sort(Comparator.reverseOrder());
+        list.sort(Comparator.reverseOrder()); // beim Einfügen wird der alte Wert überschrieben!!!
         list.forEach(ba -> {
             CopyBackDataList reset = new CopyBackDataList();
             SqlResetData.getResetData(backupInfo, ba, reset);
