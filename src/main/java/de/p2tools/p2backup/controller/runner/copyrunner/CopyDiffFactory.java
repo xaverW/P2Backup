@@ -124,11 +124,14 @@ public class CopyDiffFactory {
             }
 
             FileData oldFile = oldBackupFileMap.remove(fileData.getFilePathStr());
-            if (oldFile == null || !fileData.getHash().equals(oldFile.getHash())) {
-                // dann gibt es sie nicht oder
-                // sie sind nicht gleich -> aus DATEIEN kopieren
+            if (oldFile == null) {
+                // dann gibt es sie nicht
                 copyList.add(fileData);
-                oldBackupFileList.add(oldFile); // bleibt im alten Backup
+
+            } else if (!fileData.getHash().equals(oldFile.getHash())) {
+                // dann sind ise nicht gleich -> aus DATEIEN kopieren
+                copyList.add(fileData);
+                oldBackupFileList.add(oldFile); // bleibt aber dann im alten Backup
 
             } else {
                 // dann sind sie gleich -> move aus altem Backup
