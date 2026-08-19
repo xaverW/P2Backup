@@ -41,6 +41,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DialogSearchInBackup extends P2DialogExtra {
@@ -140,7 +141,8 @@ public class DialogSearchInBackup extends P2DialogExtra {
     }
 
     private void addComboBox() {
-        cboBackup.setItems(backupInfoProp.get().getBackupDataList());
+        cboBackup.setItems(backupInfoProp.get().getBackupDataList().sorted(Comparator.naturalOrder()));
+        cboBackup.getSelectionModel().selectLast();
         if (!cboBackup.getItems().isEmpty()) {
             cboBackup.getSelectionModel().selectLast();
         }

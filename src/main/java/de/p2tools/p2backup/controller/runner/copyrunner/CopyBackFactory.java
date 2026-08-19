@@ -6,7 +6,7 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.resetdata.CopyBackData;
 import de.p2tools.p2backup.controller.data.resetdata.CopyBackDataList;
-import de.p2tools.p2backup.controller.sqlite.SqlResetData;
+import de.p2tools.p2backup.controller.sqlite.SqlCopyBackData;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
@@ -26,7 +26,7 @@ public class CopyBackFactory {
     public CopyBackFactory() {
     }
 
-    public static boolean getResetDataList(BackupInfo backupInfo, BackupData backupData, CopyBackDataList copyBackDataList) {
+    public static boolean getCopyBackDataList(BackupInfo backupInfo, BackupData backupData, CopyBackDataList copyBackDataList) {
         List<BackupData> list = new ArrayList<>();
         HashMap<String, CopyBackData> hashMap = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class CopyBackFactory {
         list.sort(Comparator.reverseOrder()); // beim Einfügen wird der alte Wert überschrieben!!!
         list.forEach(ba -> {
             CopyBackDataList reset = new CopyBackDataList();
-            SqlResetData.getResetData(backupInfo, ba, reset);
+            SqlCopyBackData.getCopyBackData(backupInfo, ba, reset);
             reset.forEach(r -> hashMap.put(r.getFileData().getFilePathStr(), r));
         });
 

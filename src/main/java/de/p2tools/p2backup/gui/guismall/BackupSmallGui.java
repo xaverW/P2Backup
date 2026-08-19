@@ -90,7 +90,6 @@ public class BackupSmallGui extends P2DialogOnly {
         final ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
-        scrollPane.getStyleClass().add("smallGuiScrollPane");
         scrollPane.setContent(vBox);
         getVBoxCompleteDialog().getChildren().addAll(scrollPane, P2GuiTools.getVBoxGrower());
     }

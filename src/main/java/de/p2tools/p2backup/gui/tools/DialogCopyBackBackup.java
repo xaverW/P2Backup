@@ -21,7 +21,7 @@ import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.data.filedata.FileDataList;
+import de.p2tools.p2backup.controller.data.resetdata.CopyBackData;
 import de.p2tools.p2backup.controller.data.resetdata.CopyBackDataList;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.copyrunner.CopyBackFactory;
@@ -37,6 +37,8 @@ import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -61,6 +63,7 @@ public class DialogCopyBackBackup extends P2DialogExtra {
     private final Label lblName = new Label();
     private final Label lblSize = new Label();
     private final CopyBackDataList copyBackDataList = new CopyBackDataList();
+    private final SortedList<CopyBackData> sortedList = new SortedList<>(new FilteredList<>(copyBackDataList, p -> true));
 
     private final ProgData progData;
 
@@ -109,9 +112,9 @@ public class DialogCopyBackBackup extends P2DialogExtra {
         super.close();
     }
 
-    public void setResult(FileDataList fileDataList) {
+//    public void setResult(FileDataList fileDataList) {
 //        Platform.runLater(() -> );
-    }
+//    }
 
     private void initTable() {
         Table.setTable(tableView);
@@ -121,7 +124,8 @@ public class DialogCopyBackBackup extends P2DialogExtra {
                 tableView.setContextMenu(contextMenu);
             }
         });
-        tableView.setItems(copyBackDataList);
+        tableView.setItems(sortedList);
+        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
     }
 
     private ContextMenu getContextMenu() {
@@ -134,7 +138,13 @@ public class DialogCopyBackBackup extends P2DialogExtra {
     }
 
     private void initList() {
-        listView.setItems(backupInfo.getBackupDataList().sorted(Comparator.reverseOrder()));
+        listView.setItems(backupInfo.getBackupDataList().sorted(Comparator.naturalOrder()));
+        listView.getSelectionModel().selectLast();
+        listView.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
+            setInfo();
+        });
+        setInfo();
+
         HBox hBoxTop = new HBox(P2LibConst.SPACING_HBOX);
         hBoxTop.setAlignment(Pos.CENTER);
         hBoxTop.getStyleClass().add("infoDialogTop");
@@ -144,10 +154,6 @@ public class DialogCopyBackBackup extends P2DialogExtra {
     }
 
     private void initInfo() {
-        listView.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
-            setInfo();
-        });
-
         HBox hBoxTop = new HBox(P2LibConst.SPACING_HBOX);
         hBoxTop.getStyleClass().add("infoDialogTop");
         hBoxTop.getChildren().addAll(new Label("Backup:"), lblName, P2GuiTools.getHBoxGrower(),
@@ -185,7 +191,7 @@ public class DialogCopyBackBackup extends P2DialogExtra {
             lblName.setText("");
         } else {
             lblName.setText(backupDataProp.get().getSubPath());
-            CopyBackFactory.getResetDataList(backupInfo, backupDataProp.get(), copyBackDataList);
+            CopyBackFactory.getCopyBackDataList(backupInfo, backupDataProp.get(), copyBackDataList);
             lblSize.setText(copyBackDataList.getSize() + "");
         }
     }

@@ -43,6 +43,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
@@ -116,7 +117,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
 
     private void init() {
         chkQuick.setSelected(true);
-        cboBackup.setItems(backupInfo.getBackupDataList());
+        cboBackup.setItems(backupInfo.getBackupDataList().sorted(Comparator.naturalOrder()));
         cboBackup.getSelectionModel().selectLast();
         cboBackup.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
             fileDataList.clear();

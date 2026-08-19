@@ -9,11 +9,11 @@ import de.p2tools.p2backup.controller.data.resetdata.CopyBackDataList;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SqlResetData {
-    private SqlResetData() {
+public class SqlCopyBackData {
+    private SqlCopyBackData() {
     }
 
-    public static boolean getResetData(BackupInfo backupInfo, BackupData backupData, CopyBackDataList copyBackDataList) {
+    public static boolean getCopyBackData(BackupInfo backupInfo, BackupData backupData, CopyBackDataList copyBackDataList) {
         String url = SqlFactory.getUrl(backupInfo);
         if (url.isEmpty()) {
             return false;

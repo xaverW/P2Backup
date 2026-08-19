@@ -137,7 +137,7 @@ public class BackupHowController extends VBox {
         gridPaneCount.add(btnHelp, 2, row);
         GridPane.setHalignment(btnHelp, HPos.RIGHT);
 
-        vBoxContent.getChildren().addAll(P2GuiTools.getHDistance(10),
+        vBoxContent.getChildren().addAll(P2GuiTools.getDistance(25),
                 BackupGuiFactory.getInfoPane("Wie viele Backups sollen gespeichert werden?"),
                 gridPaneCount);
     }

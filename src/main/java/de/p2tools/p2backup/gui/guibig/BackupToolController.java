@@ -26,15 +26,14 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class BackupToolController extends VBox {
 
     private final ProgData progData;
     private final VBox vBoxContent = new VBox();
-    Button btnBlocked = new Button("Geblockte Dateien Suchen");
-    Label lblBlocked = new Label("Dient zur Anzeige, welche Dateien ins Backup kopiert werden und " +
+    private final Button btnBlocked = new Button("Geblockte Dateien Suchen");
+    private final Label lblBlocked = new Label("Dient zur Anzeige, welche Dateien ins Backup kopiert werden und " +
             "welche nicht im Backup landen.");
 
     public BackupToolController() {
@@ -192,20 +191,21 @@ public class BackupToolController extends VBox {
         gridPane.add(lblBlocked, 1, row);
 
         lblInfo.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblInfo, Priority.ALWAYS);
         lblResetBackup.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblResetBackup, Priority.ALWAYS);
         lblBackup.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblBackup, Priority.ALWAYS);
         lblHistory.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblHistory, Priority.ALWAYS);
         lblCompare.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblCompare, Priority.ALWAYS);
         lblCheck.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblCheck, Priority.ALWAYS);
         lblBlocked.setMaxWidth(Double.MAX_VALUE);
-        GridPane.setVgrow(lblBlocked, Priority.ALWAYS);
 
         vBoxContent.getChildren().addAll(gridPane);
+
+//        ScrollPane scrollPane = new ScrollPane();
+//        scrollPane.setFitToHeight(true);
+//        scrollPane.setFitToWidth(true);
+//        scrollPane.setContent(gridPane);
+//        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+//        vBoxContent.getChildren().addAll(scrollPane);
+
     }
 }
