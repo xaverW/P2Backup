@@ -24,6 +24,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
 import de.p2tools.p2backup.controller.runner.FileRunner;
 import de.p2tools.p2backup.controller.runner.hashrunner.FileListFactory;
+import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.gui.tools.DialogBackupInfo;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.log.P2Log;
@@ -100,14 +101,16 @@ public class ToolCountFiles {
             } catch (Exception ex) {
                 P2Log.errorLog(952145036, ex.getMessage());
             }
-            try {
-                for (BackupData p : backupInfo.getBackupDataList()) {
-                    int n = runDirFindFilesBackup(p);
-                    p.setCount(n);
-                }
-            } catch (Exception ex) {
-                P2Log.errorLog(989564789, ex.getMessage());
-            }
+
+            SqlFileData.countBackupFileList(backupInfo);
+//            try {
+//                for (BackupData p : backupInfo.getBackupDataList()) {
+//                    int n = runDirFindFilesBackup(p);
+//                    p.setCount(n);
+//                }
+//            } catch (Exception ex) {
+//                P2Log.errorLog(989564789, ex.getMessage());
+//            }
 
             IntegerProperty count = new SimpleIntegerProperty(0);
             LongProperty size = new SimpleLongProperty(0);
@@ -129,7 +132,7 @@ public class ToolCountFiles {
             countAll = 0;
 
             try {
-                new FileRunner() {
+                new FileRunner(backupInfo) {
                     @Override
                     public void workFile(File file) {
                         if (file.exists()) {
@@ -161,7 +164,7 @@ public class ToolCountFiles {
             countAll = 0;
 
             try {
-                new FileRunner() {
+                new FileRunner(backupInfo) {
                     @Override
                     public void workFile(File file) {
                         if (file.exists()) {

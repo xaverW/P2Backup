@@ -17,7 +17,6 @@
 
 package de.p2tools.p2backup.controller.runner;
 
-import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2lib.tools.log.P2Log;
@@ -25,17 +24,16 @@ import de.p2tools.p2lib.tools.log.P2Log;
 import java.io.File;
 
 public class FileRunner {
-    private boolean stop = false;
     private boolean recur = false;
-    private boolean altert = false; // nur einmal Fehler melden
+    private final BackupInfo backupInfo;
+
+    public FileRunner(BackupInfo backupInfo) {
+        this.backupInfo = backupInfo;
+    }
 
     public int recDir(File dir, boolean recur) {
         this.recur = recur;
         return runDir(dir);
-    }
-
-    public void setStop() {
-        stop = true;
     }
 
     public void workFile(File file) {
@@ -47,10 +45,6 @@ public class FileRunner {
     private int runDir(File dir) {
         int r = 0;
         try {
-            if (stop) {
-                return 0;
-            }
-
             File[] list;
             if (dir.isDirectory()) {
                 workDir(dir);
@@ -58,18 +52,18 @@ public class FileRunner {
                 list = dir.listFiles();
                 if (list == null) {
                     final String path = dir.getCanonicalPath();
-                    BackupInfo backupInfo = ProgData.getInstance().backupInfoProperty.get();
-                    if (backupInfo != null) {
-                        if (backupInfo.runnerDto.isAsk()) {
-                            if (!FileFactory.goOnError(backupInfo, path, false)) {
-                                backupInfo.runnerDto.setStop();
-                                stop = true;
-                            }
+                    if (backupInfo.runnerDto.isAsk()) {
+                        if (!FileFactory.goOnError(backupInfo, path, false)) {
+                            backupInfo.runnerDto.setStop();
+                            return 0;
                         }
                     }
 
                 } else {
                     for (File file : list) {
+                        if (backupInfo.runnerDto.isStop()) {
+                            return 0;
+                        }
                         if (file.isFile()) {
                             ++r;
                             workFile(file);

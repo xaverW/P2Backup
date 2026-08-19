@@ -95,8 +95,6 @@ public class PaneGenerateBackupList extends VBox {
         // From
         boolean done = false;
         Button btnFrom = new Button("");
-//        btnFrom.visibleProperty().bind(ProgConfig.SYSTEM_ENHANCED);
-//        btnFrom.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
         btnFrom.setTooltip(new Tooltip("Ändern"));
         btnFrom.getStyleClass().add("btnAdjust");
         btnFrom.setGraphic(PIconFactory.PICON.BTN_SHOW_FROM.getFontIcon());
@@ -104,12 +102,12 @@ public class PaneGenerateBackupList extends VBox {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_FROM);
         });
+        btnFrom.visibleProperty().bind(backupInfo.getPathListFrom().emptyProperty());
+        btnFrom.managedProperty().bind(btnFrom.visibleProperty());
 
         // ===========
         // To
         Button btnTo = new Button("");
-//        btnTo.visibleProperty().bind(ProgConfig.SYSTEM_ENHANCED);
-//        btnTo.managedProperty().bind(ProgConfig.SYSTEM_ENHANCED);
         btnTo.setTooltip(new Tooltip("Ändern"));
         btnTo.getStyleClass().add("btnAdjust");
         btnTo.setGraphic(PIconFactory.PICON.BTN_SHOW_FROM.getFontIcon());
@@ -117,6 +115,8 @@ public class PaneGenerateBackupList extends VBox {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_TO);
         });
+        btnTo.visibleProperty().bind(backupInfo.backupPathProperty().isEmpty());
+        btnTo.managedProperty().bind(btnTo.visibleProperty());
 
         // ===========
         // Start

@@ -13,20 +13,20 @@ public class FileListFactory {
     private FileListFactory() {
     }
 
-    public static int getFileList(File file, Set<File> foundFileList) {
-        // im Verzeichnis nach Dateien suchen
-        try {
-            new FileRunner() {
-                @Override
-                public void workFile(File file) {
-                    foundFileList.add(file);
-                }
-            }.recDir(file, true);
-        } catch (Exception ex) {
-            P2Log.errorLog(975102364, ex, "runFindFiles - " + file.getPath());
-        }
-        return foundFileList.size();
-    }
+//    public static int getFileList(File file, Set<File> foundFileList) {
+//        // im Verzeichnis nach Dateien suchen
+//        try {
+//            new FileRunner() {
+//                @Override
+//                public void workFile(File file) {
+//                    foundFileList.add(file);
+//                }
+//            }.recDir(file, true);
+//        } catch (Exception ex) {
+//            P2Log.errorLog(975102364, ex, "runFindFiles - " + file.getPath());
+//        }
+//        return foundFileList.size();
+//    }
 
     public static void getFileList(BackupInfo backupInfo,
                                    List<File> fromPathList,
@@ -59,13 +59,10 @@ public class FileListFactory {
         // Verzeichnis ablaufen und Dateien suchen: Dateien, Dirs, geblockte Dateien
         // BackupInfo nur für STOP
         try {
-            new FileRunner() {
+            new FileRunner(backupInfo) {
                 @Override
                 public void workDir(File file) {
                     // alle Dir eintragen
-                    if (backupInfo.runnerDto.isStop()) {
-                        this.setStop();
-                    }
                     if (foundDirList != null) {
                         foundDirList.add(file);
                     }
@@ -74,9 +71,6 @@ public class FileListFactory {
                 @Override
                 public void workFile(File file) {
                     // check file
-                    if (backupInfo.runnerDto.isStop()) {
-                        this.setStop();
-                    }
                     if (checkFile(file, backupInfo)) {
                         foundFileList.add(file);
                     } else if (blockFileList != null) {

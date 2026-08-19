@@ -34,12 +34,14 @@ import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2ComboBoxString;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -165,12 +167,14 @@ public class DialogCopyBackBackup extends P2DialogExtra {
             CopyBackFactory.copyBackBackup(getStage(), backupInfo, copyBackDataList, ProgConfig.COPY_BACK_DIALOG_DEST_DIR.getValueSafe());
         });
 
-        HBox hBoxBottom = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxBottom.setAlignment(Pos.CENTER);
-        hBoxBottom.getChildren().addAll(new Label("Speicherziel:"), cboDest, btnSearch, btnStartCopy);
-        HBox.setHgrow(cboDest, Priority.ALWAYS);
-
-        vBoxCont.getChildren().addAll(hBoxTop, tableView, hBoxBottom);
+        GridPane gridPane = new GridPane(5, 5);
+        gridPane.add(new Label("Speicherziel"), 0, 0);
+        gridPane.add(cboDest, 1, 0);
+        gridPane.add(btnSearch, 2, 0);
+        gridPane.add(btnStartCopy, 3, 0);
+        gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(), P2GridConstraints.getCcComputedSizeAndHgrowCenter(),
+                P2GridConstraints.getCcPrefSize(), P2GridConstraints.getCcPrefSize());
+        vBoxCont.getChildren().addAll(hBoxTop, tableView, gridPane);
         VBox.setVgrow(tableView, Priority.ALWAYS);
     }
 

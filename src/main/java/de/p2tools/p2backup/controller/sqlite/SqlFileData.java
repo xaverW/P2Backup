@@ -50,6 +50,36 @@ public class SqlFileData {
         return true;
     }
 
+    public static boolean countBackupFileList(BackupInfo backupInfo) {
+        boolean ret = true;
+        String url = SqlFactory.getUrl(backupInfo);
+        if (url.isEmpty()) {
+            return false;
+        }
+        for (BackupData backupData : backupInfo.getBackupDataList()) {
+            final String sqlBackupInfo = "SELECT size FROM " +
+                    "backupFiles WHERE backupId == ?";
+
+            try (var conn = DriverManager.getConnection(url);
+                 var pstmt = conn.prepareStatement(sqlBackupInfo)) {
+
+                pstmt.setLong(1, backupData.getId());
+
+                var rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    long size = rs.getLong("size");
+                    backupData.setCount(backupData.getCount() + 1);
+                    backupData.setSize(backupData.getSize() + size);
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+                ret = false;
+                break;
+            }
+        }
+        return ret;
+    }
+
     public static boolean readBackupFileList(BackupInfo backupInfo, BackupData backupData,
                                              FileDataList fileDataList) {
         String url = SqlFactory.getUrl(backupInfo);
