@@ -16,11 +16,16 @@
 
 package de.p2tools.p2backup.gui.configdialog.configpanes;
 
+import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.picon.PIconFactory;
+import de.p2tools.p2backup.gui.help.HelpText;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.guitools.ptoggleswitch.P2ToggleSwitch;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -30,6 +35,7 @@ import java.util.Collection;
 public class PaneConfig {
 
     private final ProgData progData;
+    private final P2ToggleSwitch tglOnlyOneInstance = new P2ToggleSwitch("Nur eine Instanz des Programms öffnen");
 
     private final Stage stage;
 
@@ -39,16 +45,23 @@ public class PaneConfig {
     }
 
     public void close() {
+        tglOnlyOneInstance.selectedProperty().unbindBidirectional(ProgConfig.SYSTEM_ONLY_ONE_INSTANCE);
     }
 
     public TitledPane make(Collection<TitledPane> result) {
+        tglOnlyOneInstance.selectedProperty().bindBidirectional(ProgConfig.SYSTEM_ONLY_ONE_INSTANCE);
+        final Button btnHelpOnlyOneInstance = PIconFactory.getHelpButton(stage, "Nur eine Instanz des Programms öffnen",
+                HelpText.ONLY_ONE_INSTANCE);
+        GridPane.setHalignment(btnHelpOnlyOneInstance, HPos.RIGHT);
+
         final GridPane gridPane = new GridPane();
         gridPane.setHgap(P2LibConst.DIST_GRIDPANE_HGAP);
         gridPane.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);
         gridPane.setPadding(new Insets(P2LibConst.PADDING));
 
         int row = 0;
-        gridPane.add(new Label(" "), 0, ++row);
+        gridPane.add(tglOnlyOneInstance, 0, ++row, 2, 1);
+        gridPane.add(btnHelpOnlyOneInstance, 2, row);
         gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
                 P2GridConstraints.getCcComputedSizeAndHgrow(), P2GridConstraints.getCcPrefSize());
 

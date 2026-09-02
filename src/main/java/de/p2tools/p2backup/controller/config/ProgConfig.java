@@ -127,6 +127,7 @@ public class ProgConfig extends P2DataProgConfig {
     public static IntegerProperty SYSTEM_CONFIG_DIALOG_CONFIG = new SimpleIntegerProperty(-1);
 
     // Configs
+    public static BooleanProperty SYSTEM_ONLY_ONE_INSTANCE = addBoolProp("system-only-one-instance", Boolean.FALSE);
     public static StringProperty SYSTEM_PROG_OPEN_URL = addStrProp("system-prog-open-url");
     public static StringProperty SYSTEM_PROG_PLAY = addStrProp("system-prog-play", GetProgramStandardPath.getTemplatePathVlc());
     public static String SYSTEM_PROG_SAVE_INIT = GetProgramStandardPath.getTemplatePathFFmpeg();

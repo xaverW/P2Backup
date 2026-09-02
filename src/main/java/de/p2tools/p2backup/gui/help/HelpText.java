@@ -30,6 +30,19 @@ public class HelpText {
 //                    "oder mit der Blacklist ausblenden." +
                     "\n";
 
+    public static final String ONLY_ONE_INSTANCE =
+            "Werden mehre Instanzen mit dem gleichen Konfig-Ordner geöffnet, überschreiben sie " +
+                    "ihre Einstellungen. Die Einstellungen der Instanz die zuletzt geschlossen wird, speichert dann die " +
+                    "Einstellungen." +
+                    "\n\n" +
+                    "Um das zu erkennen, wird im Konfig-Ordner eine Lock-Datei erstellt. Ist diese bei einem " +
+                    "weiteren Programmstart bereits vorhanden, wird eine Meldung ausgegeben, dass das Programm " +
+                    "bereits läuft." +
+                    "\n\n" +
+                    "(Es ist möglich, das Programm mit unterschiedlichen Konfig-Ordnern zu starten -> Anleitung. Dann kann man mehrere " +
+                    "Instanzen parallel mit unterschiedlichen Einstellungen betreiben.)" +
+                    "\n";
+
     public static final String LOAD_ONLY_FILMS_STARTDIALOG =
             "\"Nur Filme der letzten Tage laden\"" +
                     "\n" +

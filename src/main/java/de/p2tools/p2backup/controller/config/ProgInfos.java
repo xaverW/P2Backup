@@ -138,4 +138,11 @@ public class ProgInfos {
             }
         }
     }
+
+    public static String getLockFileStr() {
+        return SettingsDirectory.getSettingsFile(ProgData.configDir,
+                ProgConst.CONFIG_DIRECTORY,
+                "p2backup.lock").toString();
+    }
+
 }

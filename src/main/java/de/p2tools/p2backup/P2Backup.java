@@ -21,12 +21,14 @@ import de.p2tools.p2backup.controller.ProgStartBeforeGui;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
+import de.p2tools.p2backup.controller.config.ProgInfos;
 import de.p2tools.p2backup.gui.guibig.BackupBigGui;
 import de.p2tools.p2backup.gui.guismall.BackupSmallGui;
 import de.p2tools.p2lib.css.P2CssFactory;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiSize;
 import de.p2tools.p2lib.tools.P2InfoFactory;
+import de.p2tools.p2lib.tools.P2Lock;
 import de.p2tools.p2lib.tools.duration.P2Duration;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -55,6 +57,14 @@ public class P2Backup extends Application {
         progData.primaryStage = primaryStage;
 
         ProgStartBeforeGui.workBeforeGui();
+
+        //wenn gewünscht, Lock-File prüfen
+        final String xmlFilePath = ProgInfos.getLockFileStr();
+        if (ProgConfig.SYSTEM_ONLY_ONE_INSTANCE.getValue() && !P2Lock.getLockInstance(xmlFilePath)) {
+            //dann kann man sich den Rest sparen
+            return;
+        }
+
         initRootLayout();
         ProgStartAfterGui.doWorkAfterGui();
 
