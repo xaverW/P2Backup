@@ -28,7 +28,8 @@ public class PIconFactory {
         BTN_RESET_1("gmi-radio-button-on", 25),
         BTN_RESET_2("gmi-rotate-right", 30),
         BTN_SHOW_FROM("mdmz-play_arrow", 15),
-
+        BTN_QUIT_APP("mdi2l-location-exit", 18),
+        BTN_START_ALL("mdi2s-share-all", 18),
 
         BTN_LOAD_BACKUP("mdoal-backup", 20),
         BTN_LOAD_BACKUP_BIG_30("mdoal-backup", 30),

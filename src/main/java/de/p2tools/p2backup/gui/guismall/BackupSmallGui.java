@@ -32,10 +32,7 @@ import de.p2tools.p2lib.guitools.P2SmallGuiFactory;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -46,7 +43,7 @@ public class BackupSmallGui extends P2DialogOnly {
 
     private final ProgData progData;
     private final VBox vBox = new VBox();
-    private final Button btnStartAll = new Button("Alle Starten");
+    private final Button btnStartAll = new Button();
 
     public BackupSmallGui() {
         super(ProgData.getInstance().primaryStage, null, "P2Backup");
@@ -101,6 +98,8 @@ public class BackupSmallGui extends P2DialogOnly {
 
 
         btnStartAll.getStyleClass().addAll("smallGuiBtn");
+        btnStartAll.setGraphic(PIconFactory.PICON.BTN_START_ALL.getFontIcon());
+        btnStartAll.setTooltip(new Tooltip("Alle Backups starten"));
         btnStartAll.setOnAction(a -> progData.backupInfoList.forEach(b -> {
             if ((!b.runnerDto.getGuiRunning()) && (!b.isNotReady())) {
                 new BackupRunner(b).makeBackup();
@@ -109,7 +108,9 @@ public class BackupSmallGui extends P2DialogOnly {
         setStartAll();
 
 
-        final Button btnQuitt = new Button("Programm beenden");
+        final Button btnQuitt = new Button();
+        btnQuitt.setGraphic(PIconFactory.PICON.BTN_QUIT_APP.getFontIcon());
+        btnQuitt.setTooltip(new Tooltip("Programm beenden"));
         btnQuitt.getStyleClass().addAll("smallGuiBtn");
         btnQuitt.setOnAction(a -> ProgQuit.quit());
 

@@ -284,7 +284,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
         Button btnStop = new Button();
 //        btnStop.setMinHeight(18);
 //        btnStop.setMaxHeight(18);
-        btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
+        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

@@ -298,7 +298,8 @@ public class PaneGenerateBackupList extends VBox {
     private HBox addProgress(BackupInfo backupInfo) {
 
         Button btnStop = new Button();
-        btnStop.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
+        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
+//        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         final PProgressBar pProgressBar = new PProgressBar(backupInfo, true, true, false);

@@ -129,10 +129,7 @@ public class ProgConfig extends P2DataProgConfig {
     // Configs
     public static BooleanProperty SYSTEM_ONLY_ONE_INSTANCE = addBoolProp("system-only-one-instance", Boolean.TRUE);
     public static StringProperty SYSTEM_PROG_OPEN_URL = addStrProp("system-prog-open-url");
-    public static StringProperty SYSTEM_PROG_PLAY = addStrProp("system-prog-play", GetProgramStandardPath.getTemplatePathVlc());
     public static String SYSTEM_PROG_SAVE_INIT = GetProgramStandardPath.getTemplatePathFFmpeg();
-    public static StringProperty SYSTEM_PROG_SAVE = addStrProp("system-prog-save", SYSTEM_PROG_SAVE_INIT);
-    public static BooleanProperty SYSTEM_BLACK_WHITE_ICON_START = addBoolProp("system-black-white-icon-start", Boolean.FALSE);
     public static BooleanProperty SYSTEM_SMALL_BACKUP = addBoolProp("system-small-backup", false);
     public static BooleanProperty SYSTEM_ENHANCED = addBoolProp("system-enhanced", false); // erweiterte Einstellungen
 
@@ -163,11 +160,6 @@ public class ProgConfig extends P2DataProgConfig {
 
     // SearchDirDialog
     public static StringProperty SEARCH_DIALOG_SIZE = addStrProp("search-dialog-size", "800:500");
-    public static StringProperty SEARCH_DIALOG_TABLE_WIDTH = addStrProp("search-dialog-table-width");
-    public static StringProperty SEARCH_DIALOG_TABLE_SORT = addStrProp("search-dialog-table-sort");
-    public static StringProperty SEARCH_DIALOG_TABLE_UP_DOWN = addStrProp("search-dialog-table-up-down");
-    public static StringProperty SEARCH_DIALOG_TABLE_VIS = addStrProp("search-dialog-table-vis");
-    public static StringProperty SEARCH_DIALOG_TABLE_ORDER = addStrProp("search-dialog-table-order");
 
     // InfoBackupDialog
     public static StringProperty BACKUP_INFO_DIALOG_SIZE = addStrProp("backup-info-dialog-size", "500:500");
@@ -182,7 +174,6 @@ public class ProgConfig extends P2DataProgConfig {
 
     // CheckBackup
     public static StringProperty CHECK_BACKUP_DIALOG_SIZE = addStrProp("chack-backup-dialog-size", "800:500");
-    public static DoubleProperty CHECK_BACKUP_SPLIT_DIVIDER = addDoubleProp("check-backup-split-divider", 0.3);
     public static StringProperty CHECK_FILES_TABLE_WIDTH = addStrProp("check-files-table-width");
     public static StringProperty CHECK_FILES_TABLE_SORT = addStrProp("check-files-table-sort");
     public static StringProperty CHECK_FILES_TABLE_UP_DOWN = addStrProp("check-files-table-up-down");
@@ -245,10 +236,6 @@ public class ProgConfig extends P2DataProgConfig {
 
 
     // CSS-Color
-    public static BooleanProperty SYSTEM_CHANGE_THEME_TIME = addBoolProp("system-change-theme-time", Boolean.FALSE);
-    public static IntegerProperty SYSTEM_CHANGE_TO_DARK_THEME_HOUR = addIntProp("system-change-to-dark-theme-hour", 20);
-    public static IntegerProperty SYSTEM_CHANGE_TO_DARK_THEME_MINUTE = addIntProp("system-change-to-dark-theme-minute", 0);
-
     public static IntegerProperty SYSTEM_FONT_SIZE = addIntProp("system-style-size", 0);
     public static BooleanProperty SYSTEM_FONT_SIZE_CHANGE = addBoolProp("system-font-size-change", Boolean.FALSE); // für die Schriftgröße
 
@@ -305,12 +292,6 @@ public class ProgConfig extends P2DataProgConfig {
     public static StringProperty SYSTEM_GUI_TITLE_BAR_SEL_DARK_2 = addStrProp("system-gui-title-bar-sel-dark-2", ProgConst.GUI_TITLE_BAR_SEL_DARK_2);
     public static StringProperty SYSTEM_GUI_TITLE_BAR_SEL_LIGHT_1 = addStrProp("system-gui-title-bar-sel-light-1", ProgConst.GUI_TITLE_BAR_SEL_LIGHT_1);
     public static StringProperty SYSTEM_GUI_TITLE_BAR_SEL_LIGHT_2 = addStrProp("system-gui-title-bar-sel-light-2", ProgConst.GUI_TITLE_BAR_SEL_LIGHT_2);
-    // Einstellungen Filmliste
-    public static BooleanProperty SYSTEM_LOAD_FILMS_ON_START = addBoolProp("system-load-films-on-start", Boolean.TRUE);
-    public static StringProperty SYSTEM_LOAD_NOT_SENDER = addStrProp("system-load-not-sender", "");
-    public static IntegerProperty SYSTEM_LOAD_FILMLIST_MAX_DAYS = addIntProp("system-load-filmlist-max-days", 0); //es werden nur die x letzten Tage geladen
-    public static IntegerProperty SYSTEM_LOAD_FILMLIST_MIN_DURATION = addIntProp("system-load-filmlist-min-duration", 0); //es werden nur Filme mit mind. x Minuten geladen
-
 
     static {
         addComment("Shortcuts");
