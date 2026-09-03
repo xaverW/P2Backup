@@ -28,6 +28,7 @@ import de.p2tools.p2lib.guitools.P2ComboBoxString;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import de.p2tools.p2lib.tools.file.P2FileName;
 import de.p2tools.p2lib.tools.file.P2FileUtils;
 import javafx.geometry.Insets;
@@ -72,7 +73,7 @@ public class DialogCopyFileController extends P2DialogExtra {
         cboDest.init(ProgConfig.CBO_COPY_DIALOG_DEST_DIR, ProgConfig.COPY_DIALOG_DEST_DIR);
         cboDest.setMaxWidth(Double.MAX_VALUE);
         btnSearchDestPath.setTooltip(new Tooltip("Verzeichnis auswählen"));
-        btnSearchDestPath.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
+        btnSearchDestPath.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
         btnSearchDestPath.setOnAction(a -> {
             P2DirFileChooser.DirChooser(getStage(), cboDest);
 //            ProgConfig.COPY_DIALOG_DEST_DIR.set(

@@ -26,6 +26,7 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -92,7 +93,7 @@ public class BackupFromController extends VBox {
 
     private void makeVboxFrom() {
         Button btnPath = new Button();
-        btnPath.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
+        btnPath.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
         btnPath.setTooltip(new Tooltip("Den Ordner zum Sichern auswählen"));
         btnPath.setOnAction(event -> {
             PathDataFactory.addPath(backupInfo);
@@ -125,7 +126,7 @@ public class BackupFromController extends VBox {
 
     private void makeVboxDir() {
         Button btnPath = new Button();
-        btnPath.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
+        btnPath.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
         btnPath.setTooltip(new Tooltip("Ordner die von der Sicherung ausgeschlossen werden sollen"));
         btnPath.setOnAction(event -> {
             String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, "");

@@ -25,6 +25,7 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -173,7 +174,7 @@ public class BackupBigGui extends VBox {
     }
 
     private Button getBtnSmall() {
-        final Button btnSmall = P2Button.getButton(PIconFactory.PICON.SMALL_ICON_BIG.getFontIcon(), "Kleine Ansicht");
+        final Button btnSmall = P2Button.getButton(P2IconFactory.P2ICON.SMALL_GUI_ICON_30.getFontIcon(), "Kleine Ansicht");
         btnSmall.getStyleClass().add("changeGuiBtn");
         btnSmall.setOnAction(a -> BackupGuiFactory.changeGui());
         return btnSmall;

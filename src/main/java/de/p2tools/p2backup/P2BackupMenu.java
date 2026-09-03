@@ -29,6 +29,8 @@ import de.p2tools.p2backup.gui.configdialog.ConfigDialogController;
 import de.p2tools.p2backup.gui.dialog.DialogAbout;
 import de.p2tools.p2backup.gui.dialog.DialogCopyBack;
 import de.p2tools.p2lib.alert.P2Alert;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
+import de.p2tools.p2lib.ikonli.PIconShow;
 import de.p2tools.p2lib.tools.log.P2Logger;
 import de.p2tools.p2lib.tools.shortcut.P2ShortcutWorker;
 import javafx.beans.property.BooleanProperty;
@@ -36,6 +38,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
+
+import java.util.Arrays;
 
 public class P2BackupMenu extends MenuButton {
     public P2BackupMenu() {
@@ -108,12 +112,15 @@ public class P2BackupMenu extends MenuButton {
         setMinWidth(Region.USE_PREF_SIZE);
         getStyleClass().addAll("p2BackupMenu");
         setText("");
-        setGraphic(PIconFactory.PICON.MENU.getFontIcon());
+        setGraphic(P2IconFactory.P2ICON.PROG_MENU.getFontIcon());
 
         getItems().addAll(miConfig, miDarkMode, miColorMode);
         getItems().addAll(addHelp(progData), new SeparatorMenuItem(), miQuit);
         if (ProgData.debug) {
-            getItems().addAll(chkEnhanced);
+
+            final MenuItem miIcon = new MenuItem("Icon");
+            miIcon.setOnAction(e -> new PIconShow(Arrays.asList(PIconFactory.PICON.values())));
+            getItems().addAll(new SeparatorMenuItem(), new SeparatorMenuItem(), miIcon, chkEnhanced);
         }
     }
 

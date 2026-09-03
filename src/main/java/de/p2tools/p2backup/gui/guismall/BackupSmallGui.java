@@ -29,6 +29,7 @@ import de.p2tools.p2lib.dialogs.dialog.P2DialogOnly;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2SmallGuiFactory;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import de.p2tools.p2lib.tools.log.P2Log;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -92,7 +93,7 @@ public class BackupSmallGui extends P2DialogOnly {
     }
 
     private void addBtn() {
-        final Button btnSmall = P2Button.getButton(PIconFactory.PICON.SMALL_ICON_SMALL.getFontIcon(), "Kleine Ansicht");
+        final Button btnSmall = P2Button.getButton(P2IconFactory.P2ICON.SMALL_GUI_ICON_25.getFontIcon(), "Kleine Ansicht");
         btnSmall.getStyleClass().add("changeGuiBtn");
         btnSmall.setOnAction(a -> BackupGuiFactory.changeGui());
 
@@ -109,7 +110,7 @@ public class BackupSmallGui extends P2DialogOnly {
 
 
         final Button btnQuitt = new Button();
-        btnQuitt.setGraphic(PIconFactory.PICON.BTN_QUIT_APP.getFontIcon());
+        btnQuitt.setGraphic(P2IconFactory.P2ICON.BTN_QUIT.getFontIcon());
         btnQuitt.setTooltip(new Tooltip("Programm beenden"));
         btnQuitt.getStyleClass().addAll("smallGuiBtn");
         btnQuitt.setOnAction(a -> ProgQuit.quit());

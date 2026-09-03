@@ -24,6 +24,7 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.guitools.pcbo.P2CboButtonListString;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -75,7 +76,7 @@ public class BackupToController extends VBox {
 
     private void initList() {
         Button btnTo = new Button();
-        btnTo.setGraphic(PIconFactory.PICON.BTN_DIR_OPEN.getFontIcon());
+        btnTo.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
         btnTo.setTooltip(new Tooltip("Den Ordner für das Backup auswählen"));
         btnTo.setOnAction(event -> {
             String start;
