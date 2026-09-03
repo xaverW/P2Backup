@@ -161,7 +161,7 @@ public class BackupFromController extends VBox {
         HBox.setHgrow(txtExclude, Priority.ALWAYS);
 
         Button btnAddFile = new Button();
-        btnAddFile.setGraphic(PIconFactory.PICON.BTN_PLUS.getFontIcon());
+        btnAddFile.setGraphic(P2IconFactory.P2ICON.BTN_PLUS_OUTLINE.getFontIcon());
         btnAddFile.setTooltip(new Tooltip("Dateien die von der Sicherung ausgeschlossen werden sollen"));
         btnAddFile.setOnAction(event -> {
             String exclude = txtExclude.getText();

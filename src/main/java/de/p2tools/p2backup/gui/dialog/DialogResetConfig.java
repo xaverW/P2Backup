@@ -37,12 +37,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class DialogCopyBack extends P2DialogExtra {
+public class DialogResetConfig extends P2DialogExtra {
 
     final ProgData progData;
     final StackPane stackPane;
 
-    public DialogCopyBack(ProgData progData) {
+    public DialogResetConfig(ProgData progData) {
         super(progData.primaryStage, null, "Programm zurücksetzen");
 
         this.progData = progData;
@@ -59,7 +59,7 @@ public class DialogCopyBack extends P2DialogExtra {
         headerLabel.setStyle("-fx-font-size: 1.5em;");
 
         // Set zurücksetzen
-        P2BigButton cancelButton = new P2BigButton(PIconFactory.PICON.BTN_RESET_1.getFontIcon(),
+        P2BigButton cancelButton = new P2BigButton(P2IconFactory.P2ICON.BTN_DIALOG_RESET_CONFIG.getFontIcon(),
                 "Nichts ändern", "");
         cancelButton.setOnAction(e -> close());
 
@@ -67,7 +67,7 @@ public class DialogCopyBack extends P2DialogExtra {
                 HelpText.RESET_DIALOG);
 
         // alle Einstellungen
-        P2BigButton allButton = new P2BigButton(PIconFactory.PICON.BTN_RESET_2.getFontIcon(), "" +
+        P2BigButton allButton = new P2BigButton(P2IconFactory.P2ICON.BTN_DIALOG_RESET_CONFIG.getFontIcon(), "" +
                 "Alle Einstellungen zurücksetzen!",
                 "Alle Einstellungen gehen verloren.");
         allButton.setOnAction(e -> {

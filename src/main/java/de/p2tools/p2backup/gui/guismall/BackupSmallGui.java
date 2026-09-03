@@ -140,7 +140,7 @@ public class BackupSmallGui extends P2DialogOnly {
             Button btnStart = new Button("");
             btnStart.setMinHeight(18);
             btnStart.setMaxHeight(18);
-            btnStart.setGraphic(PIconFactory.PICON.BTN_START_BACKUP.getFontIcon());
+            btnStart.setGraphic(P2IconFactory.P2ICON.BTN_NEXT_15.getFontIcon());
             btnStart.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
             btnStart.setOnAction(a -> {
                 new BackupRunner(backupInfo).makeBackup();
@@ -151,7 +151,7 @@ public class BackupSmallGui extends P2DialogOnly {
             Button btnStop = new Button();
             btnStop.setMinHeight(18);
             btnStop.setMaxHeight(18);
-            btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
+            btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP_15.getFontIcon());
             btnStop.visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
             btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 

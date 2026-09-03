@@ -85,7 +85,7 @@ public class DialogCopyFileController extends P2DialogExtra {
         String suffix = name.contains(".") ? name.substring(name.lastIndexOf(".") + 1) : "";
         txtName.setText(name);
 
-        btnProposeFileName.setGraphic(PIconFactory.PICON.BTN_RANDOM.getFontIcon());
+        btnProposeFileName.setGraphic(P2IconFactory.P2ICON.BTN_RANDOM.getFontIcon());
         btnProposeFileName.setTooltip(new Tooltip("Einen Dateinamen vorschlagen"));
         btnProposeFileName.setOnAction(event -> {
             String fileName = txtName.textProperty().getValueSafe();

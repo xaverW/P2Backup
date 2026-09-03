@@ -24,6 +24,7 @@ import de.p2tools.p2backup.gui.dialog.DialogAddBackup;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2BigButton;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
@@ -81,13 +82,13 @@ public class BackupListController extends VBox {
 
 
         Button btnAdd = new Button("Neues Backup anlegen");
-        btnAdd.setGraphic(PIconFactory.PICON.BTN_ADD_BACKUP.getFontIcon());
+        btnAdd.setGraphic(P2IconFactory.P2ICON.BTN_PLUS_OUTLINE.getFontIcon());
         btnAdd.setMaxWidth(Double.MAX_VALUE);
         btnAdd.visibleProperty().bind(progData.backupInfoProperty.isNull().not());
         btnAdd.managedProperty().bind(progData.backupInfoProperty.isNull().not());
         btnAdd.setOnAction(a -> add());
 
-        P2BigButton btnBigAdd = new P2BigButton(PIconFactory.PICON.BTN_ADD_BACKUP_BIG.getFontIcon(),
+        P2BigButton btnBigAdd = new P2BigButton(P2IconFactory.P2ICON.BTN_PLUS_OUTLINE_50.getFontIcon(),
                 "Neues Backup anlegen", "");
         btnBigAdd.setAlignment(Pos.CENTER);
         btnBigAdd.setMaxHeight(Double.MAX_VALUE);

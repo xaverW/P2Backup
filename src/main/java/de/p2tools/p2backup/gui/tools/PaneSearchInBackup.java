@@ -24,13 +24,13 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.dialog.DialogCopyFileController;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolSearchInBackup;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.guitools.P2Text;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -179,7 +179,7 @@ public class PaneSearchInBackup extends HBox {
         final Button btnOpenDirectory = new Button();
         btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
-        btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+        btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
         btnOpenDirectory.setOnAction(a -> {
             FileData fileData = tableViewFile.getSelectionModel().getSelectedItem();
             if (fileData == null) {
@@ -241,7 +241,7 @@ public class PaneSearchInBackup extends HBox {
         final Button btnOpenDirectory = new Button();
         btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
-        btnOpenDirectory.setGraphic(PIconFactory.PICON.BTN_COPY.getFontIcon());
+        btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_COPY.getFontIcon());
         btnOpenDirectory.setOnAction(a -> {
             TreeItem<String> tree = treeView.getSelectionModel().getSelectedItem();
             if (tree == null) {

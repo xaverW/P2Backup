@@ -17,8 +17,8 @@
 
 package de.p2tools.p2backup.gui.table;
 
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.guitools.P2Open;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -65,7 +65,7 @@ public class CellOpenFileButton<S, T> extends TableCell<S, T> {
                 final Button btnStart = new Button("");
                 btnStart.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnStart.setTooltip(new Tooltip("Gespeicherte Datei öffnen"));
-                btnStart.setGraphic(PIconFactory.PICON.TABLE_START.getFontIcon());
+                btnStart.setGraphic(P2IconFactory.P2ICON.BTN_PLAY_OUTLINE.getFontIcon());
                 btnStart.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
@@ -81,7 +81,7 @@ public class CellOpenFileButton<S, T> extends TableCell<S, T> {
                 btnOpenDirectory = new Button();
                 btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
-                btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+                btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
                 btnOpenDirectory.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());

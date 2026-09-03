@@ -18,10 +18,10 @@ package de.p2tools.p2backup.gui.startdialog;
 
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
@@ -166,7 +166,7 @@ public class StartDialogController extends P2DialogExtra {
         btnCancel = new Button("_Abbrechen");
         btnCancel.setOnAction(a -> closeDialog(false));
 
-        btnNext = P2Button.getButton(PIconFactory.PICON.BTN_NEXT.getFontIcon(), "nächste Seite");
+        btnNext = P2Button.getButton(P2IconFactory.P2ICON.BTN_NEXT.getFontIcon(), "nächste Seite");
         btnNext.setOnAction(event -> {
             switch (aktState) {
                 case START_1:
@@ -186,7 +186,7 @@ public class StartDialogController extends P2DialogExtra {
             }
             selectActPane();
         });
-        btnPrev = P2Button.getButton(PIconFactory.PICON.BTN_PREV.getFontIcon(), "vorherige Seite");
+        btnPrev = P2Button.getButton(P2IconFactory.P2ICON.BTN_PREV.getFontIcon(), "vorherige Seite");
         btnPrev.setOnAction(event -> {
             switch (aktState) {
                 case START_1:

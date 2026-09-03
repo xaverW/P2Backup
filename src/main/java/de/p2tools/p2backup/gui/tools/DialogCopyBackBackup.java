@@ -23,7 +23,6 @@ import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.resetdata.CopyBackData;
 import de.p2tools.p2backup.controller.data.resetdata.CopyBackDataList;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.copyrunner.CopyBackFactory;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
@@ -199,7 +198,7 @@ public class DialogCopyBackBackup extends P2DialogExtra {
 
     private HBox addProgress() {
         Button btnStop = new Button();
-        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP_15.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

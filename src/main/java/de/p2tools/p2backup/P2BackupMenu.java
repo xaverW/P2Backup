@@ -27,7 +27,7 @@ import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2backup.gui.configdialog.ConfigDialogController;
 import de.p2tools.p2backup.gui.dialog.DialogAbout;
-import de.p2tools.p2backup.gui.dialog.DialogCopyBack;
+import de.p2tools.p2backup.gui.dialog.DialogResetConfig;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
 import de.p2tools.p2lib.ikonli.PIconShow;
@@ -135,7 +135,7 @@ public class P2BackupMenu extends MenuButton {
             P2Logger.openLogFile();
         });
         final MenuItem miReset = new MenuItem("Einstellungen zurücksetzen");
-        miReset.setOnAction(event -> new DialogCopyBack(progData));
+        miReset.setOnAction(event -> new DialogResetConfig(progData));
         final MenuItem miSearchUpdate = new MenuItem("Gibt's ein Update?");
         miSearchUpdate.setOnAction(a -> new SearchProgramUpdate(progData).searchNewProgramVersion(true));
         final MenuItem miAbout = new MenuItem("Über dieses Programm");

@@ -22,7 +22,6 @@ import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolCountFiles;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2lib.P2LibConst;
@@ -32,6 +31,7 @@ import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import de.p2tools.p2lib.mediathek.tools.P2SizeTools;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -123,7 +123,7 @@ public class DialogBackupInfo extends P2DialogExtra {
             btnOpenDirectory = new Button();
             btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
             btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
-            btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+            btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
             btnOpenDirectory.setOnAction((ActionEvent event) -> {
                 Path path = p.getFilePathPath();
                 if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
@@ -155,7 +155,7 @@ public class DialogBackupInfo extends P2DialogExtra {
             btnOpenDirectory = new Button();
             btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
             btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
-            btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+            btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
             btnOpenDirectory.setOnAction((ActionEvent event) -> {
                 Path path = backupData.getToPath(backupInfo);
                 if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
@@ -199,7 +199,7 @@ public class DialogBackupInfo extends P2DialogExtra {
     private HBox addProgress() {
         PProgressBar pProgressBar = new PProgressBar(backupInfo, true, true, true);
         Button btnStop = new Button();
-        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP_15.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

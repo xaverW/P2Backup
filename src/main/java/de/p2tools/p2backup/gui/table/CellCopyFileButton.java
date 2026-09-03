@@ -20,8 +20,8 @@ package de.p2tools.p2backup.gui.table;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.HistoryFileData;
 import de.p2tools.p2backup.controller.data.resetdata.CopyBackData;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.dialog.DialogCopyFileController;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -67,7 +67,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 final Button btnCopy = new Button("");
                 btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
-                btnCopy.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
+                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY.getFontIcon());
                 btnCopy.setDisable(fileData.isErrorHash() || fileData.isOnlyInData());
 
                 btnCopy.setOnAction((ActionEvent event) -> {
@@ -112,7 +112,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 final Button btnCopy = new Button("");
                 btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
-                btnCopy.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
+                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY.getFontIcon());
                 btnCopy.setDisable(fileData.isErrorHash());
 
                 btnCopy.setOnAction((ActionEvent event) -> {
@@ -157,7 +157,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 final Button btnCopy = new Button("");
                 btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
-                btnCopy.setGraphic(PIconFactory.PICON.TABLE_COPY.getFontIcon());
+                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY.getFontIcon());
                 btnCopy.setDisable(copyBackData.getFileData().isErrorHash() || copyBackData.getFileData().isOnlyInData());
 
                 btnCopy.setOnAction((ActionEvent event) -> {

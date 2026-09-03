@@ -14,39 +14,12 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class PIconFactory {
 
     public enum PICON implements P2IconFactory.P2Icon {
-        BTN_PLUS("mdi-plus-circle-outline", 18),
-        BTN_NEXT("mdi-chevron-double-right", 18),
-        BTN_PREV("mdi-chevron-double-left", 18),
-        BTN_COPY("mdoal-file_copy", 18),
-        BTN_CLEAR("gmi-clear", 18),
-        BTN_RANDOM("mdi-rotate-3d", 18),
-        BTN_RESET_1("gmi-radio-button-on", 25),
-        BTN_RESET_2("gmi-rotate-right", 30),
-        BTN_SHOW_FROM("mdmz-play_arrow", 15),
         BTN_START_ALL("mdi2s-share-all", 18),
+
 
         BTN_LOAD_BACKUP("mdoal-backup", 20),
         BTN_LOAD_BACKUP_BIG_50("mdoal-backup", 50),
-        BTN_LOAD_REFRESH_BIG("mdi2f-folder-refresh-outline", 30),
-
-        BTN_ADD_BACKUP("gmi-control-point", 20),
-        BTN_ADD_BACKUP_BIG("gmi-control-point", 50),
-
-
-        BTN_START_BACKUP("gmi-double-arrow", 14),
-        BTN_STOP_BACKUP("mdmz-stop", 14),
-
-        TABLE_FILE_DEL("gmi-clear", 15),
-        TABLE_DIR_OPEN("mdi2f-folder-open-outline", 16),
-        TABLE_START("mdomz-play_arrow", 20),
-        TABLE_COPY("mdoal-file_copy", 15),
-
-        TOOLBAR_BTN_FORWARD("gmi-navigate-next", 25),
-        TOOLBAR_BTN_BACKWARD("gmi-navigate-before", 25);
-
-//        SMALL_ICON_BIG("gmi-blur-on", 30),
-//        SMALL_ICON_SMALL("gmi-blur-on", 20),
-
+        BTN_LOAD_REFRESH_BIG("mdi2f-folder-refresh-outline", 30);
 
         private final String literal;
         private int size = 18;

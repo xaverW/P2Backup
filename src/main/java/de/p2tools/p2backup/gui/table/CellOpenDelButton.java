@@ -20,9 +20,9 @@ package de.p2tools.p2backup.gui.table;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.deleterunner.DeleteRunner;
 import de.p2tools.p2lib.guitools.P2Open;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -74,7 +74,7 @@ public class CellOpenDelButton<S, T> extends TableCell<S, T> {
                 btnOpenDirectory = new Button();
                 btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
-                btnOpenDirectory.setGraphic(PIconFactory.PICON.TABLE_DIR_OPEN.getFontIcon());
+                btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
                 btnOpenDirectory.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
@@ -92,7 +92,7 @@ public class CellOpenDelButton<S, T> extends TableCell<S, T> {
                 btnDel = new Button("");
                 btnDel.setTooltip(new Tooltip("Backup löschen"));
                 btnDel.getStyleClass().addAll("btnFunction", "btnFuncTable");
-                btnDel.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
+                btnDel.setGraphic(P2IconFactory.P2ICON.BTN_CLEAR.getFontIcon());
                 btnDel.setOnAction(a -> {
                     new DeleteRunner(backupInfoProps.get(), backupData).deleteBackup();
                     getTableView().refresh();

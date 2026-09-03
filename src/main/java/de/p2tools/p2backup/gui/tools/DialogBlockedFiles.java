@@ -20,7 +20,6 @@ package de.p2tools.p2backup.gui.tools;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.runner.tools.ToolListBlockFile;
 import de.p2tools.p2backup.gui.guibig.PProgressBar;
 import de.p2tools.p2backup.gui.table.Table;
@@ -28,6 +27,7 @@ import de.p2tools.p2backup.gui.table.TableToolBlockedFile;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -125,7 +125,7 @@ public class DialogBlockedFiles extends P2DialogExtra {
             new ToolListBlockFile(this,
                     backupInfo, foundFileList, blockedFileList, new AtomicBoolean(true)).search();
         });
-        btnClear.setGraphic(PIconFactory.PICON.BTN_CLEAR.getFontIcon());
+        btnClear.setGraphic(P2IconFactory.P2ICON.BTN_CLEAR.getFontIcon());
         btnClear.setTooltip(new Tooltip("Suche löschen"));
         btnClear.setOnAction(a -> txtSearch.clear());
 
@@ -190,7 +190,7 @@ public class DialogBlockedFiles extends P2DialogExtra {
     private HBox addProgress() {
         PProgressBar pProgressBar = new PProgressBar(true, true);
         Button btnStop = new Button();
-        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP_15.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

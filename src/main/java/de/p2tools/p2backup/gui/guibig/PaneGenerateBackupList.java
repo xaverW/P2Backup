@@ -11,6 +11,7 @@ import de.p2tools.p2backup.controller.runner.backuprunner.BackupRunner;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.p2event.P2Listener;
 import de.p2tools.p2lib.tools.P2ColorFactory;
@@ -97,7 +98,7 @@ public class PaneGenerateBackupList extends VBox {
         Button btnFrom = new Button("");
         btnFrom.setTooltip(new Tooltip("Ändern"));
         btnFrom.getStyleClass().add("btnAdjust");
-        btnFrom.setGraphic(PIconFactory.PICON.BTN_SHOW_FROM.getFontIcon());
+        btnFrom.setGraphic(P2IconFactory.P2ICON.BTN_PLAY_15.getFontIcon());
         btnFrom.setOnAction(a -> {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_FROM);
@@ -110,7 +111,7 @@ public class PaneGenerateBackupList extends VBox {
         Button btnTo = new Button("");
         btnTo.setTooltip(new Tooltip("Ändern"));
         btnTo.getStyleClass().add("btnAdjust");
-        btnTo.setGraphic(PIconFactory.PICON.BTN_SHOW_FROM.getFontIcon());
+        btnTo.setGraphic(P2IconFactory.P2ICON.BTN_PLAY_15.getFontIcon());
         btnTo.setOnAction(a -> {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_TO);
@@ -298,7 +299,7 @@ public class PaneGenerateBackupList extends VBox {
     private HBox addProgress(BackupInfo backupInfo) {
 
         Button btnStop = new Button();
-        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP_15.getFontIcon());
 //        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 

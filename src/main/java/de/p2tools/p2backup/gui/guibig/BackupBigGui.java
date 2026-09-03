@@ -20,10 +20,8 @@ package de.p2tools.p2backup.gui.guibig;
 import de.p2tools.p2backup.P2BackupMenu;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2Button;
-import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.geometry.HPos;
@@ -54,9 +52,6 @@ public class BackupBigGui extends VBox {
     private final BackupToController backupToController;
     private final BackupHowController backupHowController;
     private final BackupToolController backupToolController;
-
-    private final Button btnBack = new Button("");
-    private final Button btnForward = new Button("");
 
     private final ProgData progData;
 
@@ -108,12 +103,6 @@ public class BackupBigGui extends VBox {
         VBox.setVgrow(backupHowController, Priority.ALWAYS);
         VBox.setVgrow(backupToolController, Priority.ALWAYS);
 
-        btnBack.getStyleClass().add("btnChange");
-        btnBack.setGraphic(PIconFactory.PICON.TOOLBAR_BTN_BACKWARD.getFontIcon());
-
-        btnForward.getStyleClass().add("btnChange");
-        btnForward.setGraphic(PIconFactory.PICON.TOOLBAR_BTN_FORWARD.getFontIcon());
-
         btnBackup.getStyleClass().addAll("pFuncBtn", "pFuncBtnTitleBar");
         btnInfos.getStyleClass().addAll("pFuncBtn", "pFuncBtnTitleBar");
         btnFrom.getStyleClass().addAll("pFuncBtn", "pFuncBtnTitleBar");
@@ -153,8 +142,7 @@ public class BackupBigGui extends VBox {
         GridPane.setHalignment(btnTool, HPos.CENTER);
 
         HBox hBoxGrid = new HBox();
-        hBoxGrid.getChildren().addAll(btnBack, P2GuiTools.getVDistance(10),
-                gridPane, P2GuiTools.getVDistance(10), btnForward);
+        hBoxGrid.getChildren().addAll(gridPane);
         hBoxGrid.setAlignment(Pos.CENTER);
         HBox.setHgrow(hBoxGrid, Priority.ALWAYS);
 
@@ -232,22 +220,6 @@ public class BackupBigGui extends VBox {
         btnTo.setOnAction(a -> progData.programState.set(ProgConst.PROGRAM_STATE_TO));
         btnHow.setOnAction(a -> progData.programState.set(ProgConst.PROGRAM_STATE_HOW));
         btnTool.setOnAction(a -> progData.programState.set(ProgConst.PROGRAM_STATE_TOOL));
-
-        btnBack.setOnAction(a -> {
-            if (progData.programState.get() > ProgConst.PROGRAM_STATE_MIN) {
-                progData.programState.set(progData.programState.get() - 1);
-            }
-        });
-        btnBack.visibleProperty().bind(progData.programState.isEqualTo(ProgConst.PROGRAM_STATE_MIN).not()
-                .and(progData.backupInfoProperty.isNull().not()));
-
-        btnForward.setOnAction(a -> {
-            if (progData.programState.get() < ProgConst.PROGRAM_STATE_MAX) {
-                progData.programState.set(progData.programState.get() + 1);
-            }
-        });
-        btnForward.visibleProperty().bind(progData.programState.isEqualTo(ProgConst.PROGRAM_STATE_MAX).not()
-                .and(progData.backupInfoProperty.isNull().not()));
 
         btnInfos.disableProperty().bind(progData.backupInfoProperty.isNull());
         btnFrom.disableProperty().bind(progData.backupInfoProperty.isNull());

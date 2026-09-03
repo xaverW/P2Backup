@@ -19,7 +19,7 @@ package de.p2tools.p2backup.gui.table;
 
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.pathdata.PathData;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -69,7 +69,7 @@ public class CellPathButton<S, T> extends TableCell<S, T> {
                 btnDel = new Button("");
                 btnDel.setTooltip(new Tooltip("Pfad löschen"));
                 btnDel.getStyleClass().addAll("btnFunction", "btnFuncTable");
-                btnDel.setGraphic(PIconFactory.PICON.TABLE_FILE_DEL.getFontIcon());
+                btnDel.setGraphic(P2IconFactory.P2ICON.BTN_CLEAR.getFontIcon());
                 btnDel.setOnAction(a -> {
                     if (what == FROM) {
                         backupDataProps.get().getPathListFrom().remove(pathData);
