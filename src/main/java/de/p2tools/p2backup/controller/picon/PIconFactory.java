@@ -1,6 +1,5 @@
 package de.p2tools.p2backup.controller.picon;
 
-import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.ikonli.IkonlyFactory;
@@ -44,12 +43,12 @@ public class PIconFactory {
         }
 
         public FontIcon getFontIcon() {
-            return getIcon(literal, size);
+            return P2IconFactory.getIcon(literal, size);
         }
 
         public FontIcon getFontIcon(int size) {
             this.size = size;
-            return getIcon(literal, size);
+            return P2IconFactory.getIcon(literal, size);
         }
     }
 
@@ -80,14 +79,6 @@ public class PIconFactory {
         if (ProgData.getInstance().backupSmallGui != null) {
             IkonlyFactory.getAllNodes(ProgData.getInstance().backupSmallGui.getStage().getScene().getRoot());
         }
-    }
-
-    public static FontIcon getIcon(String literal, int size) {
-        FontIcon fontIcon = new FontIcon();
-        fontIcon.setIconSize(size);
-        fontIcon.setIconColor(Paint.valueOf(ProgConfig.SYSTEM_ICON_COLOR.getValueSafe()));
-        fontIcon.setIconLiteral(literal);
-        return fontIcon;
     }
 
     public static Button getHelpButton(String header, String helpText) {
