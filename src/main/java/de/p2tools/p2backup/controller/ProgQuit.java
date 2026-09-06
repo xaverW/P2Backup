@@ -55,6 +55,7 @@ public class ProgQuit {
 
         if (ProgData.getInstance().backupSmallGui != null &&
                 ProgData.getInstance().primaryStageSmall.isShowing()) {
+            P2GuiSize.getSize(ProgConfig.SYSTEM_SIZE_SMALL_GUI, ProgData.getInstance().primaryStageSmall);
             ProgData.getInstance().backupSmallGui.close();
         }
 

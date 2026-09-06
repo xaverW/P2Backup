@@ -47,7 +47,8 @@ public class BackupSmallGui extends P2DialogOnly {
     private final Button btnStartAll = new Button();
 
     public BackupSmallGui() {
-        super(ProgData.getInstance().primaryStage, null, "P2Backup");
+        super(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_SIZE_SMALL_GUI, "P2Backup",
+                true, false, true);
 
         this.progData = ProgData.getInstance();
         init(false);
@@ -98,7 +99,7 @@ public class BackupSmallGui extends P2DialogOnly {
         btnSmall.setOnAction(a -> BackupGuiFactory.changeGui());
 
 
-        btnStartAll.getStyleClass().addAll("smallGuiBtn");
+        btnStartAll.getStyleClass().add("switchOffBtn");
         btnStartAll.setGraphic(PIconFactory.PICON.BTN_START_ALL.getFontIcon());
         btnStartAll.setTooltip(new Tooltip("Alle Backups starten"));
         btnStartAll.setOnAction(a -> progData.backupInfoList.forEach(b -> {
@@ -110,9 +111,9 @@ public class BackupSmallGui extends P2DialogOnly {
 
 
         final Button btnQuitt = new Button();
-        btnQuitt.setGraphic(P2IconFactory.P2ICON.BTN_QUIT.getFontIcon());
+        btnQuitt.setGraphic(P2IconFactory.P2ICON.BTN_QUIT_GUI_25.getFontIcon());
+        btnQuitt.getStyleClass().add("switchOffBtn");
         btnQuitt.setTooltip(new Tooltip("Programm beenden"));
-        btnQuitt.getStyleClass().addAll("smallGuiBtn");
         btnQuitt.setOnAction(a -> ProgQuit.quit());
 
 

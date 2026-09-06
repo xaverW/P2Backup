@@ -13,7 +13,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class PIconFactory {
 
     public enum PICON implements P2IconFactory.P2Icon {
-        BTN_START_ALL("mdi2s-share-all", 18),
+        BTN_START_ALL("mdi2s-share-all", 25),
         BTN_LOAD_BACKUP("mdoal-backup", 20),
         BTN_LOAD_BACKUP_BIG_50("mdoal-backup", 50),
         BTN_LOAD_REFRESH_BIG("mdi2f-folder-refresh-outline", 30);

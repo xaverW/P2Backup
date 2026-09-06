@@ -225,6 +225,7 @@ public class ProgConfig extends P2DataProgConfig {
 
     // SmallBackupDialog
     public static BooleanProperty SYSTEM_SMALL_GUI_SHOW_START_HELP = addBoolProp("system-small-gui-show-start-help", false);
+    public static StringProperty SYSTEM_SIZE_SMALL_GUI = addStrProp("system-size-small-gui", "200:200");
 
     // BigBackupDialog
     public static StringProperty SYSTEM_SIZE_BIG_GUI = addStrProp("system-size-big-gui", "1000:800");

@@ -167,6 +167,7 @@ public class P2Backup extends Application {
             if (progData.backupSmallGui != null &&
                     ProgData.getInstance().primaryStageSmall.isShowing()) {
                 // nur wenn zu sehen, nicht beim Start in small!!
+                P2GuiSize.getSize(ProgConfig.SYSTEM_SIZE_SMALL_GUI, ProgData.getInstance().primaryStageSmall);
                 progData.primaryStageSmall.hide();
             }
 

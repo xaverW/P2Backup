@@ -30,7 +30,7 @@ import de.p2tools.p2backup.gui.dialog.DialogAbout;
 import de.p2tools.p2backup.gui.dialog.DialogResetConfig;
 import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
-import de.p2tools.p2lib.ikonli.PIconShow;
+import de.p2tools.p2lib.ikonli.P2IconShow;
 import de.p2tools.p2lib.tools.log.P2Logger;
 import de.p2tools.p2lib.tools.shortcut.P2ShortcutWorker;
 import javafx.beans.property.BooleanProperty;
@@ -119,7 +119,7 @@ public class P2BackupMenu extends MenuButton {
         if (ProgData.debug) {
 
             final MenuItem miIcon = new MenuItem("Icon");
-            miIcon.setOnAction(e -> new PIconShow(Arrays.asList(PIconFactory.PICON.values())));
+            miIcon.setOnAction(e -> new P2IconShow(Arrays.asList(PIconFactory.PICON.values())));
             getItems().addAll(new SeparatorMenuItem(), new SeparatorMenuItem(), miIcon, chkEnhanced);
         }
     }

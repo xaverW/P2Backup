@@ -62,14 +62,14 @@ public class DialogQuit extends P2DialogExtra {
         headerLabel.setStyle("-fx-font-size: 1.8em; -fx-font-weight: bold;");
 
         // nicht beenden
-        P2BigButton cancelButton = new P2BigButton(P2IconFactory.P2ICON.BTN_QUIT.getFontIcon(),
+        P2BigButton cancelButton = new P2BigButton(P2IconFactory.P2ICON.BTN_DIALOG_RESET_CONFIG.getFontIcon(),
                 "Nicht beenden", "");
         cancelButton.setOnAction(e -> {
             close();
         });
 
         // beenden
-        P2BigButton quitButton = new P2BigButton(P2IconFactory.P2ICON.BTN_QUIT.getFontIcon(),
+        P2BigButton quitButton = new P2BigButton(P2IconFactory.P2ICON.BTN_DIALOG_RESET_CONFIG.getFontIcon(),
                 "Beenden", "Alle Backups abbrechen und das Programm beenden.");
         quitButton.setOnAction(e -> {
             DoubleProperty property = new SimpleDoubleProperty(0);
@@ -80,7 +80,7 @@ public class DialogQuit extends P2DialogExtra {
         });
 
         // warten, dann beenden
-        P2BigButton waitButton = new P2BigButton(P2IconFactory.P2ICON.BTN_QUIT.getFontIcon(),
+        P2BigButton waitButton = new P2BigButton(P2IconFactory.P2ICON.BTN_DIALOG_RESET_CONFIG.getFontIcon(),
                 "Warten", "Alle Backups abwarten und dann das Programm beenden.");
         waitButton.setOnAction(e -> startWaiting());
         waitTask.setOnSucceeded(event -> ProgQuit.quitNow());
