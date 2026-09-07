@@ -59,7 +59,7 @@ public class DialogResetConfig extends P2DialogExtra {
         headerLabel.setStyle("-fx-font-size: 1.5em;");
 
         // Set zurücksetzen
-        P2BigButton cancelButton = new P2BigButton(P2IconFactory.P2ICON.BTN_DIALOG_RESET_CONFIG.getFontIcon(),
+        P2BigButton cancelButton = new P2BigButton(P2IconFactory.P2ICON.P2_DIALOG_RESET.getFontIcon(),
                 "Nichts ändern", "");
         cancelButton.setOnAction(e -> close());
 
@@ -67,7 +67,7 @@ public class DialogResetConfig extends P2DialogExtra {
                 HelpText.RESET_DIALOG);
 
         // alle Einstellungen
-        P2BigButton allButton = new P2BigButton(P2IconFactory.P2ICON.BTN_DIALOG_RESET_CONFIG.getFontIcon(), "" +
+        P2BigButton allButton = new P2BigButton(P2IconFactory.P2ICON.P2_DIALOG_RESET.getFontIcon(), "" +
                 "Alle Einstellungen zurücksetzen!",
                 "Alle Einstellungen gehen verloren.");
         allButton.setOnAction(e -> {
@@ -92,7 +92,7 @@ public class DialogResetConfig extends P2DialogExtra {
         gridPane.setPadding(new Insets(0, 0, 20, 0));
         gridPane.setHgap(15);
         gridPane.setVgap(25);
-        gridPane.add(P2IconFactory.P2ICON.ATTENTION_80.getFontIcon(), 0, 0, 1, 1);
+        gridPane.add(P2IconFactory.P2ICON.P2_ATTENTION_OCT_80.getFontIcon(), 0, 0, 1, 1);
         gridPane.add(headerLabel, 1, 0);
         gridPane.add(cancelButton, 1, 1);
         gridPane.add(btnHelp, 2, 1);

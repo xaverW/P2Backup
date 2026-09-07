@@ -67,7 +67,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 final Button btnCopy = new Button("");
                 btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
-                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY_15.getFontIcon());
+                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY.getFontIcon());
                 btnCopy.setDisable(fileData.isErrorHash() || fileData.isOnlyInData());
 
                 btnCopy.setOnAction((ActionEvent event) -> {
@@ -112,7 +112,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 final Button btnCopy = new Button("");
                 btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
-                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY_15.getFontIcon());
+                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY.getFontIcon());
                 btnCopy.setDisable(fileData.isErrorHash());
 
                 btnCopy.setOnAction((ActionEvent event) -> {
@@ -157,7 +157,7 @@ public class CellCopyFileButton<S, T> extends TableCell<S, T> {
                 final Button btnCopy = new Button("");
                 btnCopy.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnCopy.setTooltip(new Tooltip("Gespeicherte Datei kopieren"));
-                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY_15.getFontIcon());
+                btnCopy.setGraphic(P2IconFactory.P2ICON.BTN_COPY.getFontIcon());
                 btnCopy.setDisable(copyBackData.getFileData().isErrorHash() || copyBackData.getFileData().isOnlyInData());
 
                 btnCopy.setOnAction((ActionEvent event) -> {

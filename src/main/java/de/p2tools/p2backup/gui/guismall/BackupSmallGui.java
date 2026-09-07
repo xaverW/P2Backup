@@ -94,7 +94,7 @@ public class BackupSmallGui extends P2DialogOnly {
     }
 
     private void addBtn() {
-        final Button btnSmall = P2Button.getButton(P2IconFactory.P2ICON.SMALL_GUI_ICON_25.getFontIcon(), "Kleine Ansicht");
+        final Button btnSmall = P2Button.getButton(P2IconFactory.P2ICON.P2_SMALL_GUI_ICON_25.getFontIcon(), "Kleine Ansicht");
         btnSmall.getStyleClass().add("changeGuiBtn");
         btnSmall.setOnAction(a -> BackupGuiFactory.changeGui());
 
@@ -111,7 +111,7 @@ public class BackupSmallGui extends P2DialogOnly {
 
 
         final Button btnQuitt = new Button();
-        btnQuitt.setGraphic(P2IconFactory.P2ICON.BTN_QUIT_GUI_25.getFontIcon());
+        btnQuitt.setGraphic(P2IconFactory.P2ICON.BTN_QUIT_GUI_B.getFontIcon());
         btnQuitt.getStyleClass().add("switchOffBtn");
         btnQuitt.setTooltip(new Tooltip("Programm beenden"));
         btnQuitt.setOnAction(a -> ProgQuit.quit());
@@ -141,7 +141,7 @@ public class BackupSmallGui extends P2DialogOnly {
             Button btnStart = new Button("");
             btnStart.setMinHeight(18);
             btnStart.setMaxHeight(18);
-            btnStart.setGraphic(P2IconFactory.P2ICON.BTN_NEXT_15.getFontIcon());
+            btnStart.setGraphic(P2IconFactory.P2ICON.BTN_NEXT.getFontIcon());
             btnStart.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
             btnStart.setOnAction(a -> {
                 new BackupRunner(backupInfo).makeBackup();
@@ -152,7 +152,7 @@ public class BackupSmallGui extends P2DialogOnly {
             Button btnStop = new Button();
             btnStop.setMinHeight(18);
             btnStop.setMaxHeight(18);
-            btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP_15.getFontIcon());
+            btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP.getFontIcon());
             btnStop.visibleProperty().bind(backupInfo.runnerDto.guiRunningProperty());
             btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 

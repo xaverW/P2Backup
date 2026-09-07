@@ -98,7 +98,7 @@ public class PaneGenerateBackupList extends VBox {
         Button btnFrom = new Button("");
         btnFrom.setTooltip(new Tooltip("Ändern"));
         btnFrom.getStyleClass().add("btnAdjust");
-        btnFrom.setGraphic(P2IconFactory.P2ICON.BTN_PLAY_15.getFontIcon());
+        btnFrom.setGraphic(P2IconFactory.P2ICON.BTN_PLAY.getFontIcon());
         btnFrom.setOnAction(a -> {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_FROM);
@@ -111,7 +111,7 @@ public class PaneGenerateBackupList extends VBox {
         Button btnTo = new Button("");
         btnTo.setTooltip(new Tooltip("Ändern"));
         btnTo.getStyleClass().add("btnAdjust");
-        btnTo.setGraphic(P2IconFactory.P2ICON.BTN_PLAY_15.getFontIcon());
+        btnTo.setGraphic(P2IconFactory.P2ICON.BTN_PLAY.getFontIcon());
         btnTo.setOnAction(a -> {
             progData.backupInfoProperty.set(backupInfo);
             progData.programState.set(ProgConst.PROGRAM_STATE_TO);
@@ -299,7 +299,7 @@ public class PaneGenerateBackupList extends VBox {
     private HBox addProgress(BackupInfo backupInfo) {
 
         Button btnStop = new Button();
-        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP_15.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP.getFontIcon());
 //        btnStop.setGraphic(PIconFactory.PICON.BTN_STOP_BACKUP.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 

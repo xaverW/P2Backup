@@ -162,7 +162,7 @@ public class BackupBigGui extends VBox {
     }
 
     private Button getBtnSmall() {
-        final Button btnSmall = P2Button.getButton(P2IconFactory.P2ICON.SMALL_GUI_ICON_30.getFontIcon(), "Kleine Ansicht");
+        final Button btnSmall = P2Button.getButton(P2IconFactory.P2ICON.P2_SMALL_GUI_ICON_30.getFontIcon(), "Kleine Ansicht");
         btnSmall.getStyleClass().add("changeGuiBtn");
         btnSmall.setOnAction(a -> BackupGuiFactory.changeGui());
         return btnSmall;

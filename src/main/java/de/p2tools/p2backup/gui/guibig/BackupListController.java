@@ -88,7 +88,7 @@ public class BackupListController extends VBox {
         btnAdd.managedProperty().bind(progData.backupInfoProperty.isNull().not());
         btnAdd.setOnAction(a -> add());
 
-        P2BigButton btnBigAdd = new P2BigButton(P2IconFactory.P2ICON.BTN_PLUS_OUTLINE_50.getFontIcon(),
+        P2BigButton btnBigAdd = new P2BigButton(P2IconFactory.P2ICON.BTN_PLUS_OUTLINE.getFontIcon(50),
                 "Neues Backup anlegen", "");
         btnBigAdd.setAlignment(Pos.CENTER);
         btnBigAdd.setMaxHeight(Double.MAX_VALUE);
