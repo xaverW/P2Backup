@@ -19,7 +19,6 @@ package de.p2tools.p2backup.gui.configdialog.configpanes;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.config.ProgInfos;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.help.HelpText;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
@@ -75,7 +74,7 @@ public class PaneLogFile {
             }
         }));
 
-        final Button btnHelp = PIconFactory.getHelpButton(stage, "Logfile", HelpText.LOGFILE);
+        final Button btnHelp = P2IconFactory.getHelpButton(stage, "Logfile", HelpText.LOGFILE);
 
         txtLogFile = new TextField();
         txtLogFile.textProperty().bindBidirectional(ProgConfig.SYSTEM_LOG_DIR);
@@ -85,7 +84,7 @@ public class PaneLogFile {
         btnFile.setOnAction(event -> {
             P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, txtLogFile);
         });
-        btnFile.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+        btnFile.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
 
         final Button btnClear = new Button();
         btnClear.setGraphic(P2IconFactory.P2ICON.BTN_CLEAR.getFontIcon());

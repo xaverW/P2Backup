@@ -67,7 +67,7 @@ public class CellStartOpenFileButton<S, T> extends TableCell<S, T> {
                 final Button btnStart = new Button("");
                 btnStart.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnStart.setTooltip(new Tooltip("Gespeicherte Datei öffnen"));
-                btnStart.setGraphic(P2IconFactory.P2ICON.BTN_PLAY_OUTLINE.getFontIcon());
+                btnStart.setGraphic(P2IconFactory.P2ICON.P2_BTN_PLAY_OUTLINE.getFontIcon());
                 btnStart.setDisable(fileData.isErrorHash() || fileData.isOnlyInData());
 
                 btnStart.setOnAction((ActionEvent event) -> {
@@ -83,7 +83,7 @@ public class CellStartOpenFileButton<S, T> extends TableCell<S, T> {
                 btnOpenDirectory = new Button();
                 btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
-                btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+                btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
                 btnOpenDirectory.setDisable(fileData.isOnlyInData());
 
                 btnOpenDirectory.setOnAction((ActionEvent event) -> {

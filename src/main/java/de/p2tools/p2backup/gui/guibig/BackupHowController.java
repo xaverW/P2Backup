@@ -108,7 +108,7 @@ public class BackupHowController extends VBox {
         gridPaneHow.add(rbIntelligent, 0, ++row);
 
         final Button btnHowHelp = new Button();
-        btnHowHelp.setGraphic(P2IconFactory.P2ICON.BTN_HELP.getFontIcon());
+        btnHowHelp.setGraphic(P2IconFactory.P2ICON.P2_BTN_HELP.getFontIcon());
         btnHowHelp.setOnAction(a -> new DialogHowHelp());
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);

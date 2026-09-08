@@ -25,6 +25,7 @@ import de.p2tools.p2backup.gui.table.TableBackupError;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
@@ -73,7 +74,7 @@ public class DialogCheckBackupRepair extends P2DialogExtra {
     @Override
     public void make() {
         Button btnHelp;
-        btnHelp = PIconFactory.getHelpButton(getStage(), "Backup reparieren",
+        btnHelp = P2IconFactory.getHelpButton(getStage(), "Backup reparieren",
                 "Dateien im Backup sind verändert, fehlen oder sind zuviel. Das Backup kann " +
                         "repariert werden, die Dateien werden dann im Backup gelöscht.");
         Text text;

@@ -18,12 +18,12 @@ package de.p2tools.p2backup.gui.startdialog;
 
 
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2Dialog;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -66,7 +66,7 @@ public class StartPaneBackup extends VBox {
         hBox.getChildren().add(lbl);
         getChildren().addAll(StartFactory.getTitle("Backup"), hBox, P2GuiTools.getHDistance(20));
 
-        Button btnHelp = PIconFactory.getHelpButton(pDialog.getStage(), "Name angeben",
+        Button btnHelp = P2IconFactory.getHelpButton(pDialog.getStage(), "Name angeben",
                 "Der Name wird zur Unterscheidung der Backups gebraucht." +
                         "\n\n" +
                         "Die Beschreibung " +

@@ -19,7 +19,6 @@ package de.p2tools.p2backup.gui.configdialog.configpanes;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2backup.gui.help.HelpText;
 import de.p2tools.p2lib.P2LibConst;
@@ -27,6 +26,7 @@ import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Hyperlink;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.guitools.ptoggleswitch.P2ToggleSwitch;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -77,11 +77,11 @@ public class PaneUpdate {
 
         //einmal am Tag Update suchen
         tglSearch.selectedProperty().bindBidirectional(propUpdateSearch);
-        final Button btnHelp = PIconFactory.getHelpButton(stage, "Programmupdate suchen", HelpText.CONFIG_SEARCH_UPDATE);
+        final Button btnHelp = P2IconFactory.getHelpButton(stage, "Programmupdate suchen", HelpText.CONFIG_SEARCH_UPDATE);
 
         tglSearchBeta.selectedProperty().bindBidirectional(propUpdateBetaSearch);
         chkDaily.selectedProperty().bindBidirectional(propUpdateDailySearch);
-        btnHelpBeta = PIconFactory.getHelpButton(stage, "Vorabversionen suchen", HelpText.CONFIG_SEARCH_UPDATE_DAILY);
+        btnHelpBeta = P2IconFactory.getHelpButton(stage, "Vorabversionen suchen", HelpText.CONFIG_SEARCH_UPDATE_DAILY);
 
         //jetzt suchen
         checkBeta();

@@ -112,7 +112,7 @@ public class P2BackupMenu extends MenuButton {
         setMinWidth(Region.USE_PREF_SIZE);
         getStyleClass().addAll("p2BackupMenu");
         setText("");
-        setGraphic(P2IconFactory.P2ICON.P2_PROG_MENU.getFontIcon());
+        setGraphic(P2IconFactory.P2ICON.P2__PROG_MENU.getFontIcon());
 
         getItems().addAll(miConfig, miDarkMode, miColorMode);
         getItems().addAll(addHelp(progData), new SeparatorMenuItem(), miQuit);

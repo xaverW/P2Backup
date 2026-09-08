@@ -73,7 +73,7 @@ public class DialogCopyFileController extends P2DialogExtra {
         cboDest.init(ProgConfig.CBO_COPY_DIALOG_DEST_DIR, ProgConfig.COPY_DIALOG_DEST_DIR);
         cboDest.setMaxWidth(Double.MAX_VALUE);
         btnSearchDestPath.setTooltip(new Tooltip("Verzeichnis auswählen"));
-        btnSearchDestPath.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+        btnSearchDestPath.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
         btnSearchDestPath.setOnAction(a -> {
             P2DirFileChooser.DirChooser(getStage(), cboDest);
 //            ProgConfig.COPY_DIALOG_DEST_DIR.set(
@@ -85,7 +85,7 @@ public class DialogCopyFileController extends P2DialogExtra {
         String suffix = name.contains(".") ? name.substring(name.lastIndexOf(".") + 1) : "";
         txtName.setText(name);
 
-        btnProposeFileName.setGraphic(P2IconFactory.P2ICON.BTN_RANDOM.getFontIcon());
+        btnProposeFileName.setGraphic(P2IconFactory.P2ICON.BTN_ROTATE_3D.getFontIcon());
         btnProposeFileName.setTooltip(new Tooltip("Einen Dateinamen vorschlagen"));
         btnProposeFileName.setOnAction(event -> {
             String fileName = txtName.textProperty().getValueSafe();

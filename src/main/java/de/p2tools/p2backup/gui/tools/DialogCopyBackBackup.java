@@ -162,7 +162,7 @@ public class DialogCopyBackBackup extends P2DialogExtra {
         cboDest.init(ProgConfig.CBO_COPY_BACK_DIALOG_DEST_DIR, ProgConfig.COPY_BACK_DIALOG_DEST_DIR);
         cboDest.setMaxWidth(Double.MAX_VALUE);
         btnSearch.setTooltip(new Tooltip("Verzeichnis auswählen"));
-        btnSearch.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+        btnSearch.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
         btnSearch.setOnAction(a -> {
             P2DirFileChooser.DirChooser(getStage(), cboDest);
         });
@@ -198,7 +198,7 @@ public class DialogCopyBackBackup extends P2DialogExtra {
 
     private HBox addProgress() {
         Button btnStop = new Button();
-        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.P2_BTN_STOP.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

@@ -24,6 +24,7 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -65,7 +66,7 @@ public class DialogCopyFileError extends P2DialogExtra {
     public void make() {
         Button btnHelp;
         if (isFile) {
-            btnHelp = PIconFactory.getHelpButton(getStage(), "Datei Lesen",
+            btnHelp = P2IconFactory.getHelpButton(getStage(), "Datei Lesen",
                     "Auf die Datei\n\n" +
                             file + "\n\n kann nicht zugegriffen werden. Soll alles abgebrochen " +
                             "werden oder soll die Datei übersprungen werden?" +
@@ -74,7 +75,7 @@ public class DialogCopyFileError extends P2DialogExtra {
                             "ob nur diese eine Datei übersprungen wird oder auch alle " +
                             "noch folgenden Dateien.");
         } else {
-            btnHelp = PIconFactory.getHelpButton(getStage(), "Pfad lesen",
+            btnHelp = P2IconFactory.getHelpButton(getStage(), "Pfad lesen",
                     "Der Pfad\n\n" +
                             file + "\n\n kann nicht gelesen werden. Es kann das " +
                             "abgebrochen werden oder der Pfad wird übersprungen." +

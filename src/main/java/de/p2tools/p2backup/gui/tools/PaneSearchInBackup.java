@@ -179,7 +179,7 @@ public class PaneSearchInBackup extends HBox {
         final Button btnOpenDirectory = new Button();
         btnOpenDirectory.getStyleClass().addAll("buttonVeryLow");
         btnOpenDirectory.setTooltip(new Tooltip("Ordner mit der Datei öffnen"));
-        btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+        btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
         btnOpenDirectory.setOnAction(a -> {
             FileData fileData = tableViewFile.getSelectionModel().getSelectedItem();
             if (fileData == null) {

@@ -29,6 +29,7 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Text;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
@@ -76,7 +77,7 @@ public class DialogBackupErrorList extends P2DialogExtra {
     @Override
     public void make() {
         Button btnHelp;
-        btnHelp = PIconFactory.getHelpButton(getStage(), "Datei kopieren",
+        btnHelp = P2IconFactory.getHelpButton(getStage(), "Datei kopieren",
                 "Dateien im Backup sind verändert oder fehlen. Das Backup kann " +
                         "abgebrochen werden oder die Dateien können aus dem Backup gelöscht werden. " +
                         "Ansonsten kann mit einem komplett neuen Backup wieder begonnen werden.");

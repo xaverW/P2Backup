@@ -19,7 +19,6 @@ package de.p2tools.p2backup.gui.guibig;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
@@ -76,7 +75,7 @@ public class BackupToController extends VBox {
 
     private void initList() {
         Button btnTo = new Button();
-        btnTo.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+        btnTo.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
         btnTo.setTooltip(new Tooltip("Den Ordner für das Backup auswählen"));
         btnTo.setOnAction(event -> {
             String start;
@@ -92,7 +91,7 @@ public class BackupToController extends VBox {
             }
         });
 
-        Button btnHlpTo = PIconFactory.getHelpButton("Ordner zum Speichern des Backups",
+        Button btnHlpTo = P2IconFactory.getHelpButton("Ordner zum Speichern des Backups",
                 "Hier muss der Ordner angegeben werden, in dem das " +
                         "Backup gespeichert werden soll.");
 

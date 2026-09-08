@@ -126,7 +126,7 @@ public class DialogSearchInBackup extends P2DialogExtra {
         Button btnStop = new Button();
 //        btnStop.setMinHeight(18);
 //        btnStop.setMaxHeight(18);
-        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.P2_BTN_STOP.getFontIcon());
         btnStop.setOnAction(a -> backupInfoProp.get().runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

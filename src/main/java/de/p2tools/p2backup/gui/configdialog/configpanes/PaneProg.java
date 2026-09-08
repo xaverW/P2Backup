@@ -18,7 +18,6 @@ package de.p2tools.p2backup.gui.configdialog.configpanes;
 
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.help.HelpText;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
@@ -74,10 +73,10 @@ public class PaneProg {
         btnFile.setOnAction(event -> {
             P2DirFileChooser.FileChooserOpenFile(ProgData.getInstance().primaryStage, txtFileManagerWeb);
         });
-        btnFile.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+        btnFile.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
         btnFile.setTooltip(new Tooltip("Einen Webbrowser zum Öffnen von URLs auswählen"));
 
-        final Button btnHelp = PIconFactory.getHelpButton(stage, "Webbrowser", HelpText.WEBBROWSER);
+        final Button btnHelp = P2IconFactory.getHelpButton(stage, "Webbrowser", HelpText.WEBBROWSER);
 
         VBox vBox = new VBox(2);
         vBox.setPadding(new Insets(0));

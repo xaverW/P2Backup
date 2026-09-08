@@ -123,7 +123,7 @@ public class DialogBackupInfo extends P2DialogExtra {
             btnOpenDirectory = new Button();
             btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
             btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
-            btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+            btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
             btnOpenDirectory.setOnAction((ActionEvent event) -> {
                 Path path = p.getFilePathPath();
                 if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
@@ -155,7 +155,7 @@ public class DialogBackupInfo extends P2DialogExtra {
             btnOpenDirectory = new Button();
             btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
             btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
-            btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+            btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
             btnOpenDirectory.setOnAction((ActionEvent event) -> {
                 Path path = backupData.getToPath(backupInfo);
                 if (path != null && path.toFile().exists() && path.toFile().isDirectory()) {
@@ -199,7 +199,7 @@ public class DialogBackupInfo extends P2DialogExtra {
     private HBox addProgress() {
         PProgressBar pProgressBar = new PProgressBar(backupInfo, true, true, true);
         Button btnStop = new Button();
-        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.P2_BTN_STOP.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

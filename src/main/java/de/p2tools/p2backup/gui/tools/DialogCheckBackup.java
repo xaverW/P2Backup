@@ -261,7 +261,7 @@ public class DialogCheckBackup extends P2DialogExtra {
     private HBox addProgress() {
         PProgressBar pProgressBar = new PProgressBar(true, true);
         Button btnStop = new Button();
-        btnStop.setGraphic(P2IconFactory.P2ICON.BTN_STOP.getFontIcon());
+        btnStop.setGraphic(P2IconFactory.P2ICON.P2_BTN_STOP.getFontIcon());
         btnStop.setOnAction(a -> backupInfo.runnerDto.setStop());
 
         HBox hBoxProgress = new HBox(P2LibConst.SPACING_HBOX);

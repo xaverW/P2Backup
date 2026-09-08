@@ -18,11 +18,11 @@ package de.p2tools.p2backup.gui.configdialog.configpanes;
 
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2backup.gui.help.HelpText;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.guitools.ptoggleswitch.P2ToggleSwitch;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -50,7 +50,7 @@ public class PaneConfig {
 
     public TitledPane make(Collection<TitledPane> result) {
         tglOnlyOneInstance.selectedProperty().bindBidirectional(ProgConfig.SYSTEM_ONLY_ONE_INSTANCE);
-        final Button btnHelpOnlyOneInstance = PIconFactory.getHelpButton(stage, "Nur eine Instanz des Programms öffnen",
+        final Button btnHelpOnlyOneInstance = P2IconFactory.getHelpButton(stage, "Nur eine Instanz des Programms öffnen",
                 HelpText.ONLY_ONE_INSTANCE);
         GridPane.setHalignment(btnHelpOnlyOneInstance, HPos.RIGHT);
 

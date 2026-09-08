@@ -19,7 +19,6 @@ package de.p2tools.p2backup.gui.dialog;
 
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.P2DirFileChooser;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
@@ -74,12 +73,12 @@ public class DialogAskBackupPath extends P2DialogExtra {
         gridPane.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);
 
         int row = 0;
-        Button btnHelp = PIconFactory.getHelpButton(getStage(), "Ordner für das Backup",
+        Button btnHelp = P2IconFactory.getHelpButton(getStage(), "Ordner für das Backup",
                 "Es muss ein Ordner angegeben werden, in dem das Backup " +
                         "gespeichert werden kann.");
 
         Button btnPath = new Button();
-        btnPath.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+        btnPath.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
         btnPath.setTooltip(new Tooltip("Den Ordner zum Sichern auswählen"));
         btnPath.setOnAction(event -> {
             String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, "");

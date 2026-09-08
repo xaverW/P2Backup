@@ -1,13 +1,10 @@
 package de.p2tools.p2backup.controller.picon;
 
 import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.ikonli.IkonlyFactory;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 public class PIconFactory {
@@ -79,13 +76,5 @@ public class PIconFactory {
         if (ProgData.getInstance().backupSmallGui != null) {
             IkonlyFactory.getAllNodes(ProgData.getInstance().backupSmallGui.getStage().getScene().getRoot());
         }
-    }
-
-    public static Button getHelpButton(String header, String helpText) {
-        return P2Button.helpButton(P2IconFactory.P2ICON.BTN_HELP.getFontIcon(), header, helpText);
-    }
-
-    public static Button getHelpButton(Stage stage, String header, String helpText) {
-        return P2Button.helpButton(stage, P2IconFactory.P2ICON.BTN_HELP.getFontIcon(), header, helpText);
     }
 }

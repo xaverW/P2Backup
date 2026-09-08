@@ -19,10 +19,10 @@ package de.p2tools.p2backup.gui.dialog;
 
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
-import de.p2tools.p2backup.controller.picon.PIconFactory;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Text;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -72,7 +72,7 @@ public class DialogAddBackup extends P2DialogExtra {
         gridPane.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);
 
         int row = 0;
-        Button btnHelp = PIconFactory.getHelpButton(getStage(), "Name angeben",
+        Button btnHelp = P2IconFactory.getHelpButton(getStage(), "Name angeben",
                 "Der Name wird zur Unterscheidung der Backups gebraucht." +
                         "\n\n" +
                         "Die Beschreibung " +

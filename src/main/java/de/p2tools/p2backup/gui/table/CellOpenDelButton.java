@@ -74,7 +74,7 @@ public class CellOpenDelButton<S, T> extends TableCell<S, T> {
                 btnOpenDirectory = new Button();
                 btnOpenDirectory.getStyleClass().addAll("btnFunction", "btnFuncTable");
                 btnOpenDirectory.setTooltip(new Tooltip("Ordner öffnen"));
-                btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.BTN_OPEN_DIR.getFontIcon());
+                btnOpenDirectory.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
                 btnOpenDirectory.setOnAction((ActionEvent event) -> {
                     getTableView().getSelectionModel().clearSelection();
                     getTableView().getSelectionModel().select(getIndex());
