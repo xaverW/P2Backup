@@ -24,17 +24,16 @@ import de.p2tools.p2backup.gui.table.TableToolBackupInfo;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
+import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class BackupInfoController extends VBox {
@@ -70,7 +69,6 @@ public class BackupInfoController extends VBox {
         getChildren().add(vBoxContent);
 
         init();
-        addTable();
     }
 
     public void close() {
@@ -126,15 +124,28 @@ public class BackupInfoController extends VBox {
                 P2GridConstraints.getCcComputedSizeAndHgrow(), P2GridConstraints.getCcPrefSize());
 
         vBoxContent.getChildren().addAll(BackupGuiFactory.getInfoPane("Beschreibung des Backup"), gridPane);
-    }
 
-    private void addTable() {
+        // ====================
+        // Table
         Table.setTable(tableView);
         setTableItems();
         VBox.setVgrow(tableView, Priority.ALWAYS);
 
-        vBoxContent.getChildren().addAll(P2GuiTools.getHDistance(10),
+        vBoxContent.getChildren().addAll(P2GuiTools.getHDistance(20),
                 BackupGuiFactory.getInfoPane("Gespeicherte Backups"), tableView);
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        Button btnHelp = P2IconFactory.getHelpButton("Backup Infos",
+                "Hier sind Infos zu dem oben ausgewählten Backup." +
+                        "\n\n" +
+                        "Es kann der Name des Backups festgelegt werden. Die Beschreibung " +
+                        "dient für eigene Infos zum Backup." +
+                        "\n\n" +
+                        "Mit der Farbe kann man in der Backupliste (erster Tab: \"Backup\") " +
+                        "eine Farbe dafür setzen.");
+        hBox.getChildren().add(btnHelp);
+        vBoxContent.getChildren().add(hBox);
     }
 
     private void setTableItems() {

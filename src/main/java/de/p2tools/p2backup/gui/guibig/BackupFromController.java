@@ -86,7 +86,6 @@ public class BackupFromController extends VBox {
         makeVboxFile();
         initAccordion();
         setExtended();
-//        ProgConfig.SYSTEM_ENHANCED.addListener((u, o, n) -> setExtended());
         VBox.setVgrow(vBoxTableAll, Priority.ALWAYS);
     }
 
@@ -96,11 +95,6 @@ public class BackupFromController extends VBox {
         btnPath.setTooltip(new Tooltip("Den Ordner zum Sichern auswählen"));
         btnPath.setOnAction(event -> {
             PathDataFactory.addPath(backupInfo);
-//            String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, ProgConfig.SYSTEM_FROM_PATH.get());
-//            if (!path.isEmpty()) {
-//                ProgConfig.SYSTEM_FROM_PATH.set(path);
-//                backupInfo.getPathListFrom().add(new PathData(path));
-//            }
         });
         Button btnHelp = P2IconFactory.getHelpButton("Sichern", "Hier können die Ordner die gesichert " +
                 "werden sollen, ausgewählt werden.");
@@ -160,7 +154,7 @@ public class BackupFromController extends VBox {
         HBox.setHgrow(txtExclude, Priority.ALWAYS);
 
         Button btnAddFile = new Button();
-        btnAddFile.setGraphic(P2IconFactory.P2ICON.BTN_PLUS_OUTLINE.getFontIcon());
+        btnAddFile.setGraphic(P2IconFactory.P2ICON.BTN_PLUS.getFontIcon());
         btnAddFile.setTooltip(new Tooltip("Dateien die von der Sicherung ausgeschlossen werden sollen"));
         btnAddFile.setOnAction(event -> {
             String exclude = txtExclude.getText();

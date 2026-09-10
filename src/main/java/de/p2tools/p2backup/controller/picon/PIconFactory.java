@@ -44,7 +44,6 @@ public class PIconFactory {
         }
 
         public FontIcon getFontIcon(int size) {
-            this.size = size;
             return P2IconFactory.getIcon(literal, size);
         }
     }
