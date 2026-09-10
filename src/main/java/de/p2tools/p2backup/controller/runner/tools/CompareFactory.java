@@ -110,7 +110,6 @@ public class CompareFactory {
                 P2Log.debugLog("QuickError, date!!: " + backupFile.getBackupFilePathStr());
                 isEqual(backupInfo, dataFile, backupFile);
                 continue;
-
             }
         }
         errorList.addAll(resultList.stream().filter(f ->
@@ -121,10 +120,12 @@ public class CompareFactory {
     }
 
     private static void isEqual(BackupInfo backupInfo, FileData dataFile, FileData backupFile) {
+        FileData dataHash = HashFactory.getFileData(backupInfo, "", false,
+                dataFile.getFilePath().toFile(), true);
         FileData backupHash = HashFactory.getFileData(backupInfo, "", false,
                 backupFile.getBackupFilePath().toFile(), true);
 
-        if (backupHash == null || !dataFile.getHash().equals(backupHash.getHash())) {
+        if (backupHash == null || dataHash == null || !dataHash.getHash().equals(backupHash.getHash())) {
             backupFile.setErrorDiff(true);
             P2Log.debugLog("QuickError, diff: " + backupFile.getBackupFilePathStr());
             if (backupHash != null && backupHash.getHash().equals(FileFactory.HASH_ERROR)) {

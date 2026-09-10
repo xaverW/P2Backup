@@ -32,6 +32,7 @@ import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -144,7 +145,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, chkQuick,
+        hBox.getChildren().addAll(P2Text.getLblTextBold("Backup:"), cboBackup, chkQuick,
                 P2GuiTools.getHBoxGrower(), btnStart);
 
         getVBoxCont().getChildren().addAll(hBox);
@@ -187,7 +188,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
 
         HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
         GridPane.setHgrow(hBox2, Priority.ALWAYS);
-        Label lbl = new Label("Backup:");
+        Label lbl = P2Text.getLblTextBold("Backup:");
         lbl.setVisible(false);
         hBox2.setAlignment(Pos.CENTER_LEFT);
         hBox2.getChildren().addAll(/*lbl,*/ rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash,

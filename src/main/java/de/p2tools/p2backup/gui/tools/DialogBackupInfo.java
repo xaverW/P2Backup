@@ -80,6 +80,7 @@ public class DialogBackupInfo extends P2DialogExtra {
         HBox.setHgrow(hBox, Priority.ALWAYS);
         getHboxLeft().getChildren().addAll(hBox, btnHelp);
         add();
+        search();
     }
 
     public void set() {
@@ -108,16 +109,20 @@ public class DialogBackupInfo extends P2DialogExtra {
         gridPane.getStyleClass().add("dialogInfo");
 
         int row = 0;
-        Label lblSum = P2Text.getLblTextBold("Anzahl\nDateien");
-        lblSum.setWrapText(true);
-        gridPane.add(lblSum, 2, row);
-        Label lblSize = P2Text.getLblTextBold("Größe\nOrdner");
-        lblSize.setWrapText(true);
-        gridPane.add(lblSize, 3, row);
 
+
+        VBox vBoxCount = new VBox();
+        vBoxCount.setAlignment(Pos.CENTER_RIGHT);
+        vBoxCount.getChildren().addAll(P2Text.getLblTextBold("Anzahl"), P2Text.getLblTextBold("Dateien"));
+        gridPane.add(vBoxCount, 2, row);
+
+        VBox vBoxSize = new VBox();
+        vBoxSize.setAlignment(Pos.CENTER_RIGHT);
+        vBoxSize.getChildren().addAll(P2Text.getLblTextBold("Größe"), P2Text.getLblTextBold("Ordner"));
+        gridPane.add(vBoxSize, 3, row);
 
         // zuerst die DATEN
-        gridPane.add(P2Text.getLblTextBold("Daten"), 0, ++row);
+        gridPane.add(P2Text.getLblTextBoldUnderlineSize("Daten", "1.1"), 0, ++row);
         for (PathData p : backupInfo.getPathListFrom()) {
             final Button btnOpenDirectory;
             btnOpenDirectory = new Button();
@@ -135,19 +140,25 @@ public class DialogBackupInfo extends P2DialogExtra {
 
             gridPane.add(new Label(p.getPath()), 0, ++row);
             gridPane.add(btnOpenDirectory, 1, row);
-            gridPane.add(new Label(p.getCount() + ""), 2, row);
-            gridPane.add(new Label(P2SizeTools.humanReadableByteCount(p.getSize(), true)), 3, row);
+            if (backupInfo.getPathListFrom().size() > 1) {
+                gridPane.add(new Label(p.getCount() + ""), 2, row);
+                gridPane.add(new Label(P2SizeTools.humanReadableByteCount(p.getSize(), true)), 3, row);
+            } else {
+                gridPane.add(P2Text.getLblTextBold(p.getCount() + ""), 2, row);
+                gridPane.add(P2Text.getLblTextBold(P2SizeTools.humanReadableByteCount(p.getSize(), true)), 3, row);
+            }
         }
+
         if (backupInfo.getPathListFrom().size() > 1) {
-            gridPane.add(P2Text.getLblTextItalic("Summe:"), 0, ++row);
-            gridPane.add(P2Text.getLblTextItalic(backupInfo.getCount() + ""), 2, row);
-            gridPane.add(P2Text.getLblTextItalic(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 3, row);
+            gridPane.add(P2Text.getLblTextBold("Summe:"), 0, ++row);
+            gridPane.add(P2Text.getLblTextBold(backupInfo.getCount() + ""), 2, row);
+            gridPane.add(P2Text.getLblTextBold(P2SizeTools.humanReadableByteCount(backupInfo.getSize(), true)), 3, row);
         }
 
 
         // Dann die angelegten Backups
         gridPane.add(new Label(""), 0, ++row);
-        gridPane.add(P2Text.getLblTextBold("Backup-Ordner"), 0, ++row);
+        gridPane.add(P2Text.getLblTextBoldUnderlineSize("Backup-Ordner", "1.1"), 0, ++row);
         int sum = 0;
         long sumSize = 0;
         for (BackupData backupData : backupInfo.getBackupDataList()) {
@@ -173,20 +184,21 @@ public class DialogBackupInfo extends P2DialogExtra {
             gridPane.add(new Label(P2SizeTools.humanReadableByteCount(backupData.getSize(), true)), 3, row);
         }
 
-        gridPane.add(P2Text.getLblTextItalic("Summe"), 0, ++row);
-        gridPane.add(P2Text.getLblTextItalic(sum + ""), 2, row);
-        gridPane.add(P2Text.getLblTextItalic(P2SizeTools.humanReadableByteCount(sumSize, true)), 3, row);
+        gridPane.add(P2Text.getLblTextBold("Summe"), 0, ++row);
+        gridPane.add(P2Text.getLblTextBold(sum + ""), 2, row);
+        gridPane.add(P2Text.getLblTextBold(P2SizeTools.humanReadableByteCount(sumSize, true)), 3, row);
 
         vBoxGrid.getChildren().add(gridPane);
     }
 
     private void add() {
-        Button btnSearch = new Button("Infos laden");
-        btnSearch.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
-        btnSearch.setOnAction(a -> search());
+//        Button btnSearch = new Button("Infos laden");
+//        btnSearch.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
+//        btnSearch.setOnAction(a -> search());
 
         HBox hBoxBtn = new HBox(P2LibConst.SPACING_HBOX);
-        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold(backupInfo.getName()), P2GuiTools.getHBoxGrower(), btnSearch);
+        hBoxBtn.getChildren().addAll(P2Text.getLblTextBold("Backup:"),
+                new Label(backupInfo.getName()), P2GuiTools.getHBoxGrower());
         hBoxBtn.setAlignment(Pos.CENTER_RIGHT);
         hBoxBtn.getStyleClass().add("infoDialogTop");
         getVBoxCont().getChildren().addAll(hBoxBtn);

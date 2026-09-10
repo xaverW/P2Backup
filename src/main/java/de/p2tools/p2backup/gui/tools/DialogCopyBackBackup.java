@@ -33,6 +33,7 @@ import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2ComboBoxString;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.ObjectProperty;
@@ -156,7 +157,7 @@ public class DialogCopyBackBackup extends P2DialogExtra {
     private void initInfo() {
         HBox hBoxTop = new HBox(P2LibConst.SPACING_HBOX);
         hBoxTop.getStyleClass().add("infoDialogTop");
-        hBoxTop.getChildren().addAll(new Label("Backup:"), lblName, P2GuiTools.getHBoxGrower(),
+        hBoxTop.getChildren().addAll(P2Text.getLblTextBold("Backup:"), lblName, P2GuiTools.getHBoxGrower(),
                 new Label("Anzahl:"), lblSize);
 
         cboDest.init(ProgConfig.CBO_COPY_BACK_DIALOG_DEST_DIR, ProgConfig.COPY_BACK_DIALOG_DEST_DIR);

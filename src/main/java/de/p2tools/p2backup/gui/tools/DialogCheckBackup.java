@@ -35,6 +35,7 @@ import de.p2tools.p2lib.alert.P2Alert;
 import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2Button;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.guitools.P2Text;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -168,7 +169,7 @@ public class DialogCheckBackup extends P2DialogExtra {
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER_RIGHT);
-        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, P2GuiTools.getHBoxGrower(), btnStart);
+        hBox.getChildren().addAll(P2Text.getLblTextBold("Backup:"), cboBackup, P2GuiTools.getHBoxGrower(), btnStart);
         getVBoxCont().getChildren().addAll(hBox/*, hBoxProgress*/);
     }
 

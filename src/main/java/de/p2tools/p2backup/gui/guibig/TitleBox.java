@@ -5,6 +5,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfoProps;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2GuiTools;
+import de.p2tools.p2lib.guitools.P2Text;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -56,7 +57,7 @@ public class TitleBox extends VBox {
         hBox.setPadding(new Insets(0, 5, 0, 5));
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setSpacing(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(new Label("Backup:"), cboBackup, lblTop,
+        hBox.getChildren().addAll(P2Text.getLblTextBold("Backup:"), cboBackup, lblTop,
                 P2GuiTools.getHBoxGrower(), new PProgressBar());
         getChildren().addAll(hBox);
     }
