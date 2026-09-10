@@ -91,10 +91,15 @@ public class DialogCopyBackBackup extends P2DialogExtra {
 
         Button btnHelp = P2Button.helpButton(getStage(), "Backup wieder herstellen",
                 "Damit kann man ein Backup wieder herstellen. Es werden die Daten aus einem " +
-                        "Backup in einen Ordner der eigenen Wahl, kopiert.");
-
-        vBoxList.setPadding(new Insets(5));
-        vBoxCont.setPadding(new Insets(5));
+                        "Backup in einen Ordner der eigenen Wahl, kopiert." +
+                        "\n\n" +
+                        "In der linken Liste wird das Backup ausgewählt, das hergestellt werden soll." +
+                        "\n\n" +
+                        "Die rechte Liste zeigt die Dateien die dann kopiert werden und aus welchem Backup die Datei " +
+                        "kopiert werden." +
+                        "\n\n" +
+                        "So werden die Daten wieder hergestellt, wie sie zu dem Zeitpunkt des ausgewählten Backups " +
+                        "waren.");
 
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(vBoxList, vBoxCont);
@@ -145,7 +150,7 @@ public class DialogCopyBackBackup extends P2DialogExtra {
         HBox hBoxTop = new HBox(P2LibConst.SPACING_HBOX);
         hBoxTop.setAlignment(Pos.CENTER);
         hBoxTop.getStyleClass().add("infoDialogTop");
-        hBoxTop.getChildren().add(new Label("Backups"));
+        hBoxTop.getChildren().add(P2Text.getLblTextBold("Erstellte Backups"));
         vBoxList.getChildren().addAll(hBoxTop, listView);
         VBox.setVgrow(listView, Priority.ALWAYS);
     }
@@ -153,8 +158,8 @@ public class DialogCopyBackBackup extends P2DialogExtra {
     private void initInfo() {
         HBox hBoxTop = new HBox(P2LibConst.SPACING_HBOX);
         hBoxTop.getStyleClass().add("infoDialogTop");
-        hBoxTop.getChildren().addAll(P2Text.getLblTextBold("Backup:"), lblName, P2GuiTools.getHBoxGrower(),
-                new Label("Anzahl:"), lblSize);
+        hBoxTop.getChildren().addAll(P2Text.getLblTextBold("Ausgewähltes Backup:"), lblName, P2GuiTools.getHBoxGrower(),
+                new Label("Anzahl Dateien:"), lblSize);
 
         cboDest.init(ProgConfig.CBO_COPY_BACK_DIALOG_DEST_DIR, ProgConfig.COPY_BACK_DIALOG_DEST_DIR);
         cboDest.setMaxWidth(Double.MAX_VALUE);
@@ -171,7 +176,8 @@ public class DialogCopyBackBackup extends P2DialogExtra {
         });
 
         GridPane gridPane = new GridPane(5, 5);
-        gridPane.add(new Label("Speicherziel"), 0, 0);
+        gridPane.setPadding(new Insets(0, 5, 5, 5));
+        gridPane.add(P2Text.getLblTextBold("Speicherziel:"), 0, 0);
         gridPane.add(cboDest, 1, 0);
         gridPane.add(btnSearch, 2, 0);
         gridPane.add(btnStartCopy, 3, 0);
