@@ -91,11 +91,11 @@ public class ToolCompareHashSql {
             // ==============
             // und jetzt mit dem Hash vergleichen
             fileListData.forEach(f -> f.setToPathStr(backupData.getToPathStr(backupInfo)));
-            List<FileData> list = new ArrayList<>();
+            List<FileData> errorList = new ArrayList<>();
             CompareFactory.compare(dialogCompareBackupData.getStage(),
-                    fileListData, fileListBackup, resultList, list);
+                    fileListData, fileListBackup, resultList, errorList);
 
-            if (list.isEmpty()) {
+            if (errorList.isEmpty()) {
                 // dann nur eine kurze Meldung
                 P2AlertAppThread.infoAlert(dialogCompareBackupData.getStage(),
                         "Vergleich", "Dateien und Backup sind identisch",

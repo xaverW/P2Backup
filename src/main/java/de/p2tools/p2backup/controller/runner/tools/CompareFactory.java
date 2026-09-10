@@ -31,7 +31,6 @@ public class CompareFactory {
             resultList.add(fileData);
             if (fileData.getHash().equals(FileFactory.HASH_ERROR)) {
                 fileData.setErrorHash(true);
-                errorList.add(fileData);
             }
         });
 
@@ -50,7 +49,6 @@ public class CompareFactory {
                 resultList.add(fileBackup);
                 if (fileBackup.getHash().equals(FileFactory.HASH_ERROR)) {
                     fileBackup.setErrorHash(true);
-                    errorList.add(fileBackup);
                 }
 
             } else {
@@ -58,11 +56,9 @@ public class CompareFactory {
                 fileDb.setExistInBackup(true);
                 if (fileBackup.getHash().equals(FileFactory.HASH_ERROR)) {
                     fileDb.setErrorHash(true);
-                    errorList.add(fileDb);
 
                 } else if (!fileBackup.getHash().equals(fileDb.getHash())) {
                     fileDb.setErrorDiff(true);
-                    errorList.add(fileDb);
                 }
             }
         });
