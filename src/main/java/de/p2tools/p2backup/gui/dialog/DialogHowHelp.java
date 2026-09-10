@@ -40,14 +40,17 @@ public class DialogHowHelp extends P2DialogExtra {
                     "Dateien in den Backup-Ordner kopiert.\n\n" +
                     "Das ist sehr sicher, braucht aber länger und vor " +
                     "allem sehr viel Platz.";
+
     private final String TEXT_ONLY_HEADER = "Nur geänderte Dateien kopieren";
     private final String TEXT_ONLY =
             "Damit werden bei jedem Backup nur die Dateien die sich seit " +
                     "dem letzten Backup geändert haben, in den Backup-Ordner kopiert." +
                     "\n\n" +
-                    "Das ist schneller und braucht am wenigsten Platz. Nachteil ist, dass " +
-                    "das Wiederherstellen eines bestimmten Backups schwieriger ist. Es müssen " +
-                    "alle Backup-Ordner abgesucht werden.";
+                    "Das ist schneller und braucht weniger Platz. Die Backupdateien " +
+                    "sind dann auf mehrere Ordner verteilt. Zum Wiederherstellen der Daten müssen sie " +
+                    "daraus zusammengesucht werden. Das kann aber automatisch mit dem Programm unter " +
+                    "\"Tools\" gemacht werden.";
+
     private final String TEXT_INTELLIGENT_HEADER = "Intelligentes kopieren";
     private final String TEXT_INTELLIGENT =
             "Hier werden auch nur die geänderten Dateien in den Backup-Ordner " +
@@ -91,10 +94,8 @@ public class DialogHowHelp extends P2DialogExtra {
         sc.setFitToWidth(true);
 
         Label lblHeader = new Label();
-//        lblHeader.setAlignment(Pos.CENTER_LEFT);
         lblHeader.setMaxWidth(Double.MAX_VALUE);
         lblHeader.getStyleClass().add("lblHeader");
-//        lblHeader.setWrapText(true);
         lblHeader.setText(header);
         HBox.setHgrow(lblHeader, Priority.ALWAYS);
 

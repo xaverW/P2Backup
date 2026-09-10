@@ -122,8 +122,8 @@ public class BackupHowController extends VBox {
         Button btnHelp = P2Button.helpButton("Anzahl der Backups",
                 "Hier kann man vorgeben, wie viele Backups vorgehalten werden sollen." +
                         "\n\n" +
-                        "Sind mehr als die Vorgabe vorhanden, wird das " +
-                        "älteste gelöscht.");
+                        "Sind mehr Backups vorhanden als Vorgegeben, wird das " +
+                        "älteste Backup gelöscht.");
         row = 0;
         GridPane gridPaneCount = new GridPane();
         gridPaneCount.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);

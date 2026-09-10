@@ -42,7 +42,7 @@ public class BackupFromController extends VBox {
     private final TableView<PathData> tableViewExcludeFile = new TableView<>();
     private BackupInfo backupInfo = null;
     private final Accordion accordion = new Accordion();
-    private final RadioButton rbNot = new RadioButton("Dateien ausschießen");
+    private final RadioButton rbNot = new RadioButton("Diese Dateien ausschießen");
     private final RadioButton rbOnly = new RadioButton("Nur diese Dateien sichern");
 
     private final VBox vBoxTableAll = new VBox();
@@ -97,7 +97,9 @@ public class BackupFromController extends VBox {
             PathDataFactory.addPath(backupInfo);
         });
         Button btnHelp = P2IconFactory.getHelpButton("Sichern", "Hier können die Ordner die gesichert " +
-                "werden sollen, ausgewählt werden.");
+                "werden sollen, ausgewählt werden." +
+                "\n\n" +
+                "Alle Dateien in den hier aufgelisteten Ordner, werden ins Backup kopiert.");
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.setAlignment(Pos.CENTER);
         hBox.getChildren().addAll(new Label("Ordner auswählen, die gesichert werden sollen:"),
@@ -120,7 +122,7 @@ public class BackupFromController extends VBox {
     private void makeVboxDir() {
         Button btnPath = new Button();
         btnPath.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
-        btnPath.setTooltip(new Tooltip("Ordner die von der Sicherung ausgeschlossen werden sollen"));
+        btnPath.setTooltip(new Tooltip("Ordner die von der Sicherung ausgeschlossen werden sollen."));
         btnPath.setOnAction(event -> {
             String path = P2DirFileChooser.DirChooser(ProgData.getInstance().primaryStage, "");
             if (!path.isEmpty()) {
@@ -129,7 +131,10 @@ public class BackupFromController extends VBox {
         });
         Button btnHelp = P2IconFactory.getHelpButton("Ordner ausschließen",
                 "Ordner die vom Backup ausgeschlossen werden sollen, " +
-                        "werden hier ausgewählt.");
+                        "werden hier ausgewählt." +
+                        "\n\n" +
+                        "Dateien die in einem der hier aufgelisteten Ordner liegen, werden nicht ins " +
+                        "Backup kopiert.");
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.setAlignment(Pos.CENTER);
@@ -176,7 +181,14 @@ public class BackupFromController extends VBox {
         btnAddFile.disableProperty().bind(txtExclude.textProperty().isEmpty());
         Button btnHelp = P2IconFactory.getHelpButton("Dateien ausschließen",
                 "Hier können Dateien vorgegeben werden, die vom Backup ausgeschlossen werden " +
-                        "oder die ausschließlich gesichert werden.\n\n" +
+                        "oder die ausschließlich gesichert werden." +
+                        "\n\n" +
+                        "* Diese Dateien ausschießen *\n" +
+                        "Dann werden diese Dateien NICHT ins Backup kopiert." +
+                        "\n\n" +
+                        "* Nur diese Dateien sichern *\n" +
+                        "Hier werden NUR diese Dateien ins Backup kopiert." +
+                        "\n\n" +
                         "TEXT -> Der angegebene Text muss im Dateinamen vorkommen.\n" +
                         "*TEXT -> Der angegebene Text muss am Ende des Dateinamens sein.\n" +
                         "TEXT* -> Der angegebene Text muss am Anfang des Dateinamens sein.");
