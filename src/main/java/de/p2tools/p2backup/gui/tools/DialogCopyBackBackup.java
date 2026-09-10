@@ -113,10 +113,6 @@ public class DialogCopyBackBackup extends P2DialogExtra {
         super.close();
     }
 
-//    public void setResult(FileDataList fileDataList) {
-//        Platform.runLater(() -> );
-//    }
-
     private void initTable() {
         Table.setTable(tableView);
         tableView.setOnMousePressed(m -> {

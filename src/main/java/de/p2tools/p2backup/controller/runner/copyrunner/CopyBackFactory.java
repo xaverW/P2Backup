@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,10 +62,30 @@ public class CopyBackFactory {
 
         Path path = Path.of(destDir);
         if (!path.toFile().exists()) {
-            P2Alert.showErrorAlert(stage, "Backup kopieren", "Der ZielOrdner:" + P2LibConst.LINE_SEPARATOR +
-                    destDir + P2LibConst.LINE_SEPARATORx2 +
-                    "existiert nicht.");
-            return false;
+            P2Alert.BUTTON button = P2Alert.showAlert_yes_no(stage, "Backup kopieren", "Zielorder anlegen",
+                    "Der ZielOrdner:" + P2LibConst.LINE_SEPARATOR +
+                            destDir + P2LibConst.LINE_SEPARATORx2 +
+                            "existiert nicht. Soll er angelegt werden?");
+            if (!button.equals(P2Alert.BUTTON.YES)) {
+                return false;
+            }
+
+            try {
+                Files.createDirectories(path);
+            } catch (Exception ex) {
+                P2Alert.showErrorAlert("Zielordner anlegen",
+                        "Der ZielOrdner:" + P2LibConst.LINE_SEPARATOR +
+                                destDir + P2LibConst.LINE_SEPARATORx2 +
+                                "konnte nicht angelegt werden.");
+                return false;
+            }
+            if (!path.toFile().exists()) {
+                P2Alert.showErrorAlert("Zielordner anlegen",
+                        "Der ZielOrdner:" + P2LibConst.LINE_SEPARATOR +
+                                destDir + P2LibConst.LINE_SEPARATORx2 +
+                                "konnte nicht angelegt werden.");
+                return false;
+            }
         }
 
         if (!path.toFile().isDirectory()) {
@@ -74,7 +95,8 @@ public class CopyBackFactory {
             return false;
         }
 
-        if (path.toFile().listFiles().length > 0) {
+        if (path.toFile().exists() && path.toFile().listFiles() != null &&
+                path.toFile().listFiles().length > 0) {
             P2Alert.showErrorAlert(stage, "Backup kopieren", "Der ZielOrdner:" + P2LibConst.LINE_SEPARATOR +
                     destDir + P2LibConst.LINE_SEPARATORx2 +
                     "ist nicht leer.");
