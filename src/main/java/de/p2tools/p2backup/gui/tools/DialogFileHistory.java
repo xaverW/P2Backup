@@ -59,6 +59,8 @@ public class DialogFileHistory extends P2DialogExtra {
     private final Label lblSumAll = new Label();
     private final Button btnLoad = new Button("Backup laden");
     private final Button btnClear = new Button("");
+    private final SplitPane splitPane = new SplitPane();
+    private final HBox hBoxSize = new HBox(P2LibConst.SPACING_HBOX);
 
     private final ObjectProperty<BackupInfo> backupInfoProp = new SimpleObjectProperty<>(null);
     private ObjectProperty<BackupData> backupDataProp = new SimpleObjectProperty<>(null);
@@ -82,6 +84,8 @@ public class DialogFileHistory extends P2DialogExtra {
 
     @Override
     public void make() {
+        splitPane.setDisable(true);
+        hBoxSize.setDisable(true);
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
@@ -89,7 +93,8 @@ public class DialogFileHistory extends P2DialogExtra {
         Button btnHelp = P2Button.helpButton(getStage(), "Änderungen einer Datei",
                 "Es werden alle Dateien zum Sichern angezeigt. Beim Klick auf eine Datei " +
                         "werden alle Backups angezeigt in dem die Datei gesichert ist. " +
-                        "Dadurch kann man sehen, wie oft sich die Datei geändert hat und dann gesichert wurde.");
+                        "Dadurch kann man sehen, wie oft sich eine Datei geändert hat und " +
+                        "kann sie öffnen oder kopieren.");
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
@@ -110,17 +115,21 @@ public class DialogFileHistory extends P2DialogExtra {
     public void setResult(FileDataList fileDataList) {
         Platform.runLater(() -> {
             this.fileDataList.setAll(fileDataList);
-            lblSumFound.setText(tableView.getItems().size() + "");
-            lblSumAll.setText(listViewFile.getItems().size() + "");
             setPred();
+            setSize();
         });
+    }
+
+    private void setSize() {
+        lblSumFound.setText(tableView.getItems().size() + "");
+        lblSumAll.setText(listViewFile.getItems().size() + "");
     }
 
     private void initGui() {
         Label lblBackupPath = P2Text.getLblTextBold("Backupordner:");
         Label lblPath = P2Text.getLblTextBold("Dateipfad:");
         Label lblFile = P2Text.getLblTextBold("Dateiname:");
-//
+
         GridPane gridPane = new GridPane();
         gridPane.setVgap(P2LibConst.DIST_GRIDPANE_VGAP);
         gridPane.setHgap(P2LibConst.DIST_GRIDPANE_HGAP);
@@ -156,7 +165,6 @@ public class DialogFileHistory extends P2DialogExtra {
         VBox.setVgrow(tableView, Priority.ALWAYS);
         vBoxBackup.getChildren().addAll(hBoxBackup, gridPane, tableView);
 
-        SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(vBoxDaten, vBoxBackup);
         splitPane.getDividers().getFirst().positionProperty().bindBidirectional(ProgConfig.FILE_HISTORY_SPLIT_DIVIDER);
         VBox.setVgrow(splitPane, Priority.ALWAYS);
@@ -175,7 +183,7 @@ public class DialogFileHistory extends P2DialogExtra {
         Predicate<FileData> pred = (p -> true);
         pred = pred.and(f -> f.getFileNameStr().toLowerCase().contains(txtSearch.getText().toLowerCase()));
         fileDataList.getFilteredList().setPredicate(pred);
-        lblSumAll.setText(listViewFile.getItems().size() + "");
+        setSize();
     }
 
     private void initTable() {
@@ -193,6 +201,7 @@ public class DialogFileHistory extends P2DialogExtra {
             } else {
                 lblToPath.setText(f.getToPathStr());
             }
+            setSize();
         });
     }
 
@@ -225,6 +234,8 @@ public class DialogFileHistory extends P2DialogExtra {
 
     private void addSearch() {
         btnLoad.setOnAction(a -> {
+            splitPane.setDisable(false);
+            hBoxSize.setDisable(false);
             backupInfoProp.get().runnerDto.initRunner();
             backupInfoProp.get().runnerDto.setRunnerText("Backup laden");
             new ToolFileHistoryInBackup(this,
@@ -240,8 +251,6 @@ public class DialogFileHistory extends P2DialogExtra {
 
     private HBox addProgress() {
         Button btnStop = new Button();
-//        btnStop.setMinHeight(18);
-//        btnStop.setMaxHeight(18);
         btnStop.setGraphic(P2IconFactory.P2ICON.P2_BTN_STOP.getFontIcon());
         btnStop.setOnAction(a -> backupInfoProp.get().runnerDto.setStop());
 
@@ -257,11 +266,10 @@ public class DialogFileHistory extends P2DialogExtra {
     }
 
     private void initSum() {
-        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(new Label("Anzahl: "), lblSumAll,
+        hBoxSize.getChildren().addAll(new Label("Anzahl: "), lblSumAll,
                 P2GuiTools.getHBoxGrower(),
                 new Label("Anzahl: "), lblSumFound);
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        getVBoxCont().getChildren().add(hBox);
+        hBoxSize.setAlignment(Pos.CENTER_LEFT);
+        getVBoxCont().getChildren().add(hBoxSize);
     }
 }

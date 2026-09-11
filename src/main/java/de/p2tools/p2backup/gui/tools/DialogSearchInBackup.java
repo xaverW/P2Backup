@@ -68,13 +68,15 @@ public class DialogSearchInBackup extends P2DialogExtra {
 
     @Override
     public void make() {
+        paneSearchInBackup.setDisable(true);
+
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
 
         Button btnHelp = P2Button.helpButton(getStage(), "Backup durchsuchen",
-                "Hier werden alle Dateien des Backups angezeigt. Es kann darin nach Dateien " +
-                        "gesucht werden. Dateien können geöffnet und kopiert werden.");
+                "Hier werden alle Dateien des ausgewählten Backups angezeigt. Es kann darin nach Dateien " +
+                        "gesucht werden. Dateien und ganze Pfade können geöffnet und kopiert werden.");
 
         HBox hBox = addProgress();
         HBox.setHgrow(hBox, Priority.ALWAYS);
@@ -100,19 +102,7 @@ public class DialogSearchInBackup extends P2DialogExtra {
 
     private void addSearch() {
         btnLoad.setOnAction(a -> {
-            if (cboBackup.getSelectionModel().getSelectedItem() != null) {
-                backupDataProp.set(cboBackup.getSelectionModel().getSelectedItem());
-                String subPath = backupDataProp.get().getSubPath();
-                if (!subPath.isEmpty()) {
-                    backupInfoProp.get().runnerDto.initRunner();
-                    backupInfoProp.get().runnerDto.setRunnerText("Backup laden");
-                    new ToolSearchInBackup(this,
-                            backupInfoProp.get(), backupDataProp.get(), new AtomicBoolean(true)).search();
-                }
-
-            } else {
-                backupDataProp.set(null);
-            }
+            loadBackup();
         });
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
@@ -122,10 +112,25 @@ public class DialogSearchInBackup extends P2DialogExtra {
         getVBoxCont().getChildren().addAll(hBox);
     }
 
+    private void loadBackup() {
+        paneSearchInBackup.setDisable(false);
+        if (cboBackup.getSelectionModel().getSelectedItem() != null) {
+            backupDataProp.set(cboBackup.getSelectionModel().getSelectedItem());
+            String subPath = backupDataProp.get().getSubPath();
+            if (!subPath.isEmpty()) {
+                backupInfoProp.get().runnerDto.initRunner();
+                backupInfoProp.get().runnerDto.setRunnerText("Backup laden");
+                new ToolSearchInBackup(this,
+                        backupInfoProp.get(), backupDataProp.get(), new AtomicBoolean(true)).search();
+            }
+
+        } else {
+            backupDataProp.set(null);
+        }
+    }
+
     private HBox addProgress() {
         Button btnStop = new Button();
-//        btnStop.setMinHeight(18);
-//        btnStop.setMaxHeight(18);
         btnStop.setGraphic(P2IconFactory.P2ICON.P2_BTN_STOP.getFontIcon());
         btnStop.setOnAction(a -> backupInfoProp.get().runnerDto.setStop());
 
@@ -148,6 +153,7 @@ public class DialogSearchInBackup extends P2DialogExtra {
         }
         cboBackup.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
             paneSearchInBackup.clearTree();
+            loadBackup();
         });
 
         btnLoad.disableProperty().bind((cboBackup.getSelectionModel().selectedItemProperty().isNull()));

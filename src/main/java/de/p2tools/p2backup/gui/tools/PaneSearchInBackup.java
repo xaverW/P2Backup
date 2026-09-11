@@ -27,9 +27,11 @@ import de.p2tools.p2backup.controller.data.filedata.FileFactory;
 import de.p2tools.p2backup.gui.dialog.DialogCopyFileController;
 import de.p2tools.p2backup.gui.table.Table;
 import de.p2tools.p2backup.gui.table.TableToolSearchInBackup;
+import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2GuiTools;
 import de.p2tools.p2lib.guitools.P2Open;
 import de.p2tools.p2lib.guitools.P2Text;
+import de.p2tools.p2lib.guitools.grid.P2GridConstraints;
 import de.p2tools.p2lib.ikonli.P2IconFactory;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -40,6 +42,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -205,24 +208,29 @@ public class PaneSearchInBackup extends HBox {
         tableViewFile.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
             FileData fileData = tableViewFile.getSelectionModel().getSelectedItem();
             if (fileData == null) {
+                lblPath.setText("");
                 lblFilePath.setText("");
             } else {
+                String bPath = fileData.getToPathStr();
                 String path = fileData.getCorrFilePathStr();
+                lblPath.setText(bPath);
                 lblFilePath.setText(path);
             }
         });
 
+        GridPane gridPane = new GridPane(P2LibConst.DIST_GRIDPANE_HGAP, 0);
+        gridPane.setPadding(new Insets(5));
+        gridPane.getColumnConstraints().addAll(P2GridConstraints.getCcPrefSize(),
+                P2GridConstraints.getCcComputedSizeAndHgrow(),
+                P2GridConstraints.getCcPrefSize());
 
-        HBox hBoxPath = new HBox();
-        hBoxPath.setPadding(new Insets(5, 5, 5, 5));
-        hBoxPath.getChildren().addAll(P2Text.getLblTextBold("Backup-Ordner:  "), lblPath);
+        gridPane.add(P2Text.getLblTextBold("Backup-Ordner:"), 0, 0);
+        gridPane.add(lblPath, 1, 0);
+        gridPane.add(P2Text.getLblTextBold("Datei:"), 0, 1);
+        gridPane.add(lblFilePath, 1, 1);
+        gridPane.add(btnOpenDirectory, 2, 1);
 
-        HBox hBoxFilePath = new HBox();
-        hBoxFilePath.setPadding(new Insets(5, 5, 5, 5));
-        hBoxFilePath.getChildren().addAll(P2Text.getLblTextBold("Datei:   "), lblFilePath,
-                P2GuiTools.getHBoxGrower(), btnOpenDirectory);
-
-        vBoxTable.getChildren().addAll(tableViewFile, hBoxPath, hBoxFilePath);
+        vBoxTable.getChildren().addAll(tableViewFile, gridPane);
         VBox.setVgrow(tableViewFile, Priority.ALWAYS);
     }
 

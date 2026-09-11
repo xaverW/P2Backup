@@ -76,9 +76,6 @@ public class DialogCopyFileController extends P2DialogExtra {
         btnSearchDestPath.setGraphic(P2IconFactory.P2ICON.P2_BTN_OPEN_DIR.getFontIcon());
         btnSearchDestPath.setOnAction(a -> {
             P2DirFileChooser.DirChooser(getStage(), cboDest);
-//            ProgConfig.COPY_DIALOG_DEST_DIR.set(
-//                    P2DialogFileChooser.showFileChooser(getStage(), "Kopieren", "Ziel auswählen",
-//                            "Einen Ordner zum Speichern auswählen", true, false, ""));
         });
 
         String name = Path.of(srcFile).toFile().getName();
@@ -123,7 +120,7 @@ public class DialogCopyFileController extends P2DialogExtra {
                 P2GridConstraints.getCcPrefSizeRight());
 
         int row = 0;
-        gridPane.add(new Label("Name:"), 0, row);
+        gridPane.add(new Label("Verzeichnis:"), 0, row);
         gridPane.add(taSrc, 1, row);
 
         gridPane.add(new Label("Ziel:"), 0, ++row);
