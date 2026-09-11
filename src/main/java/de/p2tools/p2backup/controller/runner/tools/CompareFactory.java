@@ -116,10 +116,18 @@ public class CompareFactory {
     }
 
     private static void isEqual(BackupInfo backupInfo, FileData dataFile, FileData backupFile) {
-        FileData dataHash = HashFactory.getFileData(backupInfo, "", false,
-                dataFile.getFilePath().toFile(), true);
-        FileData backupHash = HashFactory.getFileData(backupInfo, "", false,
-                backupFile.getBackupFilePath().toFile(), true);
+        FileData dataHash = dataFile;
+        if (dataHash.getHash().isEmpty()) {
+            // beim Quick-Test vor dem Backuplauf ist es schon gefüllt (Daten aus der DB)
+            dataHash = HashFactory.getFileData(backupInfo, "", false,
+                    dataFile.getFilePath().toFile(), true);
+        }
+        
+        FileData backupHash = backupFile;
+        if (backupHash.getHash().isEmpty()) {
+            backupHash = HashFactory.getFileData(backupInfo, "", false,
+                    backupFile.getBackupFilePath().toFile(), true);
+        }
 
         if (backupHash == null || dataHash == null || !dataHash.getHash().equals(backupHash.getHash())) {
             backupFile.setErrorDiff(true);
