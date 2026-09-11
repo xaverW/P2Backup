@@ -56,11 +56,12 @@ public class DialogCompareBackupData extends P2DialogExtra {
     private final ComboBox<BackupData> cboBackup = new ComboBox<>();
     private final Button btnStart = new Button("Backup laden");
     private final TableToolCompareDir tableView;
+    private final GridPane gridPane = new GridPane(P2LibConst.DIST_GRIDPANE_HGAP, P2LibConst.DIST_GRIDPANE_VGAP);
 
     private final RadioButton rbAllBackup = new RadioButton("Alle");
     private final RadioButton rbAllData = new RadioButton("Alle");
     private final RadioButton rbOk = new RadioButton("OK");
-    private final RadioButton rbNotOk = new RadioButton("Fehler");
+    private final RadioButton rbNotOk = new RadioButton("Geändert");
     private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
     private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
     private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
@@ -80,6 +81,8 @@ public class DialogCompareBackupData extends P2DialogExtra {
 
     @Override
     public void make() {
+        gridPane.setDisable(true);
+        tableView.setDisable(true);
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
@@ -112,31 +115,25 @@ public class DialogCompareBackupData extends P2DialogExtra {
         Platform.runLater(() -> {
                     this.fileDataList.setAll(fileDataList);
                     this.setPredicate();
+                    gridPane.setDisable(false);
+                    tableView.setDisable(false);
                 }
         );
     }
 
     private void init() {
         chkQuick.setSelected(true);
+        chkQuick.setOnAction(a -> loadBackup());
         cboBackup.setItems(backupInfo.getBackupDataList().sorted(Comparator.naturalOrder()));
         cboBackup.getSelectionModel().selectLast();
         cboBackup.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> {
             fileDataList.clear();
             rbAllBackup.setSelected(true);
+            loadBackup();
         });
 
         btnStart.setOnAction(a -> {
-            BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
-            if (backupData == null) {
-                return;
-            }
-            fileDataList.clear();
-            rbAllBackup.setSelected(true);
-            backupInfo.runnerDto.initRunner();
-
-            backupInfo.runnerDto.setRunnerText("Daten mit Backup vergleichen");
-            new ToolCompareBackupData(this, backupInfo,
-                    backupData, chkQuick.isSelected(), new AtomicBoolean(true)).compare();
+            loadBackup();
         });
         btnStart.disableProperty().bind(
                 (cboBackup.getSelectionModel().selectedItemProperty().isNull())
@@ -151,6 +148,22 @@ public class DialogCompareBackupData extends P2DialogExtra {
         getVBoxCont().getChildren().addAll(hBox);
     }
 
+    private void loadBackup() {
+        gridPane.setDisable(true);
+        tableView.setDisable(true);
+        BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
+        if (backupData == null) {
+            return;
+        }
+        fileDataList.clear();
+        rbAllBackup.setSelected(true);
+        backupInfo.runnerDto.initRunner();
+
+        backupInfo.runnerDto.setRunnerText("Daten mit Backup vergleichen");
+        new ToolCompareBackupData(this, backupInfo,
+                backupData, chkQuick.isSelected(), new AtomicBoolean(true)).compare();
+    }
+
     private void addRadio() {
         ToggleGroup tg = new ToggleGroup();
         rbAllBackup.setToggleGroup(tg);
@@ -163,24 +176,10 @@ public class DialogCompareBackupData extends P2DialogExtra {
         rbErrorHash.setToggleGroup(tg);
         rbAllBackup.setSelected(true);
 
-        GridPane gridPane = new GridPane(P2LibConst.DIST_GRIDPANE_HGAP, P2LibConst.DIST_GRIDPANE_VGAP);
-        gridPane.add(new Label("Daten:"), 0, 0);
+        gridPane.add(new Label("Dateien in den Daten:"), 0, 0);
         gridPane.add(rbAllData, 1, 0);
 
-        gridPane.add(new Label("Backup:"), 0, 1);
-//        gridPane.add(rbAllBackup, 1, 1);
-//        gridPane.add(rbOk, 2, 1);
-//        gridPane.add(rbNotOk, 3, 1);
-
-//        gridPane.add(rbErrorDiff, 1, 2);
-//        gridPane.add(rbOnlyData, 2, 2);
-//        gridPane.add(rbOnlyBackup, 3, 2);
-//        gridPane.add(rbErrorHash, 4, 2);
-        getVBoxCont().getChildren().add(gridPane);
-
-//        HBox hBox0 = new HBox(P2LibConst.SPACING_HBOX);
-//        hBox0.setAlignment(Pos.CENTER_LEFT);
-//        hBox0.getChildren().addAll(new Label("Daten:"), rbAllData);
+        gridPane.add(new Label("Dateien im Backup:"), 0, 1);
 
         HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
         hBox1.setAlignment(Pos.CENTER_LEFT);
@@ -197,7 +196,8 @@ public class DialogCompareBackupData extends P2DialogExtra {
         gridPane.add(hBox1, 1, 1);
         gridPane.add(hBox2, 1, 2);
 
-//        getVBoxCont().getChildren().addAll(hBox0, hBox1, hBox2);
+        getVBoxCont().getChildren().add(gridPane);
+
         rbAllBackup.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbAllData.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOk.selectedProperty().addListener((u, o, n) -> setPredicate());

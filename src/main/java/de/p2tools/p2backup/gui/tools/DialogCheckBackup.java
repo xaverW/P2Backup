@@ -69,6 +69,8 @@ public class DialogCheckBackup extends P2DialogExtra {
     private final Button btnStart = new Button("Backup laden");
     private final Button btnRepair = new Button("Reparieren");
     private final FileDataList errorList = new FileDataList();
+    private final HBox hBoxCheckBox1 = new HBox(P2LibConst.SPACING_HBOX);
+    private final HBox hBoxCheckBox2 = new HBox(P2LibConst.SPACING_HBOX);
 
     public DialogCheckBackup(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.CHECK_BACKUP_DIALOG_SIZE, "Backup prüfen",
@@ -82,16 +84,20 @@ public class DialogCheckBackup extends P2DialogExtra {
 
     @Override
     public void make() {
+        tableView.setDisable(true);
+        hBoxCheckBox1.setDisable(true);
+        hBoxCheckBox2.setDisable(true);
+
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
 
         Button btnHelp = P2Button.helpButton(getStage(), "Backup überprüfen",
                 "Hier kann überprüft werden, ob das Backup fehlerhaft ist. " +
-                        "Die gespeicherten Daten werden mit den realen Dateien im " +
+                        "Die gespeicherten Infos über das Backup werden mit den realen Dateien im " +
                         "Backupordner verglichen. Unterscheiden die sich, ist das Backup " +
-                        "fehlerhaft. Es ist auch möglich, die Fehlerhaften Dateien aus dem " +
-                        "Backup zu entfernen.");
+                        "fehlerhaft. Hier ist es dann möglich das Backup zu korrigieren. Die " +
+                        "fehlerhaften Dateien werden dann aus dem Backup zu entfernen.");
 
         btnRepair.setOnAction(a -> {
             DialogCheckBackupRepair b = new DialogCheckBackupRepair(getStage(), errorList);
@@ -141,6 +147,9 @@ public class DialogCheckBackup extends P2DialogExtra {
                         rbAll.setSelected(true);
                     }
                     this.setPredicate();
+                    tableView.setDisable(false);
+                    hBoxCheckBox1.setDisable(false);
+                    hBoxCheckBox2.setDisable(false);
                 }
         );
     }
@@ -148,20 +157,9 @@ public class DialogCheckBackup extends P2DialogExtra {
     private void init() {
         cboBackup.setItems(backupInfo.getBackupDataList().sorted(Comparator.naturalOrder()));
         cboBackup.getSelectionModel().selectLast();
-
+        cboBackup.getSelectionModel().selectedItemProperty().addListener((u, o, n) -> startLoad());
         btnStart.setOnAction(a -> {
-            errorList.clear();
-            btnRepair.setDisable(true);
-            BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
-            if (backupData == null) {
-                return;
-            }
-            fileDataList.clear();
-            rbAll.setSelected(true);
-            backupInfo.runnerDto.initRunner();
-            backupInfo.runnerDto.setRunnerText("Backup prüfen");
-            new ToolCheckBackup(this, backupInfo,
-                    backupData, new AtomicBoolean(true)).compare();
+            startLoad();
         });
 
         btnStart.disableProperty().bind((cboBackup.getSelectionModel().selectedItemProperty().isNull()));
@@ -171,6 +169,25 @@ public class DialogCheckBackup extends P2DialogExtra {
         hBox.setAlignment(Pos.CENTER_RIGHT);
         hBox.getChildren().addAll(P2Text.getLblTextBold("Backup:"), cboBackup, P2GuiTools.getHBoxGrower(), btnStart);
         getVBoxCont().getChildren().addAll(hBox/*, hBoxProgress*/);
+    }
+
+    private void startLoad() {
+        tableView.setDisable(true);
+        hBoxCheckBox1.setDisable(true);
+        hBoxCheckBox2.setDisable(true);
+
+        errorList.clear();
+        btnRepair.setDisable(true);
+        BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
+        if (backupData == null) {
+            return;
+        }
+        fileDataList.clear();
+        rbAll.setSelected(true);
+        backupInfo.runnerDto.initRunner();
+        backupInfo.runnerDto.setRunnerText("Backup prüfen");
+        new ToolCheckBackup(this, backupInfo,
+                backupData, new AtomicBoolean(true)).compare();
     }
 
     private void addRadio() {
@@ -184,11 +201,9 @@ public class DialogCheckBackup extends P2DialogExtra {
         rbErrorHash.setToggleGroup(tg);
         rbAll.setSelected(true);
 
-        HBox hBox1 = new HBox(P2LibConst.SPACING_HBOX);
-        hBox1.getChildren().addAll(rbAll, rbOk, rbNotOk, P2GuiTools.getHBoxGrower(), lblSum);
-        HBox hBox2 = new HBox(P2LibConst.SPACING_HBOX);
-        hBox2.getChildren().addAll(rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash);
-        getVBoxCont().getChildren().addAll(hBox1, hBox2);
+        hBoxCheckBox1.getChildren().addAll(rbAll, rbOk, rbNotOk, P2GuiTools.getHBoxGrower(), lblSum);
+        hBoxCheckBox2.getChildren().addAll(rbErrorDiff, rbOnlyData, rbOnlyBackup, rbErrorHash);
+        getVBoxCont().getChildren().addAll(hBoxCheckBox1, hBoxCheckBox2);
 
         rbAll.selectedProperty().addListener((u, o, n) -> setPredicate());
         rbOk.selectedProperty().addListener((u, o, n) -> setPredicate());
