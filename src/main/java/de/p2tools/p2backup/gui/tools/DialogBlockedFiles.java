@@ -64,6 +64,7 @@ public class DialogBlockedFiles extends P2DialogExtra {
     private final RadioButton rbAll = new RadioButton("Alle");
     private final RadioButton rbFound = new RadioButton("Sichern");
     private final RadioButton rbBlock = new RadioButton("Geblockt");
+    private final HBox hBoxCheck = new HBox(P2LibConst.SPACING_HBOX);
 
     public DialogBlockedFiles(BackupInfo backupInfo) {
         super(ProgData.getInstance().primaryStage, ProgConfig.BLOCKED_FILE_DIALOG_SIZE, "In den Daten/Backup suchen",
@@ -80,6 +81,9 @@ public class DialogBlockedFiles extends P2DialogExtra {
 
     @Override
     public void make() {
+        tableView.setDisable(true);
+        hBoxCheck.setDisable(true);
+
         Button btnOk = new Button("OK");
         btnOk.setOnAction(a -> close());
         addOkButton(btnOk);
@@ -113,13 +117,23 @@ public class DialogBlockedFiles extends P2DialogExtra {
     }
 
     public void setResult() {
-        Platform.runLater(this::set);
+        Platform.runLater(() -> {
+            set();
+            tableView.setDisable(false);
+            hBoxCheck.setDisable(false);
+            btnStart.setDisable(false);
+        });
     }
 
     private void addSearch() {
         btnStart.setOnAction(a -> {
+            tableView.setDisable(true);
+            hBoxCheck.setDisable(true);
+            btnStart.setDisable(true);
+
             foundFileList.clear();
             blockedFileList.clear();
+
             backupInfo.runnerDto.initRunner();
             backupInfo.runnerDto.setRunnerText("Geblockte Dateien suchen");
             new ToolListBlockFile(this,
@@ -155,11 +169,10 @@ public class DialogBlockedFiles extends P2DialogExtra {
         rbFound.setOnAction(a -> set());
         rbBlock.setOnAction(a -> set());
 
-        HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
-        hBox.getChildren().addAll(rbAll, rbFound, rbBlock,
+        hBoxCheck.getChildren().addAll(rbAll, rbFound, rbBlock,
                 P2GuiTools.getHBoxGrower(), lblSum);
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        getVBoxCont().getChildren().add(hBox);
+        hBoxCheck.setAlignment(Pos.CENTER_LEFT);
+        getVBoxCont().getChildren().add(hBoxCheck);
     }
 
     private void addTable() {
@@ -185,7 +198,6 @@ public class DialogBlockedFiles extends P2DialogExtra {
         contextMenu.getItems().addAll(resetTable);
         return contextMenu;
     }
-
 
     private HBox addProgress() {
         PProgressBar pProgressBar = new PProgressBar(true, true);

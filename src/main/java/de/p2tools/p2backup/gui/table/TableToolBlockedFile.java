@@ -68,6 +68,7 @@ public class TableToolBlockedFile extends PTable<File> {
         btnColumn.setCellValueFactory(new PropertyValueFactory<>("path"));
         btnColumn.setCellFactory(new CellOpenFileButton<>(stage).cellFactory);
 
+        btnColumn.setPrefWidth(200);
         getColumns().addAll(pathColumn, btnColumn);
     }
 }

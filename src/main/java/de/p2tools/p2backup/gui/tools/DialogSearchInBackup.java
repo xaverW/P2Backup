@@ -97,7 +97,11 @@ public class DialogSearchInBackup extends P2DialogExtra {
     }
 
     public void setResult(FileDataList fileDataList) {
-        Platform.runLater(() -> paneSearchInBackup.makeTree(fileDataList));
+        Platform.runLater(() -> {
+            paneSearchInBackup.makeTree(fileDataList);
+            paneSearchInBackup.setDisable(false);
+            btnLoad.setDisable(false);
+        });
     }
 
     private void addSearch() {
@@ -113,7 +117,8 @@ public class DialogSearchInBackup extends P2DialogExtra {
     }
 
     private void loadBackup() {
-        paneSearchInBackup.setDisable(false);
+        paneSearchInBackup.setDisable(true);
+        btnLoad.setDisable(true);
         if (cboBackup.getSelectionModel().getSelectedItem() != null) {
             backupDataProp.set(cboBackup.getSelectionModel().getSelectedItem());
             String subPath = backupDataProp.get().getSubPath();
@@ -155,8 +160,6 @@ public class DialogSearchInBackup extends P2DialogExtra {
             paneSearchInBackup.clearTree();
             loadBackup();
         });
-
-        btnLoad.disableProperty().bind((cboBackup.getSelectionModel().selectedItemProperty().isNull()));
     }
 
     private void initSum() {

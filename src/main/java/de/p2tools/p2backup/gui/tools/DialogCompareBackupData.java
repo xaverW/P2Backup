@@ -60,8 +60,8 @@ public class DialogCompareBackupData extends P2DialogExtra {
 
     private final RadioButton rbAllBackup = new RadioButton("Alle");
     private final RadioButton rbAllData = new RadioButton("Alle");
-    private final RadioButton rbOk = new RadioButton("OK");
-    private final RadioButton rbNotOk = new RadioButton("Geändert");
+    private final RadioButton rbOk = new RadioButton("In den aktuellen Daten");
+    private final RadioButton rbNotOk = new RadioButton("Unterschied zu den aktuellen Daten");
     private final RadioButton rbErrorDiff = new RadioButton("Datei ist verändert");
     private final RadioButton rbOnlyData = new RadioButton("Datei fehlt");
     private final RadioButton rbOnlyBackup = new RadioButton("Datei ist zu viel");
@@ -117,6 +117,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
                     this.setPredicate();
                     gridPane.setDisable(false);
                     tableView.setDisable(false);
+                    btnStart.setDisable(false);
                 }
         );
     }
@@ -135,9 +136,6 @@ public class DialogCompareBackupData extends P2DialogExtra {
         btnStart.setOnAction(a -> {
             loadBackup();
         });
-        btnStart.disableProperty().bind(
-                (cboBackup.getSelectionModel().selectedItemProperty().isNull())
-        );
 
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getStyleClass().add("infoDialogTop");
@@ -151,6 +149,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
     private void loadBackup() {
         gridPane.setDisable(true);
         tableView.setDisable(true);
+        btnStart.setDisable(true);
         BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
         if (backupData == null) {
             return;

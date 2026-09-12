@@ -150,6 +150,7 @@ public class DialogCheckBackup extends P2DialogExtra {
                     tableView.setDisable(false);
                     hBoxCheckBox1.setDisable(false);
                     hBoxCheckBox2.setDisable(false);
+                    btnStart.setDisable(false);
                 }
         );
     }
@@ -161,9 +162,6 @@ public class DialogCheckBackup extends P2DialogExtra {
         btnStart.setOnAction(a -> {
             startLoad();
         });
-
-        btnStart.disableProperty().bind((cboBackup.getSelectionModel().selectedItemProperty().isNull()));
-
         HBox hBox = new HBox(P2LibConst.SPACING_HBOX);
         hBox.getStyleClass().add("infoDialogTop");
         hBox.setAlignment(Pos.CENTER_RIGHT);
@@ -175,6 +173,7 @@ public class DialogCheckBackup extends P2DialogExtra {
         tableView.setDisable(true);
         hBoxCheckBox1.setDisable(true);
         hBoxCheckBox2.setDisable(true);
+        btnStart.setDisable(true);
 
         errorList.clear();
         btnRepair.setDisable(true);

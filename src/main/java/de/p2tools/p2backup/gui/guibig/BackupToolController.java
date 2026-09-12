@@ -54,13 +54,13 @@ public class BackupToolController extends VBox {
             vBoxContent.setDisable(backupInfo == null);
             if (backupInfo != null) {
                 vBoxContent.disableProperty().bind(backupInfo.runnerDto.guiRunningProperty());
-                btnBlocked.setVisible(!backupInfo.getPathListExcludeDir().isEmpty() ||
-                        !backupInfo.getPathListExcludeFile().isEmpty());
+                btnBlocked.visibleProperty().bind(backupInfo.getPathListExcludeDir().emptyProperty().not()
+                        .or(backupInfo.getPathListExcludeFile().emptyProperty().not()));
+//                btnBlocked.setVisible(!backupInfo.getPathListExcludeDir().isEmpty() ||
+//                        !backupInfo.getPathListExcludeFile().isEmpty());
                 btnBlocked.managedProperty().bind(btnBlocked.visibleProperty());
-
-                lblBlocked.setVisible(!backupInfo.getPathListExcludeDir().isEmpty() ||
-                        !backupInfo.getPathListExcludeFile().isEmpty());
-                lblBlocked.managedProperty().bind(lblBlocked.visibleProperty());
+                lblBlocked.visibleProperty().bind(btnBlocked.visibleProperty());
+                lblBlocked.managedProperty().bind(btnBlocked.visibleProperty());
             }
         });
 
@@ -199,13 +199,5 @@ public class BackupToolController extends VBox {
         lblBlocked.setMaxWidth(Double.MAX_VALUE);
 
         vBoxContent.getChildren().addAll(gridPane);
-
-//        ScrollPane scrollPane = new ScrollPane();
-//        scrollPane.setFitToHeight(true);
-//        scrollPane.setFitToWidth(true);
-//        scrollPane.setContent(gridPane);
-//        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-//        vBoxContent.getChildren().addAll(scrollPane);
-
     }
 }
