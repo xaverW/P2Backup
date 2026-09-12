@@ -118,6 +118,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
                     gridPane.setDisable(false);
                     tableView.setDisable(false);
                     btnStart.setDisable(false);
+                    chkQuick.setDisable(false);
                 }
         );
     }
@@ -150,6 +151,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
         gridPane.setDisable(true);
         tableView.setDisable(true);
         btnStart.setDisable(true);
+        chkQuick.setDisable(true);
         BackupData backupData = cboBackup.getSelectionModel().getSelectedItem();
         if (backupData == null) {
             return;
