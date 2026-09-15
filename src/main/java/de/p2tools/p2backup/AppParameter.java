@@ -38,7 +38,8 @@ public class AppParameter {
         PATH("p", "path", true, "path of configuration file"),
         DEBUG("d", "debug", false, "show debug info"),
         DURATION("t", "time", false, "show timekeeping info"),
-        SMALL("s", "small", false, "start in small mode");
+        SMALL("s", "small", false, "start in small mode"),
+        BIG("b", "big", false, "start in big mode");
 
         final String shortname;
         final String name;
@@ -95,6 +96,10 @@ public class AppParameter {
 
             if (hasOption(line, ProgParameter.SMALL)) {
                 ProgData.startSmall = true;
+            }
+
+            if (hasOption(line, ProgParameter.BIG)) {
+                ProgData.startBig = true;
             }
 
             if (hasOption(line, ProgParameter.PATH)) {

@@ -25,7 +25,6 @@ import de.p2tools.p2backup.controller.config.ProgInfos;
 import de.p2tools.p2backup.gui.guibig.BackupBigGui;
 import de.p2tools.p2backup.gui.guismall.BackupSmallGui;
 import de.p2tools.p2lib.css.P2CssFactory;
-import de.p2tools.p2lib.dialogs.dialog.P2DialogExtra;
 import de.p2tools.p2lib.guitools.P2GuiSize;
 import de.p2tools.p2lib.tools.P2InfoFactory;
 import de.p2tools.p2lib.tools.P2Lock;
@@ -74,23 +73,30 @@ public class P2Backup extends Application {
 
     private void initRootLayout() {
         try {
-            ProgConfig.SYSTEM_SMALL_BACKUP.addListener((u, o, n) ->
-                    selectGui());
+            ProgConfig.SYSTEM_SMALL_BACKUP.addListener((u, o, n) -> selectGui());
+
 
             initBigLayout();
-            selectGui();
-
-            if (ProgData.startSmall) {
-                progData.primaryStage.setIconified(true);
-                P2DialogExtra.getDialogList().forEach(d -> d.getStage().setIconified(true));
-            }
-
-
             if (ProgData.firstProgramStart) {
+                // dann immer BIG
+                ProgConfig.SYSTEM_SMALL_BACKUP.set(false);
                 // dann gabs den Startdialog
                 ProgConfig.SYSTEM_DARK_THEME.set(ProgConfig.SYSTEM_DARK_START.get());
                 ProgConfig.SYSTEM_GUI_THEME_1.set(ProgConfig.SYSTEM_GUI_THEME_1_START.get());
+
+            } else if (progData.backupInfoList.isEmpty()) {
+                // dann immer BIG
+                ProgConfig.SYSTEM_SMALL_BACKUP.set(false);
+
+            } else {
+                if (ProgData.startSmall) {
+                    ProgConfig.SYSTEM_SMALL_BACKUP.set(true);
+                }
+                if (ProgData.startBig) {
+                    ProgConfig.SYSTEM_SMALL_BACKUP.set(false);
+                }
             }
+            selectGui();
         } catch (final Exception e) {
             e.printStackTrace();
         }

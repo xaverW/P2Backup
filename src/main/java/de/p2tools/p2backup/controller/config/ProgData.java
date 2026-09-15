@@ -46,6 +46,7 @@ public class ProgData {
     public static boolean raspberry = false; // läuft auf einem Raspberry
     public static boolean firstProgramStart = false; // ist der allererste Programmstart: Init wird gemacht
     public static boolean startSmall = false; // Minimiert starten
+    public static boolean startBig = false; // Minimiert starten
     public P2EventHandler pEventHandler;
     public ObjectProperty<P2CssFactory.CSS> cssProp = new SimpleObjectProperty<>(P2CssFactory.CSS.CSS_1);
 
