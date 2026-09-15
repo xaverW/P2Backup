@@ -74,7 +74,7 @@ public class DialogFileHistory extends P2DialogExtra {
     private final Label lblFileName = new Label();
 
     public DialogFileHistory(ProgData progData) {
-        super(progData.primaryStage, ProgConfig.FILE_HISTORY_DIALOG_SIZE, "Dateien im Backup suchen",
+        super(progData.primaryStage, ProgConfig.FILE_HISTORY_DIALOG_SIZE, "Änderungshistorie von den Daten anzeigen",
                 true, true, true, DECO.NO_BORDER);
 
         this.backupInfoProp.set(progData.backupInfoProperty.get());

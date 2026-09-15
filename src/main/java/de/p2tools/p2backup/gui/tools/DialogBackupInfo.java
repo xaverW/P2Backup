@@ -53,7 +53,7 @@ public class DialogBackupInfo extends P2DialogExtra {
     private final VBox vBoxGrid = new VBox();
 
     public DialogBackupInfo(BackupInfo backupInfo) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.BACKUP_INFO_DIALOG_SIZE, "Infos über die Daten",
+        super(ProgData.getInstance().primaryStage, ProgConfig.BACKUP_INFO_DIALOG_SIZE, "Infos über das Backup anzeigen",
                 true, true, false, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();

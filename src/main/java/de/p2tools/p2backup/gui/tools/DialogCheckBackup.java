@@ -73,7 +73,7 @@ public class DialogCheckBackup extends P2DialogExtra {
     private final HBox hBoxCheckBox2 = new HBox(P2LibConst.SPACING_HBOX);
 
     public DialogCheckBackup(BackupInfo backupInfo) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.CHECK_BACKUP_DIALOG_SIZE, "Backup prüfen",
+        super(ProgData.getInstance().primaryStage, ProgConfig.CHECK_BACKUP_DIALOG_SIZE, "Backup überprüfen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();

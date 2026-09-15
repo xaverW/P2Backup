@@ -70,7 +70,7 @@ public class DialogCompareBackupData extends P2DialogExtra {
     private final Label lblSum = new Label();
 
     public DialogCompareBackupData(BackupInfo backupInfo) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.COMPARE_DIALOG_SIZE, "Daten mit Backup vergleichen",
+        super(ProgData.getInstance().primaryStage, ProgConfig.COMPARE_DIALOG_SIZE, "Daten mit dem Backup vergleichen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();

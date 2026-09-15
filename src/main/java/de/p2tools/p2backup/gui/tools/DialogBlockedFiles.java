@@ -67,7 +67,7 @@ public class DialogBlockedFiles extends P2DialogExtra {
     private final HBox hBoxCheck = new HBox(P2LibConst.SPACING_HBOX);
 
     public DialogBlockedFiles(BackupInfo backupInfo) {
-        super(ProgData.getInstance().primaryStage, ProgConfig.BLOCKED_FILE_DIALOG_SIZE, "In den Daten/Backup suchen",
+        super(ProgData.getInstance().primaryStage, ProgConfig.BLOCKED_FILE_DIALOG_SIZE, "Geblockte Dateien anzeigen",
                 true, true, true, DECO.NO_BORDER);
 
         this.progData = ProgData.getInstance();
