@@ -65,7 +65,8 @@ public class StartDialogController extends P2DialogExtra {
 
 
     public StartDialogController() {
-        super(null, null, "Starteinstellungen");
+        super(null, null, "Starteinstellungen",
+                true, false, false, DECO.BORDER_VERY_SMALL);
 
         this.progData = ProgData.getInstance();
         init(true);

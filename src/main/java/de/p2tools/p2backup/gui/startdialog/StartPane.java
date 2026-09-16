@@ -16,12 +16,14 @@
 
 package de.p2tools.p2backup.gui.startdialog;
 
-import de.p2tools.p2lib.P2LibConst;
+import de.p2tools.p2lib.guitools.P2Text;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -46,32 +48,36 @@ public class StartPane extends VBox {
         iv.setImage(im);
 
         hBox.getChildren().addAll(iv);
-        Label text = new Label("1) Hier kann eine neue Filmliste\n" +
-                "geladen werden." +
+        VBox vBox = new VBox(10);
+        vBox.getChildren().add(P2Text.getLblTextBold("""
+                Das ist der Dialog beim
+                ersten Programmstart.
+                """));
+        Label lblText = new Label("""
+                1. Hier kann das
+                Programmfenster in eine
+                Minimal-Ansicht
+                umgeschaltet werden.
+                
+                2. Hier befindet sich das
+                Programm-Menü.
+                
+                3 Damit kann ein bereits
+                angelegtes Backup hinzugefügt    
+                werden.
+                
+                4. Ein neues Backup wird
+                damit angelegt.
+                
+                
+                
+                
+                """);
+        lblText.setAlignment(Pos.TOP_LEFT);
 
-                P2LibConst.LINE_SEPARATORx2 +
-                "2) Das ist das Programm-Menü" + P2LibConst.LINE_SEPARATOR +
-                "mit den Einstellungen und Infos über" + P2LibConst.LINE_SEPARATOR +
-                "das Programm." +
-
-                P2LibConst.LINE_SEPARATORx2 +
-                "3) Das ist die Auswahl der\n" +
-                "Anzeige: Mediathek, Audiothek." +
-
-                P2LibConst.LINE_SEPARATORx2 +
-                "4) Die Liste kann damit\n" +
-                "gefiltert werden." +
-
-                P2LibConst.LINE_SEPARATORx2 +
-                "5) Eingestellte Filter kann man\n" +
-                "damit speichern oder wieder\n" +
-                "herstellen." +
-
-                P2LibConst.LINE_SEPARATORx2 +
-                "6) Infos zum Ausgewählten\n" +
-                "Film werden hier angezeigt.");
-
-        hBox.getChildren().add(text);
+        vBox.getChildren().add(lblText);
+        hBox.getChildren().add(vBox);
+        HBox.setHgrow(vBox, Priority.ALWAYS);
 
         getChildren().addAll(StartFactory.getTitle("Infos zur Programmoberfläche"), hBox);
     }
@@ -88,37 +94,47 @@ public class StartPane extends VBox {
 
         hBox.getChildren().addAll(iv);
 
-        Label text = new Label("1) Mit dem Pluszeichen können" + P2LibConst.LINE_SEPARATOR +
-                "Spalten in der Tabelle" + P2LibConst.LINE_SEPARATOR +
-                "ein- und ausgeblendet werden." +
-
-                P2LibConst.LINE_SEPARATORx2 +
-                "2) Filme kann man damit\n" +
-                "ansehen oder speichern." +
-
-                P2LibConst.LINE_SEPARATORx2 +
-                "3) Hier werden die" + P2LibConst.LINE_SEPARATOR +
-                "Downloads angezeigt." +
-
-                P2LibConst.LINE_SEPARATORx2 +
-                "4) Das ist die Liste aller" + P2LibConst.LINE_SEPARATOR +
-                "angelegter Downloads.");
-
-        hBox.getChildren().add(text);
+        VBox vBox = new VBox(10);
+        vBox.setAlignment(Pos.CENTER_LEFT);
+        vBox.getChildren().add(P2Text.getLblTextBold("""
+                Das ist die Liste der
+                angelegten Backups
+                """));
+        Label text = new Label("""
+                1. Damit können die
+                verschiedenen Funktionen
+                zum Einstellen der Backups
+                umgeschaltet werden.
+                
+                2. Dieses Backup läuft gerade,
+                der Fortschritt und die gerade
+                kopierten Dateien werden
+                angezeigt.
+                
+                3. Das ist ein weiteres Backup
+                das gerade nicht läuft. Der
+                grüne Rahmen zeigt an, dass
+                es ausgewählt ist. Die
+                Einstellungen beziehen sich
+                immer auf das ausgewählte
+                Backup.
+                """);
+        vBox.getChildren().add(text);
+        hBox.getChildren().add(vBox);
         getChildren().addAll(StartFactory.getTitle("Infos zur Programmoberfläche"), hBox);
     }
 
     private javafx.scene.image.Image getHelpScreen1() {
         final String path = "/de/p2tools/p2backup/res/startdialog/mtviewer-startpage-1.png";
-        return new javafx.scene.image.Image(path, 500,
-                500,
+        return new javafx.scene.image.Image(path, 400,
+                400,
                 true, true);
     }
 
     private javafx.scene.image.Image getHelpScreen2() {
         final String path = "/de/p2tools/p2backup/res/startdialog/mtviewer-startpage-2.png";
-        return new javafx.scene.image.Image(path, 500,
-                500,
+        return new javafx.scene.image.Image(path, 400,
+                400,
                 true, true);
     }
 }
