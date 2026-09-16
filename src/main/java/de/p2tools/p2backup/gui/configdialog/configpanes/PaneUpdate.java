@@ -16,10 +16,10 @@
 
 package de.p2tools.p2backup.gui.configdialog.configpanes;
 
+import de.p2tools.p2backup.controller.SearchProgramUpdate;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
-import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2backup.gui.help.HelpText;
 import de.p2tools.p2lib.P2LibConst;
 import de.p2tools.p2lib.guitools.P2GuiTools;
@@ -51,7 +51,7 @@ public class PaneUpdate {
     private final CheckBox chkDaily = new CheckBox("Zwischenschritte (Dailys) mit einbeziehen");
     private final Button btnNow = new Button("_Jetzt suchen");
     private final Stage stage;
-    BooleanProperty propUpdateSearch = ProgConfig.SYSTEM_UPDATE_SEARCH_ACT;
+    BooleanProperty propUpdateSearch = ProgConfig.SYSTEM_SEARCH_UPDATE;
     BooleanProperty propUpdateBetaSearch = ProgConfig.SYSTEM_UPDATE_SEARCH_BETA;
     BooleanProperty propUpdateDailySearch = ProgConfig.SYSTEM_UPDATE_SEARCH_DAILY;
     private Button btnHelpBeta;

@@ -20,6 +20,7 @@ import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.config.ProgInfos;
+import de.p2tools.p2backup.gui.startdialog.StartDialogController;
 import de.p2tools.p2lib.P2LibInit;
 import de.p2tools.p2lib.configfile.ConfigFile;
 import de.p2tools.p2lib.configfile.ConfigReadFile;
@@ -27,6 +28,7 @@ import de.p2tools.p2lib.tools.P2ToolsRaspberry;
 import de.p2tools.p2lib.tools.duration.P2Duration;
 import de.p2tools.p2lib.tools.log.P2Log;
 import de.p2tools.p2lib.tools.log.P2Logger;
+import javafx.application.Platform;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,12 +49,12 @@ public class ProgStartBeforeGui {
             P2Duration.onlyPing("Erster Start");
             ProgData.firstProgramStart = true;
 
-//            StartDialogController startDialogController = new StartDialogController();
-//            if (!startDialogController.isOk()) {
-//                // dann jetzt beenden -> Tschüs
-//                Platform.exit();
-//                System.exit(0);
-//            }
+            StartDialogController startDialogController = new StartDialogController();
+            if (!startDialogController.isOk()) {
+                // dann jetzt beenden -> Tschüs
+                Platform.exit();
+                System.exit(0);
+            }
 
             ProgConfigUpdate.setUpdateDone(); // dann ist's ja kein Programmupdate
         }

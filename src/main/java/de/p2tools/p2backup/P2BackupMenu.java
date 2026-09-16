@@ -19,12 +19,12 @@ package de.p2tools.p2backup;
 
 
 import de.p2tools.p2backup.controller.ProgQuit;
+import de.p2tools.p2backup.controller.SearchProgramUpdate;
 import de.p2tools.p2backup.controller.config.PShortcut;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.picon.PIconFactory;
-import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2backup.gui.configdialog.ConfigDialogController;
 import de.p2tools.p2backup.gui.dialog.DialogAbout;
 import de.p2tools.p2backup.gui.dialog.DialogResetConfig;

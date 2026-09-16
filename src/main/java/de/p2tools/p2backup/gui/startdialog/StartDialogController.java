@@ -28,7 +28,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
@@ -37,17 +36,14 @@ import javafx.scene.layout.VBox;
 
 public class StartDialogController extends P2DialogExtra {
 
-    public static final int DIALOG_TEXT_WIDTH = 700;
     private static final String STR_START_1 = "Infos";
     private static final String STR_START_2 = "Infos";
     private static final String STR_COLOR_MODE = "Farbe";
-    private static final String STR_BACKUP = "Backup";
     private static final String STR_UPDATE = "Update";
 
     private final ProgData progData;
     private boolean ok = false;
 
-    private final TilePane tilePane = new TilePane();
     private Button btnOk, btnCancel;
     private Button btnPrev, btnNext;
 
@@ -55,24 +51,17 @@ public class StartDialogController extends P2DialogExtra {
     private final Button btnStart2 = new Button(STR_START_2);
     private final Button btnColorMode = new Button(STR_COLOR_MODE);
     private final Button btnUpdate = new Button(STR_UPDATE);
-    private final Button btnBackup = new Button(STR_BACKUP);
 
     private State aktState = State.START_1;
-    private TitledPane tStart1;
-    private TitledPane tStart2;
-    private TitledPane tColorMode;
-    private TitledPane tUpdate;
-    private TitledPane tBackup;
 
     private StartPane startPane1;
     private StartPane startPane2;
     private StartPaneColorMode startPaneColorMode;
     private StartPaneUpdate startPaneUpdate;
-    private StartPaneBackup startPaneBackup;
     private final VBox vBoxCont = new VBox();
     private final ObjectProperty<BackupInfo> backupDataObjectProperty = new SimpleObjectProperty<>(new BackupInfo());
 
-    private enum State {START_1, START_2, COLOR_MODE, UPDATE, BACKUP}
+    private enum State {START_1, START_2, COLOR_MODE, UPDATE}
 
 
     public StartDialogController() {
@@ -97,7 +86,6 @@ public class StartDialogController extends P2DialogExtra {
         startPane2.close();
         startPaneColorMode.close();
         startPaneUpdate.close();
-        startPaneBackup.close();
         super.close();
     }
 
@@ -110,13 +98,12 @@ public class StartDialogController extends P2DialogExtra {
         tilePane1.setAlignment(Pos.CENTER);
         tilePane1.setHgap(10);
         tilePane1.setVgap(10);
-        tilePane1.getChildren().addAll(btnStart1, btnStart2, btnColorMode, btnUpdate, btnBackup);
+        tilePane1.getChildren().addAll(btnStart1, btnStart2, btnColorMode, btnUpdate);
 
         initTopButton(btnStart1, State.START_1);
         initTopButton(btnStart2, State.START_2);
         initTopButton(btnColorMode, State.COLOR_MODE);
         initTopButton(btnUpdate, State.UPDATE);
-        initTopButton(btnBackup, State.BACKUP);
         VBox.setVgrow(vBoxCont, Priority.ALWAYS);
         getVBoxCont().setPadding(new Insets(5));
         getVBoxCont().getChildren().addAll(tilePane1, P2GuiTools.getHDistance(5), vBoxCont);
@@ -148,20 +135,16 @@ public class StartDialogController extends P2DialogExtra {
         //updatePane
         startPaneUpdate = new StartPaneUpdate(this);
         startPaneUpdate.makeStart();
-
-        //updatePane
-        startPaneBackup = new StartPaneBackup(this, backupDataObjectProperty);
-        startPaneBackup.makeStart();
     }
 
     private void initButton() {
         btnOk = new Button("_Ok");
         btnOk.setDisable(true);
         btnOk.setOnAction(a -> {
-            progData.backupInfoList.add(backupDataObjectProperty.get());
+//            progData.backupInfoList.add(backupDataObjectProperty.get());
             closeDialog(true);
         });
-        btnOk.disableProperty().bind(backupDataObjectProperty.getValue().nameProperty().isEmpty());
+//        btnOk.disableProperty().bind(backupDataObjectProperty.getValue().nameProperty().isEmpty());
 
         btnCancel = new Button("_Abbrechen");
         btnCancel.setOnAction(a -> closeDialog(false));
@@ -179,9 +162,6 @@ public class StartDialogController extends P2DialogExtra {
                     aktState = State.UPDATE;
                     break;
                 case UPDATE:
-                    aktState = State.BACKUP;
-                    break;
-                case BACKUP:
                     break;
             }
             selectActPane();
@@ -199,9 +179,6 @@ public class StartDialogController extends P2DialogExtra {
                     break;
                 case UPDATE:
                     aktState = State.COLOR_MODE;
-                    break;
-                case BACKUP:
-                    aktState = State.UPDATE;
                     break;
             }
             selectActPane();
@@ -240,19 +217,12 @@ public class StartDialogController extends P2DialogExtra {
                 break;
             case UPDATE:
                 btnPrev.setDisable(false);
-                btnNext.setDisable(false);
+                btnNext.setDisable(true);
                 vBoxCont.getChildren().clear();
                 vBoxCont.getChildren().add(startPaneUpdate);
                 setButtonStyle(btnUpdate);
+                btnOk.setDisable(false);
                 break;
-            case BACKUP:
-                btnPrev.setDisable(false);
-                btnNext.setDisable(true);
-                vBoxCont.getChildren().clear();
-                vBoxCont.getChildren().add(startPaneBackup);
-                setButtonStyle(btnBackup);
-                break;
-
             default:
                 btnOk.setDisable(false);
         }
@@ -263,7 +233,6 @@ public class StartDialogController extends P2DialogExtra {
         btnStart2.getStyleClass().setAll("btnStartDialog");
         btnColorMode.getStyleClass().setAll("btnStartDialog");
         btnUpdate.getStyleClass().setAll("btnStartDialog");
-        btnBackup.getStyleClass().setAll("btnStartDialog");
         btnSel.getStyleClass().setAll("btnStartDialog", "btnStartDialogSel");
     }
 
@@ -272,7 +241,6 @@ public class StartDialogController extends P2DialogExtra {
         btnStart2.setTooltip(new Tooltip("Infos über das Programm"));
         btnColorMode.setTooltip(new Tooltip("Wie soll die Programmoberfläche aussehen?"));
         btnUpdate.setTooltip(new Tooltip("Soll das Programm nach Updates suchen?"));
-        btnBackup.setTooltip(new Tooltip("Hier kann das erste Backup angelegt werden."));
 
         btnOk.setTooltip(new Tooltip("Programm mit den gewählten Einstellungen starten"));
         btnCancel.setTooltip(new Tooltip("Das Programm nicht einrichten\n" +

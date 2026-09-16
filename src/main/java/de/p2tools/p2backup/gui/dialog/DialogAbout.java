@@ -16,11 +16,11 @@
 
 package de.p2tools.p2backup.gui.dialog;
 
+import de.p2tools.p2backup.controller.SearchProgramUpdate;
 import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.config.ProgInfos;
-import de.p2tools.p2backup.controller.update.SearchProgramUpdate;
 import de.p2tools.p2lib.dialogs.AboutDialog;
 
 public class DialogAbout extends AboutDialog {
