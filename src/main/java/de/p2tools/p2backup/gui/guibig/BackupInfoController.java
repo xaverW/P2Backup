@@ -53,7 +53,6 @@ public class BackupInfoController extends VBox {
             if (backupInfo != null) {
                 Color color = colorPicker.getValue();
                 backupInfo.setColor(color.toString());
-                System.out.println("ColorPicker set: " + backupInfo.getColor());
             }
         }
     };

@@ -16,6 +16,7 @@
 
 package de.p2tools.p2backup.controller.data.backupinfo;
 
+import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.data.backupdata.BackupData;
 import de.p2tools.p2backup.controller.data.backupdata.BackupDataList;
@@ -39,7 +40,7 @@ public class BackupInfoProps extends P2DataSample<BackupInfo> implements Compara
     private LongProperty id = new SimpleLongProperty(P2Index.getIndex());
     private LongProperty version = new SimpleLongProperty(ProgConst.BACUP_VERSION); // ist immer die aktuelle Version
     private StringProperty name = new SimpleStringProperty("");
-    private StringProperty color = new SimpleStringProperty("#000000");
+    private StringProperty color = new SimpleStringProperty("#ffffff:#000000");
     private StringProperty description = new SimpleStringProperty("");
     private StringProperty backupPath = new SimpleStringProperty("");
     private LongProperty lastBackupId = new SimpleLongProperty(0);
@@ -125,15 +126,37 @@ public class BackupInfoProps extends P2DataSample<BackupInfo> implements Compara
     }
 
     public String getColor() {
-        return color.get();
+        // dark:light
+        // WHITE:BLACK
+        // #ffffff:#000000
+        if (!color.getValueSafe().contains(":")) {
+            color.set("#ffffff:#000000");
+        }
+        String cDark = color.get().isEmpty() ?
+                "#ffffff" : color.get().substring(0, color.get().indexOf(":"));
+        String cLight = color.get().isEmpty() ?
+                "#000000" : color.get().substring(color.get().indexOf(":") + 1);
+        if (ProgConfig.SYSTEM_DARK_THEME.get()) {
+            return cDark;
+        } else {
+            return cLight;
+        }
     }
 
     public StringProperty colorProperty() {
         return color;
     }
 
-    public void setColor(String color) {
-        this.color.set(color);
+    public void setColor(String set) {
+        String cDark = color.get().isEmpty() ?
+                "#ffffff" : color.get().substring(0, color.get().indexOf(":"));
+        String cLight = color.get().isEmpty() ?
+                "#000000" : color.get().substring(color.get().indexOf(":") + 1);
+        if (ProgConfig.SYSTEM_DARK_THEME.get()) {
+            this.color.set(set + ":" + cLight);
+        } else {
+            this.color.set(cDark + ":" + set);
+        }
     }
 
     public String getDescription() {

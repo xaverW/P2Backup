@@ -2,6 +2,7 @@ package de.p2tools.p2backup.gui.guibig;
 
 import de.p2tools.p2backup.controller.LoadFactory;
 import de.p2tools.p2backup.controller.config.PEvents;
+import de.p2tools.p2backup.controller.config.ProgConfig;
 import de.p2tools.p2backup.controller.config.ProgConst;
 import de.p2tools.p2backup.controller.config.ProgData;
 import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
@@ -161,6 +162,9 @@ public class PaneGenerateBackupList extends VBox {
         Label lblName = new Label();
         lblName.textProperty().bind(backupInfo.nameProperty());
         backupInfo.colorProperty().addListener((u, o, n) -> {
+            lblName.setStyle(getNameColor(backupInfo));
+        });
+        ProgConfig.SYSTEM_DARK_THEME.addListener((u, o, n) -> {
             lblName.setStyle(getNameColor(backupInfo));
         });
         lblName.setStyle(getNameColor(backupInfo));
