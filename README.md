@@ -4,6 +4,9 @@
 P2Backup ist ein Tool mit dem man Backups erstellen kann. Damit lassen sich die eigenen Daten auf zB. USB-Platten sichern. Es werden mehrere Versionsstände gespeichert. Damit können die unterschiedlichen alten Versionen meiner Daten durchsucht oder wieder hergestellt werden.
 
 
+![Screenshot](/screenshot.png)
+
+
 ## Infos
 Das Programm nutzt den Ordner:  
 **Linux:**  
