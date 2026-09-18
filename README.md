@@ -50,12 +50,10 @@ gestartet werden.
 
 ## Anleitung
 Eine Anleitung zum Programm findet sich auf der Website:  
-<a target="_blank" href="https://www.p2backup.de/">P2Backup</a>
+<a target="_blank" href="https://www.p2backup.de/">www.p2backup.de</a>
 
 
 ## Website
 [www.p2backup.de]( https://www.p2backup.de)
-</br>
-[www.p2tools.de]( https://www.p2tools.de)
 
 
