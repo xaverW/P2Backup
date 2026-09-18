@@ -40,9 +40,6 @@ Diese Programmpakete bringen die Java-Laufzeitumgebung mit und sind nur für das
 zum Download:  
 [github.com/xaverW/P2Backup/releases](https://github.com/xaverW/P2Backup/releases)  
 
-und hier können auch BETA-Versionen und Dailys geladen werden:  
-[https://www.p2backup.de/download/](https://www.p2backup.de/download/)
-
 
 ## Installation
 P2Backup-XX__Windows==SETUP__DATUM.exe wird durch einen Doppelklick darauf installiert. Die anderen Versionen müssen nicht installiert werden, das Entpacken der heruntergeladenen ZIP-Datei ist quasi die Installation. Die heruntergeladene ZIP-Datei entpacken und den entpackten Ordner “P2Backup...” ins Benutzerverzeichnis verschieben. Das Programm kann dann mit Doppelklick auf:  
@@ -53,11 +50,12 @@ gestartet werden.
 
 ## Anleitung
 Eine Anleitung zum Programm findet sich auf der Website:
-[https://www.p2backup.de/](https://www.p2backup.de/)  
+ <a align="left" target="_blank" href="https://www.p2backup.de/" class="gdoc-footer__link">P2Backup</a>
 
 
 ## Website
 [www.p2backup.de]( https://www.p2backup.de)
+</br>
 [www.p2tools.de]( https://www.p2tools.de)
 
 
