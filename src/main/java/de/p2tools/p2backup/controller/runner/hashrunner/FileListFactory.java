@@ -13,20 +13,15 @@ public class FileListFactory {
     private FileListFactory() {
     }
 
-//    public static int getFileList(File file, Set<File> foundFileList) {
-//        // im Verzeichnis nach Dateien suchen
-//        try {
-//            new FileRunner() {
-//                @Override
-//                public void workFile(File file) {
-//                    foundFileList.add(file);
-//                }
-//            }.recDir(file, true);
-//        } catch (Exception ex) {
-//            P2Log.errorLog(975102364, ex, "runFindFiles - " + file.getPath());
-//        }
-//        return foundFileList.size();
-//    }
+    public static void getCompleteFileList(BackupInfo backupInfo,
+                                           List<File> fromPathList,
+                                           Set<File> foundFileList) {
+        // in den Verzeichnissen (fromPath) nach Dateien suchen: Dateien, Dirs, geblockte Dateien
+        // BackupInfo nur für STOP
+        for (File file : fromPathList) {
+            runDirCompleteFindFiles(backupInfo, file, foundFileList);
+        }
+    }
 
     public static void getFileList(BackupInfo backupInfo,
                                    List<File> fromPathList,
@@ -49,6 +44,24 @@ public class FileListFactory {
         for (PathData p : backupInfo.getPathListFrom()) {
             runDirFindFiles(backupInfo, p.getFilePathFile(), foundDirList, foundFileList, blockList);
         }
+    }
+
+    private static int runDirCompleteFindFiles(BackupInfo backupInfo,
+                                               File file,
+                                               Set<File> foundFileList) {
+        // Verzeichnis ablaufen und Dateien suchen: Alle Dateien
+        // BackupInfo nur für STOP
+        try {
+            new FileRunner(backupInfo) {
+                @Override
+                public void workFile(File file) {
+                    foundFileList.add(file);
+                }
+            }.recDir(file, true);
+        } catch (Exception ex) {
+            P2Log.errorLog(956231049, ex, "CreateHash.run - " + file.getPath());
+        }
+        return foundFileList.size();
     }
 
     private static int runDirFindFiles(BackupInfo backupInfo,

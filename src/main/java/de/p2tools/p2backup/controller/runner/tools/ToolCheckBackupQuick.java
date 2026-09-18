@@ -24,7 +24,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileDataProps;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
-import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
+import de.p2tools.p2backup.controller.runner.hashrunner.DirCompleteCreateHash;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2lib.p2event.P2Event;
 import de.p2tools.p2lib.tools.P2Wait;
@@ -65,7 +65,7 @@ public class ToolCheckBackupQuick {
     }
 
     private void compareDir(FileDataList errorList) {
-        // Daten laden
+        // Daten aus der DB laden
         FileDataList fileListDb = new FileDataList();
         if (!SqlFileData.readBackupFileList(backupInfo, backupData, fileListDb)) {
             backupInfo.runnerDto.setStop();
@@ -97,9 +97,9 @@ public class ToolCheckBackupQuick {
         // dann ist ein Backup-Pfad
         if (toPath != null) {
             AtomicBoolean a = new AtomicBoolean(true);
-            new DirCreateHash(backupInfo,
+            new DirCompleteCreateHash(backupInfo,
                     Path.of(toPath).toFile(),
-                    null, fileDbList,
+                    fileDbList,
                     "", // zum Eintragen in FileDate, brauchmer aber nicht
                     true, false,
                     a).create(false);

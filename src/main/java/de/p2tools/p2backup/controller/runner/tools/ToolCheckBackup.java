@@ -24,7 +24,7 @@ import de.p2tools.p2backup.controller.data.backupinfo.BackupInfo;
 import de.p2tools.p2backup.controller.data.filedata.FileData;
 import de.p2tools.p2backup.controller.data.filedata.FileDataList;
 import de.p2tools.p2backup.controller.data.filedata.FileFactory;
-import de.p2tools.p2backup.controller.runner.hashrunner.DirCreateHash;
+import de.p2tools.p2backup.controller.runner.hashrunner.DirCompleteCreateHash;
 import de.p2tools.p2backup.controller.sqlite.SqlFileData;
 import de.p2tools.p2backup.gui.tools.DialogCheckBackup;
 import de.p2tools.p2lib.alert.P2AlertAppThread;
@@ -126,12 +126,12 @@ public class ToolCheckBackup {
         // dann ist ein Backup-Pfad
         if (toPath != null) {
             AtomicBoolean a = new AtomicBoolean(true);
-            new DirCreateHash(backupInfo,
+            new DirCompleteCreateHash(backupInfo,
                     Path.of(toPath).toFile(),
-                    null, fileBackupList,
+                    fileBackupList,
                     toPath, // zum Eintragen in FileDate, brauch mer für Dateien die nur im Backup sind!
                     false, false,
-                    a).create();
+                    a).create(true);
             while (a.get()) {
                 P2Wait.pause(500);
             }
