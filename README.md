@@ -49,8 +49,8 @@ gestartet werden.
 
 
 ## Anleitung
-Eine Anleitung zum Programm findet sich auf der Website:
- <a align="left" target="_blank" href="https://www.p2backup.de/" class="gdoc-footer__link">P2Backup</a>
+Eine Anleitung zum Programm findet sich auf der Website:  
+<a target="_blank" href="https://www.p2backup.de/">P2Backup</a>
 
 
 ## Website
