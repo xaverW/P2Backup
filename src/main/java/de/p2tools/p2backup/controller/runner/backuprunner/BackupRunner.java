@@ -152,6 +152,8 @@ public class BackupRunner {
         // ==============================================
         if (backupInfo.runnerDto.isStop() || !ret) {
             backupInfo.runnerDto.setOk(false);
+            backupInfo.runnerDto.setRunnerText("Backup löschen");
+
             // dann wurde abgebrochen oder hatte einen Fehler
             final Stage stage;
             if (progData.primaryStageSmall != null && progData.primaryStageSmall.isShowing()) {

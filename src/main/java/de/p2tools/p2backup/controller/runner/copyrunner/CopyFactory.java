@@ -45,6 +45,8 @@ public class CopyFactory {
                                     List<FileData> fileDataList /* eingelesenen DATEN */) {
 
         ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
+        backupInfo.runnerDto.setRunnerMax(fileDataList.size());
+
         for (FileData fileData : fileDataList) {
             // toFilePath:  /tmp/usb/backup/2025-10-21__16-29-29/Daten/home/emil/Desktop/daten/file2/1972/bild.jpg
             // toPath:      /tmp/usb/backup/2025-10-23__10-12-00
