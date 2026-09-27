@@ -262,14 +262,14 @@ public class BackupRunnerFactory {
         if (backupInfo.getBackupDataList().isEmpty()) {
             // dann gibts keinen Vorgänger -> alles kopieren
             backupInfo.runnerDto.setRunnerMax(backupInfo.runnerDto.getDataFileList().getSize());
-            ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+            ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList(), true);
             return ret;
         }
 
         switch (backupInfo.getHow()) {
             case ProgConst.BACKUP_DIFF, ProgConst.BACKUP_INTELLIGENT ->
                     ret = CopyDiffFactory.copyDiffFilesToBackup(backupInfo);
-            default -> ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+            default -> ret = CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList(), true);
         }
 
         return ret;

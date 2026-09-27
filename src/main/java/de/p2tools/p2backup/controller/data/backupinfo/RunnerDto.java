@@ -52,7 +52,8 @@ public class RunnerDto {
         ProgData.getInstance().pEventHandler.addListener(new P2Listener(PEvents.EVENT_TIMER_HALF_SECOND) {
             @Override
             public void pingGui(P2Event event) {
-                guiProgress.set(1.0 * runnerAlreadyDone.get() / runnerMax.get());
+                final double progress = 1.0 * runnerAlreadyDone.get() / runnerMax.get();
+                guiProgress.set(progress < 0 ? 0 : progress);
                 if (runnerMax.get() > 0) {
                     int toDo = runnerMax.get() - runnerAlreadyDone.get();
                     if (runnerDouble.get()) {

@@ -42,10 +42,13 @@ public class CopyFactory {
     }
 
     public static boolean copyFiles(BackupInfo backupInfo,
-                                    List<FileData> fileDataList /* eingelesenen DATEN */) {
+                                    List<FileData> fileDataList /* eingelesenen DATEN */,
+                                    boolean setRunner) {
 
         ProgData.getInstance().pEventHandler.notifyListener(new P2Event(PEvents.EVENT_RUNNER_RUN));
-        backupInfo.runnerDto.setRunnerMax(fileDataList.size());
+        if (setRunner) {
+            backupInfo.runnerDto.setRunnerMax(fileDataList.size());
+        }
 
         for (FileData fileData : fileDataList) {
             // toFilePath:  /tmp/usb/backup/2025-10-21__16-29-29/Daten/home/emil/Desktop/daten/file2/1972/bild.jpg

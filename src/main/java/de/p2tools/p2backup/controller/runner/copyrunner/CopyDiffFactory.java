@@ -72,7 +72,7 @@ public class CopyDiffFactory {
                     return false;
                 }
                 case IGNORE -> {
-                    return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList());
+                    return CopyFactory.copyFiles(backupInfo, backupInfo.runnerDto.getDataFileList(), true);
                 }
                 case REPAIR -> {
                     if (!RepairFactory.repairBackup(backupInfo, errorList)) {
@@ -143,7 +143,7 @@ public class CopyDiffFactory {
         // =========================================
         // und jetzt kopieren/linken/moven
         // =========================================
-        if (!CopyFactory.copyFiles(backupInfo, copyList)) {
+        if (!CopyFactory.copyFiles(backupInfo, copyList, false)) {
             return false;
         }
 
@@ -162,7 +162,7 @@ public class CopyDiffFactory {
                 // die gesamte moveList wieder eintragen
                 oldBackupFileList.addAll(moveList);
 
-                // und jetzt zurück kopieren
+                // und jetzt zurückkopieren
                 boolean error = false;
                 for (FileData fileData : resetList) {
                     File fromFile = fileData.getBackupFilePath().toFile();
